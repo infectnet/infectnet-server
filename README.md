@@ -1,1 +1,1 @@
-# Game Server
+# InfectNet Server
