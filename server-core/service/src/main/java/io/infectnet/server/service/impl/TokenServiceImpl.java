@@ -1,6 +1,6 @@
 package io.infectnet.server.service.impl;
 
-import io.infectnet.server.service.Token;
+import io.infectnet.server.service.TokenDTO;
 import io.infectnet.server.service.TokenService;
 
 import java.util.List;
@@ -8,22 +8,22 @@ import java.util.List;
 public class TokenServiceImpl implements TokenService {
 
     @Override
-    public Token createNew() {
+    public TokenDTO createNew() {
         return null;
     }
 
     @Override
-    public boolean exists(Token token) {
+    public boolean exists(TokenDTO token) {
         return false;
     }
 
     @Override
-    public void delete(Token token) {
+    public void delete(TokenDTO token) {
 
     }
 
     @Override
-    public List<Token> getAllTokens() {
+    public List<TokenDTO> getAllTokens() {
         return null;
     }
 }
