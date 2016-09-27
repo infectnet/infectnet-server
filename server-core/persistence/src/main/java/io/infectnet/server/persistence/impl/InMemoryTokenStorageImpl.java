@@ -12,7 +12,7 @@ public class InMemoryTokenStorageImpl implements TokenStorage {
     }
 
     @Override
-    public Token getToken(Integer id) {
+    public Token getTokenById(Integer id) {
         return null;
     }
 
