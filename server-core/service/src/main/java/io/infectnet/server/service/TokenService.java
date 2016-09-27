@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface TokenService {
 
-    TokenDTO createNew();
+    TokenDTO createNewToken();
 
     boolean exists(TokenDTO token);
 

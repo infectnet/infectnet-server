@@ -14,13 +14,13 @@ public class PersistenceModule {
 
     @Provides
     @Singleton
-    TokenStorage providesTokenStorage() {
+    public TokenStorage providesTokenStorage() {
         return new InMemoryTokenStorageImpl();
     }
 
     @Provides
     @Singleton
-    UserStorage providesUserStorage() {
+    public UserStorage providesUserStorage() {
         return new InMemoryUserStorageImpl();
     }
 

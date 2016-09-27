@@ -15,13 +15,13 @@ public class ServiceModule {
 
     @Provides
     @Singleton
-    TokenService providesTokenService() {
+    public TokenService providesTokenService() {
         return new TokenServiceImpl();
     }
 
     @Provides
     @Singleton
-    UserService providesUserService() {
+    public UserService providesUserService() {
         return new UserServiceImpl();
     }
 
