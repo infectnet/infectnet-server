@@ -2,6 +2,7 @@ package io.infectnet.server.service.configuration;
 
 import dagger.Module;
 import dagger.Provides;
+import io.infectnet.server.persistence.configuration.PersistenceModule;
 import io.infectnet.server.service.TokenService;
 import io.infectnet.server.service.UserService;
 import io.infectnet.server.service.impl.TokenServiceImpl;

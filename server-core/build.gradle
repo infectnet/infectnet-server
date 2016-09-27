@@ -1,5 +1,9 @@
 allprojects {
     apply plugin: "net.ltgt.apt"
+    apply plugin: 'application'
+
+
+    mainClassName = "io.infectnet.server.core.Application"
 
     dependencies {
         compile 'com.google.dagger:dagger:2.7'
@@ -7,14 +11,20 @@ allprojects {
     }
 }
 
-project(':service') {
+project(':server-core') {
     dependencies {
-        compile project(':persistence')
+        compile project(':server-core:controller')
     }
 }
 
-project(':controller') {
+project(':server-core:service') {
     dependencies {
-        compile project(':service')
+        compile project(':server-core:persistence')
+    }
+}
+
+project(':server-core:controller') {
+    dependencies {
+        compile project(':server-core:service')
     }
 }
