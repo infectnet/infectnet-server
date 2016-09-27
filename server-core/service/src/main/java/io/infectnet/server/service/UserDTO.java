@@ -1,4 +1,4 @@
 package io.infectnet.server.service;
 
-public class Token {
+public class UserDTO {
 }

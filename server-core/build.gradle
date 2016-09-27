@@ -1,0 +1,8 @@
+plugins {
+    id "net.ltgt.apt" version "0.5"
+}
+
+dependencies {
+    compile 'com.google.dagger:dagger:2.x'
+    apt 'com.google.dagger:dagger-compiler:2.x'
+}

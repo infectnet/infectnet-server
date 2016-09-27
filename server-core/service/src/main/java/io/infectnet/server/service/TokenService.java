@@ -4,12 +4,12 @@ import java.util.List;
 
 public interface TokenService {
 
-    Token createNew();
+    TokenDTO createNew();
 
-    boolean exists(Token token);
+    boolean exists(TokenDTO token);
 
-    void delete(Token token);
+    void delete(TokenDTO token);
 
-    List<Token> getAllTokens();
+    List<TokenDTO> getAllTokens();
 
 }
