@@ -3,28 +3,29 @@ package io.infectnet.server.persistence.impl;
 import io.infectnet.server.persistence.Token;
 import io.infectnet.server.persistence.TokenStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link TokenStorage} in-memory implementation.
+ */
 public class InMemoryTokenStorageImpl implements TokenStorage {
-    @Override
-    public List<Token> getAllTokens() {
-        // To be implemented...
-        return null;
-    }
+
+
+    private List<Token> tokens = new ArrayList<>();
 
     @Override
-    public Token getTokenById(Integer id) {
-        // To be implemented...
-        return null;
+    public List<Token> getAllTokens() {
+        return new ArrayList<>(tokens);
     }
 
     @Override
     public void saveToken(Token token) {
-        // To be implemented...
+        tokens.add(token);
     }
 
     @Override
     public void deleteToken(Token token) {
-        // To be implemented...
+        tokens.remove(token);
     }
 }
