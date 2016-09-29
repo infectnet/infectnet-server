@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ApplicationStarter {
 
-    private List<RestController> restControllers;
+    private final List<RestController> restControllers;
 
     @Inject
     public ApplicationStarter() {
