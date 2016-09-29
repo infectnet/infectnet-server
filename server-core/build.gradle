@@ -12,6 +12,8 @@ allprojects {
         apt 'com.google.dagger:dagger-compiler:2.7'
 
         compile 'org.modelmapper:modelmapper:0.7.5'
+
+        compile 'org.apache.commons:commons-lang3:3.4'
     }
 }
 
