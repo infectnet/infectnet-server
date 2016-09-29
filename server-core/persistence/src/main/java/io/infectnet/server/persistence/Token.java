@@ -4,9 +4,16 @@ import java.time.LocalDateTime;
 
 public class Token {
 
-    private final String token;
+    private String token;
 
-    private final LocalDateTime expirationDateTime;
+    private LocalDateTime expirationDateTime;
+
+    /**
+     * Constructs a new {@link Token} object.
+     */
+    public Token() {
+
+    }
 
     /**
      * Constructs a new {@link Token} object.
@@ -35,6 +42,24 @@ public class Token {
      */
     public LocalDateTime getExpirationDateTime() {
         return expirationDateTime;
+    }
+
+    /**
+     * Sets the actual token.
+     *
+     * @param token the actual token
+     */
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    /**
+     * Sets the expiration date to the token.
+     *
+     * @param expirationDateTime the expiration date
+     */
+    public void setExpirationDateTime(LocalDateTime expirationDateTime) {
+        this.expirationDateTime = expirationDateTime;
     }
 
     @Override

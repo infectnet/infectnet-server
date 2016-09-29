@@ -2,6 +2,7 @@ package io.infectnet.server.service.configuration;
 
 import dagger.Module;
 import dagger.Provides;
+import io.infectnet.server.persistence.TokenStorage;
 import io.infectnet.server.persistence.configuration.PersistenceModule;
 import io.infectnet.server.service.TokenService;
 import io.infectnet.server.service.UserService;
@@ -15,8 +16,8 @@ public class ServiceModule {
 
     @Provides
     @Singleton
-    public TokenService providesTokenService() {
-        return new TokenServiceImpl();
+    public TokenService providesTokenService(TokenStorage tokenStorage) {
+        return new TokenServiceImpl(tokenStorage);
     }
 
     @Provides
