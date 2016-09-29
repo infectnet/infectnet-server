@@ -4,7 +4,9 @@ import io.infectnet.server.persistence.Token;
 import io.infectnet.server.persistence.TokenStorage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * {@link TokenStorage} in-memory implementation.
@@ -12,16 +14,38 @@ import java.util.List;
 public class InMemoryTokenStorageImpl implements TokenStorage {
 
 
-    private List<Token> tokens = new ArrayList<>();
+    private List<Token> tokens;
+
+    public InMemoryTokenStorageImpl() {
+        this.tokens = new ArrayList<>();
+    }
+
+    @Override
+    public Optional<Token> getTokenByTokenString(String token) {
+        return tokens.stream()
+                .filter(t -> t.getToken().equals(token))
+                .findFirst();
+    }
 
     @Override
     public List<Token> getAllTokens() {
-        return new ArrayList<>(tokens);
+        return Collections.unmodifiableList(tokens);
+    }
+
+    @Override
+    public boolean exists(Token token) {
+        return tokens.stream()
+                .filter(t -> t.getToken().equals(token.getToken()))
+                .count() != 0;
     }
 
     @Override
     public void saveToken(Token token) {
-        tokens.add(token);
+        if (!exists(token)) {
+            tokens.add(token);
+        } else {
+            throw new IllegalArgumentException("The token string is not unique!");
+        }
     }
 
     @Override

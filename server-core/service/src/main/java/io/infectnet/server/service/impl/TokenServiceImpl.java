@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -20,13 +21,14 @@ public class TokenServiceImpl implements TokenService {
 
     private static final int TOKEN_LENGTH = 16;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    private final TokenStorage tokenStorage;
 
     @Inject
-    private TokenStorage tokenStorage;
-
-    public TokenServiceImpl() {
+    public TokenServiceImpl(TokenStorage tokenStorage) {
         this.modelMapper = new ModelMapper();
+        this.tokenStorage = tokenStorage;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public boolean exists(TokenDTO token) {
-        return tokenStorage.getAllTokens().contains(modelMapper.map(token, Token.class));
+        return tokenStorage.exists(modelMapper.map(token, Token.class));
     }
 
     @Override
@@ -55,6 +57,16 @@ public class TokenServiceImpl implements TokenService {
         return tokenStorage.getAllTokens().stream()
                 .map(t -> modelMapper.map(t, TokenDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public TokenDTO getTokenByTokenString(String token) {
+        Optional<Token> tokenEntity= tokenStorage.getTokenByTokenString(token);
+        if (tokenEntity.isPresent()) {
+            return modelMapper.map(tokenEntity.get(), TokenDTO.class);
+        } else {
+            return null;
+        }
     }
 
     private LocalDateTime getCurrentExpireDate() {

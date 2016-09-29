@@ -1,6 +1,7 @@
 package io.infectnet.server.service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface for services handling token generation.
@@ -35,5 +36,12 @@ public interface TokenService {
      * @return a list of tokens
      */
     List<TokenDTO> getAllTokens();
+
+    /**
+     * Returns a {@link TokenDTO} with the given token string.
+     *
+     * @return an {@link Optional} containing the token
+     */
+    TokenDTO getTokenByTokenString(String token);
 
 }
