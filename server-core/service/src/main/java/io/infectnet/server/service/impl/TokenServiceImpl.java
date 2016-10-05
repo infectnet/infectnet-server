@@ -26,9 +26,9 @@ public class TokenServiceImpl implements TokenService {
     private final TokenStorage tokenStorage;
 
     @Inject
-    public TokenServiceImpl(TokenStorage tokenStorage) {
-        this.modelMapper = new ModelMapper();
+    public TokenServiceImpl(TokenStorage tokenStorage, ModelMapper modelMapper) {
         this.tokenStorage = tokenStorage;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -60,12 +60,12 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public TokenDTO getTokenByTokenString(String token) {
-        Optional<Token> tokenEntity= tokenStorage.getTokenByTokenString(token);
+    public Optional<TokenDTO> getTokenByTokenString(String token) {
+        Optional<Token> tokenEntity = tokenStorage.getTokenByTokenString(token);
         if (tokenEntity.isPresent()) {
-            return modelMapper.map(tokenEntity.get(), TokenDTO.class);
+            return Optional.of(modelMapper.map(tokenEntity.get(), TokenDTO.class));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

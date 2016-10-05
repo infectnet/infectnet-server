@@ -8,6 +8,7 @@ import io.infectnet.server.service.TokenService;
 import io.infectnet.server.service.UserService;
 import io.infectnet.server.service.impl.TokenServiceImpl;
 import io.infectnet.server.service.impl.UserServiceImpl;
+import org.modelmapper.ModelMapper;
 
 import javax.inject.Singleton;
 
@@ -16,8 +17,14 @@ public class ServiceModule {
 
     @Provides
     @Singleton
-    public TokenService providesTokenService(TokenStorage tokenStorage) {
-        return new TokenServiceImpl(tokenStorage);
+    public ModelMapper providesModelMapper() {
+        return new ModelMapper();
+    }
+
+    @Provides
+    @Singleton
+    public TokenService providesTokenService(TokenStorage tokenStorage, ModelMapper modelMapper) {
+        return new TokenServiceImpl(tokenStorage, modelMapper);
     }
 
     @Provides

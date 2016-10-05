@@ -42,6 +42,6 @@ public interface TokenService {
      *
      * @return an {@link Optional} containing the token
      */
-    TokenDTO getTokenByTokenString(String token);
+    Optional<TokenDTO> getTokenByTokenString(String token);
 
 }
