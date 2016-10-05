@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
+/**
+ * Default {@link TokenService} implementation.
+ */
 public class TokenServiceImpl implements TokenService {
 
     private static final long EXPIRE_MINUTES = 10;

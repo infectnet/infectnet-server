@@ -105,11 +105,8 @@ class TokenServiceImplTest extends Specification {
             1 * tokenStorage.getTokenByTokenString(TEST_TOKEN_1) >> Optional.of(tokenEntity)
             1 * modelMapper.map(tokenEntity, TokenDTO.class) >> tokenDto
 
-        when: "we request a token by its tokenString"
-            def result = tokenService.getTokenByTokenString(TEST_TOKEN_1)
-
-        then: "we will get an Optional containing the requested token"
-            result.get().getToken().equals(TEST_TOKEN_1)
+        expect: "we get an Optional containing the requested token"
+            tokenService.getTokenByTokenString(TEST_TOKEN_1).get().getToken().equals(TEST_TOKEN_1)
     }
 
     def "a token cannot be retrieved by tokenString"() {
@@ -117,11 +114,8 @@ class TokenServiceImplTest extends Specification {
         given: "the desired token is not in the storage"
             1 * tokenStorage.getTokenByTokenString(TEST_TOKEN_1) >> Optional.empty()
 
-        when: "we request a token by its tokenString"
-            def result = tokenService.getTokenByTokenString(TEST_TOKEN_1)
-
-        then: "we will get an empty Optional"
-            !result.isPresent()
+        expect: "we get an empty Optional"
+            !tokenService.getTokenByTokenString(TEST_TOKEN_1).isPresent()
     }
 
 }
