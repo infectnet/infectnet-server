@@ -3,7 +3,6 @@ package io.infectnet.server.persistence.impl;
 import io.infectnet.server.persistence.Token;
 import io.infectnet.server.persistence.TokenStorage;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +15,8 @@ public class InMemoryTokenStorageImpl implements TokenStorage {
 
     private List<Token> tokens;
 
-    public InMemoryTokenStorageImpl() {
-        this.tokens = new ArrayList<>();
+    public InMemoryTokenStorageImpl(List<Token> tokenList) {
+        this.tokens = tokenList;
     }
 
     @Override

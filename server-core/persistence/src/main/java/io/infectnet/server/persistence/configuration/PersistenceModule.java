@@ -8,6 +8,7 @@ import io.infectnet.server.persistence.impl.InMemoryTokenStorageImpl;
 import io.infectnet.server.persistence.impl.InMemoryUserStorageImpl;
 
 import javax.inject.Singleton;
+import java.util.ArrayList;
 
 @Module
 public class PersistenceModule {
@@ -15,7 +16,7 @@ public class PersistenceModule {
     @Provides
     @Singleton
     public TokenStorage providesTokenStorage() {
-        return new InMemoryTokenStorageImpl();
+        return new InMemoryTokenStorageImpl(new ArrayList<>());
     }
 
     @Provides
