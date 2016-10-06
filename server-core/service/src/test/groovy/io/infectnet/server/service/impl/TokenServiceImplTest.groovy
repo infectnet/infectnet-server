@@ -30,6 +30,9 @@ class TokenServiceImplTest extends Specification {
 
     def "new token can be created"() {
 
+        given: "there is no colliding token in the storage"
+            tokenStorage.getTokenByTokenString(_) >> Optional.empty()
+
         when: "we create a new token"
             def result = tokenService.createNewToken()
 

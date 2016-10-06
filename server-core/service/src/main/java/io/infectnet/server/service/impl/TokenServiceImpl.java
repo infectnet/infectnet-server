@@ -36,7 +36,14 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public TokenDTO createNewToken() {
-        TokenDTO newToken = new TokenDTO(RandomStringUtils.random(TOKEN_LENGTH), getCurrentExpireDate());
+        String tokenString = "";
+
+        do {
+            tokenString = RandomStringUtils.random(TOKEN_LENGTH);
+        }
+        while (tokenStorage.getTokenByTokenString(tokenString).isPresent());
+
+        TokenDTO newToken = new TokenDTO(tokenString, getCurrentExpireDate());
 
         Token token = modelMapper.map(newToken, Token.class);
 
