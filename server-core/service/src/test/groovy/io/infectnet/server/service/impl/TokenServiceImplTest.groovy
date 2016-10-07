@@ -58,6 +58,13 @@ class TokenServiceImplTest extends Specification {
 
     }
 
+    def "checking if null token exists"() {
+        when: "we check if null token exists"
+            tokenService.exists(null)
+        then: "NullPointerException is thrown"
+            thrown(NullPointerException)
+    }
+
     def "token can be deleted"() {
 
         given: "the token we want to delete"
@@ -70,6 +77,14 @@ class TokenServiceImplTest extends Specification {
 
         then: "the token will be deleted from storage"
             1 * tokenStorage.deleteToken(tokenEntity)
+    }
+
+    def "deleting null token"() {
+        when: "we want to delete null token"
+            tokenService.delete(null)
+
+        then: "NullPointerException is thrown"
+            thrown(NullPointerException)
     }
 
     def "all tokens can be retrieved"() {
@@ -87,7 +102,7 @@ class TokenServiceImplTest extends Specification {
             2 * modelMapper.map(_, TokenDTO.class) >>> expectedList
 
         expect: "we get all of the tokens"
-            tokenService.getAllTokens().equals(expectedList)
+            tokenService.getAllTokens() == expectedList
 
     }
 
@@ -109,7 +124,7 @@ class TokenServiceImplTest extends Specification {
             1 * modelMapper.map(tokenEntity, TokenDTO.class) >> tokenDto
 
         expect: "we get an Optional containing the requested token"
-            tokenService.getTokenByTokenString(TEST_TOKEN_1).get().getToken().equals(TEST_TOKEN_1)
+            tokenService.getTokenByTokenString(TEST_TOKEN_1).get().getToken() == TEST_TOKEN_1
     }
 
     def "a token cannot be retrieved by tokenString"() {
@@ -119,6 +134,14 @@ class TokenServiceImplTest extends Specification {
 
         expect: "we get an empty Optional"
             !tokenService.getTokenByTokenString(TEST_TOKEN_1).isPresent()
+    }
+
+    def "retrieving a token by null tokenString"() {
+        when: "we want to retrieve a token with null tokenString"
+            tokenService.getTokenByTokenString(null)
+
+        then: "NullPointerException is thrown"
+            thrown(NullPointerException)
     }
 
 }

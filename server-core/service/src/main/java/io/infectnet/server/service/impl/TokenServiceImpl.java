@@ -5,11 +5,13 @@ import io.infectnet.server.persistence.TokenStorage;
 import io.infectnet.server.service.TokenDTO;
 import io.infectnet.server.service.TokenService;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,7 +38,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public TokenDTO createNewToken() {
-        String tokenString = "";
+        String tokenString = StringUtils.EMPTY;
 
         do {
             tokenString = RandomStringUtils.random(TOKEN_LENGTH);
@@ -54,11 +56,15 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public boolean exists(TokenDTO token) {
+        token = Objects.requireNonNull(token);
+
         return tokenStorage.exists(modelMapper.map(token, Token.class));
     }
 
     @Override
     public void delete(TokenDTO token) {
+        token = Objects.requireNonNull(token);
+
         tokenStorage.deleteToken(modelMapper.map(token, Token.class));
     }
 
@@ -70,8 +76,10 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Optional<TokenDTO> getTokenByTokenString(String token) {
-        Optional<Token> tokenEntity = tokenStorage.getTokenByTokenString(token);
+    public Optional<TokenDTO> getTokenByTokenString(String tokenString) {
+        tokenString = Objects.requireNonNull(tokenString);
+
+        Optional<Token> tokenEntity = tokenStorage.getTokenByTokenString(tokenString);
         if (tokenEntity.isPresent()) {
             return Optional.of(modelMapper.map(tokenEntity.get(), TokenDTO.class));
         } else {
