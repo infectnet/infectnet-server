@@ -56,16 +56,12 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public boolean exists(TokenDTO token) {
-        token = Objects.requireNonNull(token);
-
-        return tokenStorage.exists(modelMapper.map(token, Token.class));
+        return tokenStorage.exists(modelMapper.map(Objects.requireNonNull(token), Token.class));
     }
 
     @Override
     public void delete(TokenDTO token) {
-        token = Objects.requireNonNull(token);
-
-        tokenStorage.deleteToken(modelMapper.map(token, Token.class));
+        tokenStorage.deleteToken(modelMapper.map(Objects.requireNonNull(token), Token.class));
     }
 
     @Override
@@ -77,9 +73,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Optional<TokenDTO> getTokenByTokenString(String tokenString) {
-        tokenString = Objects.requireNonNull(tokenString);
-
-        Optional<Token> tokenEntity = tokenStorage.getTokenByTokenString(tokenString);
+        Optional<Token> tokenEntity = tokenStorage.getTokenByTokenString(Objects.requireNonNull(tokenString));
         if (tokenEntity.isPresent()) {
             return Optional.of(modelMapper.map(tokenEntity.get(), TokenDTO.class));
         } else {
