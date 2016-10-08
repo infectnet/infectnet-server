@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class ConverterServiceImpl implements ConverterService {
 
     // Sorted by source classes
-    private Map<Class, List<Converter>> mappings;
+    private Map<Class<?>, List<Converter<?, ?>>> mappings;
 
     public ConverterServiceImpl() {
         this.mappings = new HashMap<>();
@@ -21,16 +21,21 @@ public class ConverterServiceImpl implements ConverterService {
     @Override
     public <S, T> T map(S source, Class<T> targetClass) {
         S nonNullSource = Objects.requireNonNull(source);
-        Optional<Converter> converter = mappings.get(nonNullSource.getClass()).stream()
+
+        // The unchecked cast is completely safe, since at that point
+        // we know that the source and target class of the converter
+        // match our needs.
+        @SuppressWarnings("unchecked")
+        Optional<Converter<S, T>> converter = mappings.get(nonNullSource.getClass()).stream()
                 .filter(c -> c.getTargetClass().equals(Objects.requireNonNull(targetClass)))
+                .map(c -> (Converter<S, T>) c)
                 .findFirst();
 
         if (!converter.isPresent()) {
             throw new IllegalArgumentException("No such converter mapping can be found!");
-        } else {
-            @SuppressWarnings("unchecked") T target = (T) converter.get().convert(nonNullSource);
-            return target;
         }
+
+        return converter.get().convert(nonNullSource);
     }
 
     @Override
