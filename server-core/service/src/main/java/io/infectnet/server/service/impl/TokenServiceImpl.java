@@ -5,16 +5,21 @@ import io.infectnet.server.persistence.TokenStorage;
 import io.infectnet.server.service.TokenDTO;
 import io.infectnet.server.service.TokenService;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
+/**
+ * Default {@link TokenService} implementation.
+ */
 public class TokenServiceImpl implements TokenService {
 
     private static final long EXPIRE_MINUTES = 10;
@@ -26,14 +31,21 @@ public class TokenServiceImpl implements TokenService {
     private final TokenStorage tokenStorage;
 
     @Inject
-    public TokenServiceImpl(TokenStorage tokenStorage) {
-        this.modelMapper = new ModelMapper();
+    public TokenServiceImpl(TokenStorage tokenStorage, ModelMapper modelMapper) {
         this.tokenStorage = tokenStorage;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public TokenDTO createNewToken() {
-        TokenDTO newToken = new TokenDTO(RandomStringUtils.random(TOKEN_LENGTH), getCurrentExpireDate());
+        String tokenString = StringUtils.EMPTY;
+
+        do {
+            tokenString = RandomStringUtils.random(TOKEN_LENGTH);
+        }
+        while (tokenStorage.getTokenByTokenString(tokenString).isPresent());
+
+        TokenDTO newToken = new TokenDTO(tokenString, getCurrentExpireDate());
 
         Token token = modelMapper.map(newToken, Token.class);
 
@@ -44,12 +56,12 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public boolean exists(TokenDTO token) {
-        return tokenStorage.exists(modelMapper.map(token, Token.class));
+        return tokenStorage.exists(modelMapper.map(Objects.requireNonNull(token), Token.class));
     }
 
     @Override
     public void delete(TokenDTO token) {
-        tokenStorage.deleteToken(modelMapper.map(token, Token.class));
+        tokenStorage.deleteToken(modelMapper.map(Objects.requireNonNull(token), Token.class));
     }
 
     @Override
@@ -60,12 +72,12 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public TokenDTO getTokenByTokenString(String token) {
-        Optional<Token> tokenEntity= tokenStorage.getTokenByTokenString(token);
+    public Optional<TokenDTO> getTokenByTokenString(String tokenString) {
+        Optional<Token> tokenEntity = tokenStorage.getTokenByTokenString(Objects.requireNonNull(tokenString));
         if (tokenEntity.isPresent()) {
-            return modelMapper.map(tokenEntity.get(), TokenDTO.class);
+            return Optional.of(modelMapper.map(tokenEntity.get(), TokenDTO.class));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

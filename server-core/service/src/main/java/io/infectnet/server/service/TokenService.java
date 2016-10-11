@@ -40,8 +40,9 @@ public interface TokenService {
     /**
      * Returns a {@link TokenDTO} with the given token string.
      *
+     * @param tokenString the token string to search by
      * @return an {@link Optional} containing the token
      */
-    TokenDTO getTokenByTokenString(String token);
+    Optional<TokenDTO> getTokenByTokenString(String tokenString);
 
 }
