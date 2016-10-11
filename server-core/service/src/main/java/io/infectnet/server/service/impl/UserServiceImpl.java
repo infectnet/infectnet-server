@@ -1,17 +1,24 @@
 package io.infectnet.server.service.impl;
 
+import io.infectnet.server.service.TokenService;
 import io.infectnet.server.service.UserDTO;
 import io.infectnet.server.service.UserService;
 
+import javax.inject.Inject;
+import java.util.Optional;
+
 public class UserServiceImpl implements UserService {
 
+    @Inject
+    private TokenService tokenService;
+    
     @Override
-    public UserDTO register(String token, String username, String password) {
+    public Optional<UserDTO> register(String token, String username, String password) {
         return null;
     }
 
     @Override
-    public UserDTO login(String username, String password) {
+    public Optional<UserDTO> login(String username, String password) {
         return null;
     }
 
