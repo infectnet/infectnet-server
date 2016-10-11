@@ -5,13 +5,8 @@ import java.util.Optional;
 public interface UserService {
 
     /**
-     * Registers the new user in. Checks if the token has not expired yet and the username is unique,
-     * and whether or not the password is valid according to the specified rules:
-     *      minimum length of 8 characters
-     *      must contain at least one number
-     *      must contain at least one uppercase letter.
-     * If authentication fails no new user will be stored, otherwise a new User is stored
-     * with the username and password and the date of the registration now produced.
+     * Validates the new registration using the token, the username and the password.
+     * Returns a UserDTO made from the new user.
      *
      * @param token the token from the current registration
      * @param username the username from the current registration

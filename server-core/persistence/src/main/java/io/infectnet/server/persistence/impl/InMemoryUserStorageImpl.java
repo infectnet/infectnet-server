@@ -50,4 +50,11 @@ public class InMemoryUserStorageImpl implements UserStorage {
         userList.remove(user);
     }
 
+    @Override
+    public boolean exists(User user) {
+        return userList.stream()
+                .filter(t -> t.getUserName().equals(user.getUserName()))
+                .count() != 0;
+    }
+
 }

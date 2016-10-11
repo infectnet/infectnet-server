@@ -42,4 +42,11 @@ public interface UserStorage {
      */
     void deleteUser(User user);
 
+    /**
+     * Checks if the given user is in the storage.
+     *
+     * @param user the user to search for
+     * @return true is the user exists, false otherwise
+     */
+    boolean exists(User user);
 }
