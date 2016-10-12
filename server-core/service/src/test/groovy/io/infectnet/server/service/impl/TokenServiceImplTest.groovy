@@ -2,8 +2,8 @@ package io.infectnet.server.service.impl
 
 import io.infectnet.server.persistence.Token
 import io.infectnet.server.persistence.TokenStorage
+import io.infectnet.server.service.ConverterService
 import io.infectnet.server.service.TokenDTO
-import org.modelmapper.ModelMapper
 import spock.lang.Specification
 
 import java.time.LocalDateTime
@@ -19,12 +19,12 @@ class TokenServiceImplTest extends Specification {
 
     def tokenStorage
     def tokenService
-    def modelMapper
+    def converterService
 
     def setup() {
-        modelMapper = Mock(ModelMapper)
+        converterService = Mock(ConverterService)
         tokenStorage = Mock(TokenStorage)
-        tokenService = new TokenServiceImpl(tokenStorage, modelMapper)
+        tokenService = new TokenServiceImpl(tokenStorage, converterService)
     }
 
 
@@ -50,7 +50,7 @@ class TokenServiceImplTest extends Specification {
         given: "there is a token in the storage"
             def tokenDto = new TokenDTO(TEST_TOKEN_1, TEST_TOKEN_EXPIRATION_DATE)
             def tokenEntity = new Token(TEST_TOKEN_1, TEST_TOKEN_EXPIRATION_DATE)
-            modelMapper.map(tokenDto, Token.class) >> tokenEntity
+            converterService.map(tokenDto, Token.class) >> tokenEntity
             1 * tokenStorage.exists(tokenEntity) >> true
 
         expect: "the service detects the token is existant"
@@ -70,7 +70,7 @@ class TokenServiceImplTest extends Specification {
         given: "the token we want to delete"
             def tokenDto = new TokenDTO(TEST_TOKEN_1, TEST_TOKEN_EXPIRATION_DATE)
             def tokenEntity = new Token(TEST_TOKEN_1, TEST_TOKEN_EXPIRATION_DATE)
-            1 * modelMapper.map(tokenDto, Token.class) >> tokenEntity
+            1 * converterService.map(tokenDto, Token.class) >> tokenEntity
 
         when: "we delete the token"
             tokenService.delete(tokenDto)
@@ -99,7 +99,7 @@ class TokenServiceImplTest extends Specification {
                     new Token(TEST_TOKEN_2, TEST_TOKEN_EXPIRATION_DATE)
             ]
             1 * tokenStorage.getAllTokens() >> entityList
-            2 * modelMapper.map(_, TokenDTO.class) >>> expectedList
+            2 * converterService.map(_, TokenDTO.class) >>> expectedList
 
         expect: "we get all of the tokens"
             tokenService.getAllTokens() == expectedList
@@ -121,7 +121,7 @@ class TokenServiceImplTest extends Specification {
             def tokenEntity = new Token(TEST_TOKEN_1, TEST_TOKEN_EXPIRATION_DATE)
             def tokenDto = new TokenDTO(TEST_TOKEN_1, TEST_TOKEN_EXPIRATION_DATE)
             1 * tokenStorage.getTokenByTokenString(TEST_TOKEN_1) >> Optional.of(tokenEntity)
-            1 * modelMapper.map(tokenEntity, TokenDTO.class) >> tokenDto
+            1 * converterService.map(tokenEntity, TokenDTO.class) >> tokenDto
 
         expect: "we get an Optional containing the requested token"
             tokenService.getTokenByTokenString(TEST_TOKEN_1).get().getToken() == TEST_TOKEN_1
