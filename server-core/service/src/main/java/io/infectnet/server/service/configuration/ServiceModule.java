@@ -12,7 +12,6 @@ import io.infectnet.server.service.impl.TokenServiceImpl;
 import io.infectnet.server.service.impl.UserServiceImpl;
 import io.infectnet.server.service.impl.converter.TokenDtoConverterImpl;
 import io.infectnet.server.service.impl.converter.TokenEntityConverterImpl;
-import org.modelmapper.ModelMapper;
 
 import javax.inject.Singleton;
 
@@ -27,12 +26,6 @@ public class ServiceModule {
         converterService.addConverterMapping(new TokenEntityConverterImpl());
 
         return converterService;
-    }
-
-    @Provides
-    @Singleton
-    public ModelMapper providesModelMapper() {
-        return new ModelMapper();
     }
 
     @Provides
