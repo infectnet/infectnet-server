@@ -7,6 +7,8 @@ import io.infectnet.server.service.TokenDTO;
 import io.infectnet.server.service.TokenService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
@@ -21,6 +23,8 @@ import static java.time.temporal.ChronoUnit.MINUTES;
  * Default {@link TokenService} implementation.
  */
 public class TokenServiceImpl implements TokenService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TokenServiceImpl.class);
 
     private static final long EXPIRE_MINUTES = 10;
 
@@ -50,6 +54,8 @@ public class TokenServiceImpl implements TokenService {
         Token token = converterService.map(newToken, Token.class);
 
         tokenStorage.saveToken(token);
+
+        logger.info("New token created: {}", token);
 
         return newToken;
     }
