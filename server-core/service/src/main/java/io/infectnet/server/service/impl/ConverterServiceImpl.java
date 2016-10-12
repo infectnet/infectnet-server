@@ -3,6 +3,8 @@ package io.infectnet.server.service.impl;
 import io.infectnet.server.service.Converter;
 import io.infectnet.server.service.ConverterService;
 import io.infectnet.server.service.exception.MappingAlreadyReservedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,6 +13,8 @@ import java.util.stream.Collectors;
  * Default {@link ConverterService} implementation.
  */
 public class ConverterServiceImpl implements ConverterService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ConverterServiceImpl.class);
 
     private static final String NO_SUCH_CONVERTER_MAPPING = "No such converter mapping can be found!";
 
@@ -59,6 +63,8 @@ public class ConverterServiceImpl implements ConverterService {
         } else {
             mappings.put(nonNullConverter.getSourceClass(), Collections.singletonList(nonNullConverter));
         }
+
+        logger.info("New converter mapping added: {}", nonNullConverter);
     }
 
     /**
