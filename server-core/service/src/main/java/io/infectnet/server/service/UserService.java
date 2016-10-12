@@ -9,11 +9,12 @@ public interface UserService {
      * Returns a UserDTO made from the new user.
      *
      * @param token the token from the current registration
+     * @param email the email address from the current registration
      * @param username the username from the current registration
      * @param password the password from the current registration
      * @return the Optional containing the UserDTO made from the created user
      */
-    Optional<UserDTO> register(String token, String username, String password);
+    Optional<UserDTO> register(String token, String email, String username, String password);
 
     /**
      * Validates the user login, if valid username and password is given, then

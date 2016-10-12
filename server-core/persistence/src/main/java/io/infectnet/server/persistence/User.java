@@ -13,6 +13,21 @@ public class User {
     private LocalDateTime registrationDate;
 
     /**
+     * Constructs a new {@link User} object.
+     *
+     * @param userName the username of the new user
+     * @param email the email address of the new user
+     * @param password the password of the new user
+     * @param registrationDate the date of the new user's registration
+     */
+    public User(String userName, String email, String password, LocalDateTime registrationDate) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.registrationDate = registrationDate;
+    }
+
+    /**
      * Returns the username of the user.
      *
      * @return the username
