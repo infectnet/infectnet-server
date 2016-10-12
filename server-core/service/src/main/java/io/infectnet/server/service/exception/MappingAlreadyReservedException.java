@@ -6,12 +6,41 @@ package io.infectnet.server.service.exception;
  */
 public class MappingAlreadyReservedException extends RuntimeException {
 
-    public MappingAlreadyReservedException() {
-        super();
+    private static final String MAPPING_IS_ALREADY_RESERVED = "Mapping is already reserved: ";
+
+    private Class<?> sourceClass;
+
+    private Class<?> targetClass;
+
+    /**
+     * Contstructs a new converter mapping reserved exception.
+     *
+     * @param sourceClass the reserved converter mapping's source class
+     * @param targetClass the reserved converter mapping's target class
+     */
+    public MappingAlreadyReservedException(Class<?> sourceClass, Class<?> targetClass) {
+        super(MAPPING_IS_ALREADY_RESERVED + sourceClass + " -> " + targetClass);
+
+        this.sourceClass = sourceClass;
+        this.targetClass = targetClass;
     }
 
-    public MappingAlreadyReservedException(String message) {
-        super(message);
+    /**
+     * Returns the colliding converter mapping's source class.
+     *
+     * @return the source class
+     */
+    public Class<?> getSourceClass() {
+        return sourceClass;
     }
 
+
+    /**
+     * Returns the colliding converter mapping's target class.
+     *
+     * @return the target class
+     */
+    public Class<?> getTargetClass() {
+        return targetClass;
+    }
 }

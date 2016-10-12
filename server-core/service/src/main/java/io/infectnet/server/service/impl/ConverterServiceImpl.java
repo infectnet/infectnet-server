@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class ConverterServiceImpl implements ConverterService {
 
     private static final String NO_SUCH_CONVERTER_MAPPING = "No such converter mapping can be found!";
-    private static final String CONVERTER_MAPPING_ALREADY_EXISTS = "converter mapping already exists!";
 
     // Sorted by source classes
     private Map<Class<?>, List<Converter<?, ?>>> mappings;
@@ -51,16 +50,10 @@ public class ConverterServiceImpl implements ConverterService {
 
         if (mappings.containsKey(nonNullConverter.getSourceClass())) {
 
-            final boolean isAlreadyReservedMapping = mappings.get(nonNullConverter.getSourceClass()).stream()
-                    .filter(c -> c.getTargetClass().equals(converter.getTargetClass()))
-                    .count() != 0;
-
-            if (!isAlreadyReservedMapping) {
+            if (!getConverterMapping(nonNullConverter.getSourceClass(), nonNullConverter.getTargetClass()).isPresent()) {
                 mappings.get(nonNullConverter.getSourceClass()).add(nonNullConverter);
             } else {
-                throw new MappingAlreadyReservedException(String.valueOf(nonNullConverter.getSourceClass())
-                        + " ->" + String.valueOf(nonNullConverter.getTargetClass())
-                        + " " + CONVERTER_MAPPING_ALREADY_EXISTS);
+                throw new MappingAlreadyReservedException(nonNullConverter.getSourceClass(), nonNullConverter.getTargetClass());
             }
 
         } else {
