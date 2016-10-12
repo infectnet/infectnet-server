@@ -19,7 +19,7 @@ public interface ConverterService {
     <S, T> T map(S source, Class<T> targetClass);
 
     /**
-     * Converts a list of objects to the given target class, if appropriate converter mapping was provided
+     * Converts a list of objects to the given target class, if appropriate converter mapping was provided.
      *
      * @param sourceList  the list of object to be converted
      * @param targetClass the target class
@@ -30,7 +30,7 @@ public interface ConverterService {
     <S, T> List<T> map(List<S> sourceList, Class<T> targetClass);
 
     /**
-     * Adds a converter mapping to the converter service
+     * Adds a converter mapping to the converter service.
      *
      * @param converter the converter which implements the conversion
      * @param <S>       source class
