@@ -4,6 +4,7 @@ import io.infectnet.server.persistence.Token;
 import io.infectnet.server.persistence.TokenStorage;
 import io.infectnet.server.persistence.User;
 import io.infectnet.server.persistence.UserStorage;
+import io.infectnet.server.service.TokenDTO;
 import io.infectnet.server.service.UserDTO;
 import io.infectnet.server.service.UserService;
 
@@ -52,6 +53,10 @@ public class UserServiceImpl implements UserService {
 
             User user = converterService.map(newUser, User.class);
             userStorage.saveUser(user);
+
+
+            Optional<Token> foundToken = tokenStorage.getTokenByTokenString(token);
+            tokenStorage.deleteToken(foundToken.get());
 
             return Optional.of(newUser);
         } else {

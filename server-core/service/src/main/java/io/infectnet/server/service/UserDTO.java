@@ -104,22 +104,17 @@ public class UserDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserDTO userDTO = (UserDTO) o;
+        UserDTO user = (UserDTO) o;
 
-        if (getUserName() != null ? !getUserName().equals(userDTO.getUserName()) : userDTO.getUserName() != null)
-            return false;
-        if (getEmail() != null ? !getEmail().equals(userDTO.getEmail()) : userDTO.getEmail() != null) return false;
-        if (getPassword() != null ? !getPassword().equals(userDTO.getPassword()) : userDTO.getPassword() != null)
-            return false;
-        return getRegistrationDate() != null ? getRegistrationDate().equals(userDTO.getRegistrationDate()) : userDTO.getRegistrationDate() == null;
-
+        if (!getUserName().equals(user.getUserName())) return false;
+        if (!getEmail().equals(user.getEmail())) return false;
+        if (!getPassword().equals(user.getPassword())) return false;
+        return getRegistrationDate().equals(user.getRegistrationDate());
     }
 
     @Override
     public int hashCode() {
         int result = getUserName() != null ? getUserName().hashCode() : 0;
-        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
-        result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
         result = 31 * result + (getRegistrationDate() != null ? getRegistrationDate().hashCode() : 0);
         return result;
     }

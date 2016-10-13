@@ -106,20 +106,16 @@ public class User {
 
         User user = (User) o;
 
-        if (getUserName() != null ? !getUserName().equals(user.getUserName()) : user.getUserName() != null)
-            return false;
-        if (getEmail() != null ? !getEmail().equals(user.getEmail()) : user.getEmail() != null) return false;
-        if (getPassword() != null ? !getPassword().equals(user.getPassword()) : user.getPassword() != null)
-            return false;
-        return getRegistrationDate() != null ? getRegistrationDate().equals(user.getRegistrationDate()) : user.getRegistrationDate() == null;
+        if (!getUserName().equals(user.getUserName())) return false;
+        if (!getEmail().equals(user.getEmail())) return false;
+        if (!getPassword().equals(user.getPassword())) return false;
+        return getRegistrationDate().equals(user.getRegistrationDate());
 
     }
 
     @Override
     public int hashCode() {
         int result = getUserName() != null ? getUserName().hashCode() : 0;
-        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
-        result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
         result = 31 * result + (getRegistrationDate() != null ? getRegistrationDate().hashCode() : 0);
         return result;
     }
