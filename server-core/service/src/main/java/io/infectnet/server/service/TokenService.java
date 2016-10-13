@@ -15,14 +15,14 @@ public interface TokenService {
   TokenDTO createNewToken();
 
   /**
-   * Checks if the token exists in storage.
+   * Checks if the token is valid and is in the storage.
    * @param token the token to check
-   * @return true if the token exists, false otherwise
+   * @return true if the token is valid, false otherwise
    */
   boolean exists(TokenDTO token);
 
   /**
-   * Deletes a {@link TokenDTO} from the storage.
+   * Deletes a token from the storage.
    * @param token the token to delete
    */
   void delete(TokenDTO token);
@@ -34,7 +34,7 @@ public interface TokenService {
   List<TokenDTO> getAllTokens();
 
   /**
-   * Returns a {@link TokenDTO} with the given token string.
+   * Returns a token with the given token string if it exists.
    * @param tokenString the token string to search by
    * @return an {@link Optional} containing the token
    */
