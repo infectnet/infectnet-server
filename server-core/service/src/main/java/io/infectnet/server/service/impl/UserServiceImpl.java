@@ -48,11 +48,7 @@ public class UserServiceImpl implements UserService {
                             Objects.requireNonNull(password))
                 ){
 
-            UserDTO newUser =
-                    new UserDTO(Objects.requireNonNull(username),
-                                Objects.requireNonNull(email),
-                                Objects.requireNonNull(password),
-                                LocalDateTime.now());
+            UserDTO newUser = new UserDTO(username, email, password, LocalDateTime.now());
 
             User user = converterService.map(newUser, User.class);
             userStorage.saveUser(user);
