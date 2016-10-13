@@ -6,6 +6,8 @@ public interface UserService {
 
     /**
      * Validates the new registration using the token, the username and the password.
+     * If authentication fails no new user will be stored, otherwise a new User is created and stored
+     * with the username, the email, the password and the date of the registration now produced.
      * Returns a UserDTO made from the new user.
      *
      * @param token the token from the current registration
@@ -34,5 +36,4 @@ public interface UserService {
      * @return true if the user exists, false otherwise
      */
     boolean exists(UserDTO user);
-
 }

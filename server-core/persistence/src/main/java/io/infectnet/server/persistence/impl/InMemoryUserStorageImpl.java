@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class InMemoryUserStorageImpl implements UserStorage {
 
-    private List<User> userList;
+    private final List<User> userList;
 
     public InMemoryUserStorageImpl() {
         this.userList = new ArrayList<>();
@@ -56,5 +56,4 @@ public class InMemoryUserStorageImpl implements UserStorage {
                 .filter(t -> t.getUserName().equals(user.getUserName()))
                 .count() != 0;
     }
-
 }

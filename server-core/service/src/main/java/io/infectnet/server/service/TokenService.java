@@ -8,41 +8,36 @@ import java.util.Optional;
  */
 public interface TokenService {
 
-    /**
-     * Creates a new unique token.
-     *
-     * @return the new token
-     */
-    TokenDTO createNewToken();
+  /**
+   * Creates a new unique token.
+   * @return the new token
+   */
+  TokenDTO createNewToken();
 
-    /**
-     * Checks if the token exists in storage.
-     *
-     * @param token the token to check
-     * @return true if the token exists, false otherwise
-     */
-    boolean exists(TokenDTO token);
+  /**
+   * Checks if the token is valid and is in the storage.
+   * @param token the token to check
+   * @return true if the token is valid, false otherwise
+   */
+  boolean exists(TokenDTO token);
 
-    /**
-     * Deletes a {@link TokenDTO} from the storage.
-     *
-     * @param token the token to delete
-     */
-    void delete(TokenDTO token);
+  /**
+   * Deletes a token from the storage.
+   * @param token the token to delete
+   */
+  void delete(TokenDTO token);
 
-    /**
-     * Returns all currently valid tokens.
-     *
-     * @return a list of tokens
-     */
-    List<TokenDTO> getAllTokens();
+  /**
+   * Returns all currently valid tokens.
+   * @return a list of tokens
+   */
+  List<TokenDTO> getAllTokens();
 
-    /**
-     * Returns a {@link TokenDTO} with the given token string.
-     *
-     * @param tokenString the token string to search by
-     * @return an {@link Optional} containing the token
-     */
-    Optional<TokenDTO> getTokenByTokenString(String tokenString);
+  /**
+   * Returns a token with the given token string if it exists.
+   * @param tokenString the token string to search by
+   * @return an {@link Optional} containing the token
+   */
+  Optional<TokenDTO> getTokenByTokenString(String tokenString);
 
 }
