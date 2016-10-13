@@ -4,7 +4,6 @@ import io.infectnet.server.persistence.Token;
 import io.infectnet.server.persistence.TokenStorage;
 import io.infectnet.server.persistence.User;
 import io.infectnet.server.persistence.UserStorage;
-import io.infectnet.server.service.TokenDTO;
 import io.infectnet.server.service.UserDTO;
 import io.infectnet.server.service.UserService;
 
