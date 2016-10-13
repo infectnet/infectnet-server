@@ -9,18 +9,18 @@ import io.infectnet.server.service.TokenDTO;
  */
 public class TokenDtoConverterImpl implements Converter<Token, TokenDTO> {
 
-    @Override
-    public TokenDTO convert(Token source) {
-        return new TokenDTO(source.getToken(), source.getExpirationDateTime());
-    }
+  @Override
+  public TokenDTO convert(Token source) {
+    return new TokenDTO(source.getToken(), source.getExpirationDateTime());
+  }
 
-    @Override
-    public Class<Token> getSourceClass() {
-        return Token.class;
-    }
+  @Override
+  public Class<Token> getSourceClass() {
+    return Token.class;
+  }
 
-    @Override
-    public Class<TokenDTO> getTargetClass() {
-        return TokenDTO.class;
-    }
+  @Override
+  public Class<TokenDTO> getTargetClass() {
+    return TokenDTO.class;
+  }
 }

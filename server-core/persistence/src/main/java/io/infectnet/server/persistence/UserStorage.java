@@ -4,12 +4,12 @@ import java.util.List;
 
 public interface UserStorage {
 
-    List<User> getAllUsers();
+  List<User> getAllUsers();
 
-    User getUserById(Integer id);
+  User getUserById(Integer id);
 
-    void saveUser(User user);
+  void saveUser(User user);
 
-    void deleteUser(User user);
+  void deleteUser(User user);
 
 }

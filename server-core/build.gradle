@@ -1,41 +1,41 @@
 allprojects {
-    apply plugin: "net.ltgt.apt"
-    apply plugin: 'application'
+  apply plugin: "net.ltgt.apt"
+  apply plugin: 'application'
 
 
-    mainClassName = "io.infectnet.server.core.Application"
+  mainClassName = "io.infectnet.server.core.Application"
 
-    dependencies {
-        compile "com.sparkjava:spark-core:2.5"
-        compile "org.slf4j:slf4j-simple:1.7.21"
+  dependencies {
+    compile "com.sparkjava:spark-core:2.5"
+    compile "org.slf4j:slf4j-simple:1.7.21"
 
-        compile 'com.google.dagger:dagger:2.7'
-        apt 'com.google.dagger:dagger-compiler:2.7'
+    compile 'com.google.dagger:dagger:2.7'
+    apt 'com.google.dagger:dagger-compiler:2.7'
 
-        compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-lang3:3.4'
 
-        compile "org.codehaus.groovy:groovy-all:2.4.1"
-        testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
-        testRuntime "cglib:cglib-nodep:3.1"
+    compile "org.codehaus.groovy:groovy-all:2.4.1"
+    testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
+    testRuntime "cglib:cglib-nodep:3.1"
 
-        testCompile "org.hamcrest:hamcrest-core:1.3"
-    }
+    testCompile "org.hamcrest:hamcrest-core:1.3"
+  }
 }
 
 project(':server-core') {
-    dependencies {
-        compile project(':server-core:controller')
-    }
+  dependencies {
+    compile project(':server-core:controller')
+  }
 }
 
 project(':server-core:service') {
-    dependencies {
-        compile project(':server-core:persistence')
-    }
+  dependencies {
+    compile project(':server-core:persistence')
+  }
 }
 
 project(':server-core:controller') {
-    dependencies {
-        compile project(':server-core:service')
-    }
+  dependencies {
+    compile project(':server-core:service')
+  }
 }
