@@ -45,7 +45,7 @@ public class TokenServiceImpl implements TokenService {
         String tokenString = StringUtils.EMPTY;
 
         do {
-            tokenString = RandomStringUtils.random(TOKEN_LENGTH);
+            tokenString = RandomStringUtils.randomAlphabetic(TOKEN_LENGTH);
         }
         while (tokenStorage.getTokenByTokenString(tokenString).isPresent());
 
@@ -62,17 +62,31 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public boolean exists(TokenDTO token) {
-        return tokenStorage.exists(converterService.map(Objects.requireNonNull(token), Token.class));
+        Token tokenEntity = converterService.map(Objects.requireNonNull(token), Token.class);
+        return isValidToken(tokenEntity) && tokenStorage.exists(tokenEntity);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This implementation also deletes all expired tokens
+     * from the storage beside the specified token.
+     *
+     * @param token the token to delete
+     */
     @Override
     public void delete(TokenDTO token) {
         tokenStorage.deleteToken(converterService.map(Objects.requireNonNull(token), Token.class));
+
+        tokenStorage.getAllTokens().stream()
+                .filter(t -> !isValidToken(t))
+                .forEach(tokenStorage::deleteToken);
     }
 
     @Override
     public List<TokenDTO> getAllTokens() {
         return tokenStorage.getAllTokens().stream()
+                .filter(this::isValidToken)
                 .map(t -> converterService.map(t, TokenDTO.class))
                 .collect(Collectors.toList());
     }
@@ -80,7 +94,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public Optional<TokenDTO> getTokenByTokenString(String tokenString) {
         Optional<Token> tokenEntity = tokenStorage.getTokenByTokenString(Objects.requireNonNull(tokenString));
-        if (tokenEntity.isPresent()) {
+        if (tokenEntity.isPresent() && isValidToken(tokenEntity.get())) {
             return Optional.of(converterService.map(tokenEntity.get(), TokenDTO.class));
         } else {
             return Optional.empty();
@@ -89,6 +103,10 @@ public class TokenServiceImpl implements TokenService {
 
     private LocalDateTime getCurrentExpireDate() {
         return LocalDateTime.now().with(temporal -> temporal.plus(EXPIRE_MINUTES, MINUTES));
+    }
+
+    private boolean isValidToken(Token token) {
+        return token.getExpirationDateTime().isAfter(LocalDateTime.now());
     }
 
 }
