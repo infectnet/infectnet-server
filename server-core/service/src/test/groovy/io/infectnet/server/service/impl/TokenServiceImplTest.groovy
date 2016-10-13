@@ -10,13 +10,13 @@ import java.time.LocalDateTime
 
 class TokenServiceImplTest extends Specification {
 
-  def final TEST_TOKEN_3 = "test_token_3"
-  def final TEST_TOKEN_EXPIRED_DATE = LocalDateTime.now().minusMinutes(5)
   def final EXPIRE_MINUTES = 10
   def final TOKEN_LENGTH = 16
-
   def final TEST_TOKEN_1 = "test_token_1"
+
   def final TEST_TOKEN_2 = "test_token_2"
+  def final TEST_TOKEN_3 = "test_token_3"
+  def final TEST_TOKEN_EXPIRED_DATE = LocalDateTime.now().minusMinutes(5)
   def final TEST_TOKEN_VALID_DATE = LocalDateTime.now().plusMinutes(5)
 
   def tokenStorage

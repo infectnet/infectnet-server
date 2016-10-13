@@ -6,9 +6,9 @@ package io.infectnet.server.controller;
  */
 public interface RestController {
 
-    /**
-     * Configures and starts the REST endpoint.
-     */
-    void configure();
+  /**
+   * Configures and starts the REST endpoint.
+   */
+  void configure();
 
 }
