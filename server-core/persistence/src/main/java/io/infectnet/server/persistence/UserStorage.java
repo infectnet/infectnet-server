@@ -1,15 +1,52 @@
 package io.infectnet.server.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserStorage {
 
-  List<User> getAllUsers();
+    /**
+     * Returns all registered users.
+     *
+     * @return a list of users
+     */
+    List<User> getAllUsers();
 
-  User getUserById(Integer id);
+    /**
+     * Returns the {@link User} with the given username.
+     *
+     * @param userName the username of the user
+     * @return an {@link Optional} containing the user
+     */
+    Optional<User> getUserByUserName(String userName);
 
-  void saveUser(User user);
+    /**
+     * Returns the {@link User} with the given email.
+     *
+     * @param email the email address of the user
+     * @return an {@link Optional} containing the user
+     */
+    Optional<User> getUserByEmail(String email);
 
-  void deleteUser(User user);
+    /**
+     * Persists a {@link User} in the storage.
+     *
+     * @param user the user to be saved
+     */
+    void saveUser(User user);
 
+    /**
+     * Deletes a {@link User} from the storage.
+     *
+     * @param user the user to be deleted
+     */
+    void deleteUser(User user);
+
+    /**
+     * Checks if the given user is in the storage.
+     *
+     * @param user the user to search for
+     * @return true is the user exists, false otherwise
+     */
+    boolean exists(User user);
 }
