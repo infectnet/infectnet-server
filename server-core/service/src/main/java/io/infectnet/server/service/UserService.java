@@ -1,5 +1,7 @@
 package io.infectnet.server.service;
 
+import io.infectnet.server.service.exception.ValidationException;
+
 import java.util.Optional;
 
 public interface UserService {
@@ -16,7 +18,7 @@ public interface UserService {
      * @param password the password from the current registration
      * @return the Optional containing the UserDTO made from the created user
      */
-    Optional<UserDTO> register(String token, String email, String username, String password);
+    UserDTO register(String token, String email, String username, String password) throws ValidationException;
 
     /**
      * Validates the user login, if valid username and password is given, then
