@@ -4,7 +4,7 @@ public class InvalidUserNameException extends ValidationException{
 
     private static final String messageKey = "InvalidUserNameException";
 
-    private static final String target = "UserName";
+    private static final String target = "username";
 
     public InvalidUserNameException() {
         super(messageKey, target);

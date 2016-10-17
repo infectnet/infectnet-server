@@ -4,7 +4,7 @@ public class InvalidPasswordException extends ValidationException{
 
     private static final String messageKey = "InvalidPassword";
 
-    private static final String target = "Password";
+    private static final String target = "password";
 
     public InvalidPasswordException() {
         super(messageKey, target);
