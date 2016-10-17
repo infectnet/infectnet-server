@@ -43,8 +43,6 @@ public class UserServiceImpl implements UserService {
                     Objects.requireNonNull(username),
                     Objects.requireNonNull(password));
 
-
-
             UserDTO newUser = new UserDTO(username, email, password, LocalDateTime.now());
 
             User user = converterService.map(newUser, User.class);
@@ -114,7 +112,7 @@ public class UserServiceImpl implements UserService {
             e.setNextException(firstException);
             firstException = e;
         }
-        if(firstException == null){
+        if(firstException != null){
             throw firstException;
         }
     }
@@ -143,7 +141,7 @@ public class UserServiceImpl implements UserService {
     private void emailIsUnique(String email) throws InvalidEmailException {
         Optional<User> user = userStorage.getUserByEmail(email);
 
-        if(!user.isPresent()){
+        if(user.isPresent()){
             throw new InvalidEmailException();
         }
     }
@@ -157,7 +155,7 @@ public class UserServiceImpl implements UserService {
     private void usernameIsUnique(String username) throws InvalidUserNameException {
         Optional<User> user = userStorage.getUserByUserName(username);
 
-        if(!user.isPresent()){
+        if(user.isPresent()){
             throw new InvalidUserNameException();
         }
     }
