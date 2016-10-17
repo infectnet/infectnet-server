@@ -1,6 +1,7 @@
 package io.infectnet.server.service.configuration;
 
 import io.infectnet.server.persistence.TokenStorage;
+import io.infectnet.server.persistence.UserStorage;
 import io.infectnet.server.persistence.configuration.PersistenceModule;
 import io.infectnet.server.service.ConverterService;
 import io.infectnet.server.service.TokenService;
@@ -37,8 +38,8 @@ public class ServiceModule {
 
   @Provides
   @Singleton
-  public UserService providesUserService() {
-    return new UserServiceImpl();
+  public UserService providesUserService(UserStorage userStorage, TokenStorage tokenStorage, ConverterService converterService) {
+    return new UserServiceImpl(userStorage, tokenStorage, converterService);
   }
 
 }

@@ -4,6 +4,7 @@ import io.infectnet.server.persistence.Token;
 import io.infectnet.server.persistence.TokenStorage;
 import io.infectnet.server.persistence.User;
 import io.infectnet.server.persistence.UserStorage;
+import io.infectnet.server.service.ConverterService;
 import io.infectnet.server.service.UserDTO;
 import io.infectnet.server.service.UserService;
 
@@ -24,15 +25,9 @@ public class UserServiceImpl implements UserService {
 
     private final TokenStorage tokenStorage;
 
-    private final ConverterServiceImpl converterService;
+    private final ConverterService converterService;
 
-    public UserServiceImpl(){
-        converterService = null;
-        tokenStorage = null;
-        userStorage = null;
-    }
-
-    public UserServiceImpl(UserStorage userStorage, TokenStorage tokenStorage, ConverterServiceImpl converterService) {
+    public UserServiceImpl(UserStorage userStorage, TokenStorage tokenStorage, ConverterService converterService) {
 
         this.userStorage = userStorage;
         this.tokenStorage = tokenStorage;
