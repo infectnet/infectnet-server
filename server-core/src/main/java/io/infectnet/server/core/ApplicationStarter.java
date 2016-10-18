@@ -1,8 +1,8 @@
 package io.infectnet.server.core;
 
 import io.infectnet.server.controller.RestController;
-import io.infectnet.server.controller.impl.RegistrationController;
-import io.infectnet.server.controller.impl.TokenController;
+import io.infectnet.server.controller.user.RegistrationController;
+import io.infectnet.server.controller.token.TokenController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

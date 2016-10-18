@@ -1,16 +1,16 @@
 package io.infectnet.server.service.configuration;
 
-import io.infectnet.server.persistence.TokenStorage;
-import io.infectnet.server.persistence.UserStorage;
+import io.infectnet.server.persistence.token.TokenStorage;
+import io.infectnet.server.persistence.user.UserStorage;
 import io.infectnet.server.persistence.configuration.PersistenceModule;
-import io.infectnet.server.service.ConverterService;
-import io.infectnet.server.service.TokenService;
-import io.infectnet.server.service.UserService;
-import io.infectnet.server.service.impl.ConverterServiceImpl;
-import io.infectnet.server.service.impl.TokenServiceImpl;
-import io.infectnet.server.service.impl.UserServiceImpl;
-import io.infectnet.server.service.impl.converter.TokenDtoConverterImpl;
-import io.infectnet.server.service.impl.converter.TokenEntityConverterImpl;
+import io.infectnet.server.service.converter.ConverterService;
+import io.infectnet.server.service.token.TokenService;
+import io.infectnet.server.service.user.UserService;
+import io.infectnet.server.service.converter.ConverterServiceImpl;
+import io.infectnet.server.service.token.TokenServiceImpl;
+import io.infectnet.server.service.user.UserServiceImpl;
+import io.infectnet.server.service.token.mapping.TokenDtoConverterImpl;
+import io.infectnet.server.service.token.mapping.TokenEntityConverterImpl;
 
 import javax.inject.Singleton;
 import dagger.Module;

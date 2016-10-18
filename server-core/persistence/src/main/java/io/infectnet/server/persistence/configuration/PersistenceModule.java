@@ -1,9 +1,9 @@
 package io.infectnet.server.persistence.configuration;
 
-import io.infectnet.server.persistence.TokenStorage;
-import io.infectnet.server.persistence.UserStorage;
-import io.infectnet.server.persistence.impl.InMemoryTokenStorageImpl;
-import io.infectnet.server.persistence.impl.InMemoryUserStorageImpl;
+import io.infectnet.server.persistence.token.TokenStorage;
+import io.infectnet.server.persistence.user.UserStorage;
+import io.infectnet.server.persistence.token.InMemoryTokenStorageImpl;
+import io.infectnet.server.persistence.user.InMemoryUserStorageImpl;
 
 import javax.inject.Singleton;
 import dagger.Module;
