@@ -173,8 +173,7 @@ class UserServiceImplTest extends Specification {
             userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.of(user)
 
             1 * encrypterService.check(TEST_PASSWORD_2, TEST_HASHED_PASSWORD_1) >> false
-            //1 * encrypterService.hash(TEST_PASSWORD_2) >> TEST_HASHED_PASSWORD_2
-
+        
         expect: "the user logs in"
             userService.login(TEST_USERNAME_1, TEST_PASSWORD_2).equals(Optional.empty())
     }
