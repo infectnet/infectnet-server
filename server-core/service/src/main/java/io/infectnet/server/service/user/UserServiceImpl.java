@@ -46,34 +46,33 @@ public class UserServiceImpl implements UserService {
     public UserDTO register(String token, String email, String username, String password) throws
         ValidationException {
 
-        String hashedPassword = encrypterService.hash(password);
-
             isRegisterValid( Objects.requireNonNull(token),
                     Objects.requireNonNull(email),
                     Objects.requireNonNull(username),
-                    Objects.requireNonNull(hashedPassword));
+                    Objects.requireNonNull(password));
 
-            UserDTO newUser = new UserDTO(username, email, hashedPassword, LocalDateTime.now());
+        String hashedPassword = encrypterService.hash(password);
 
-            User user = converterService.map(newUser, User.class);
-            userStorage.saveUser(user);
+        UserDTO newUser = new UserDTO(username, email, hashedPassword, LocalDateTime.now());
+
+        User user = converterService.map(newUser, User.class);
+        userStorage.saveUser(user);
 
 
-            Optional<Token> foundToken = tokenStorage.getTokenByTokenString(token);
-            tokenStorage.deleteToken(foundToken.get());
+        Optional<Token> foundToken = tokenStorage.getTokenByTokenString(token);
+        tokenStorage.deleteToken(foundToken.get());
 
-            return newUser;
+        return newUser;
     }
 
     @Override
     public Optional<UserDTO> login(String username, String password) {
 
-        String hashedPassword = encrypterService.hash(password);
-
         Optional<User> user = userStorage.getUserByUserName(Objects.requireNonNull(username));
 
         if(user.isPresent()
-                && encrypterService.check(user.get().getPassword(),hashedPassword)){
+                && encrypterService.check(password, user.get().getPassword())){
+
             UserDTO userDTO = converterService.map(user.get(),UserDTO.class);
 
             return Optional.of(userDTO);
