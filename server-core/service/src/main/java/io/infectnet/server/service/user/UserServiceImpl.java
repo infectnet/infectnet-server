@@ -5,6 +5,7 @@ import io.infectnet.server.persistence.token.TokenStorage;
 import io.infectnet.server.persistence.user.User;
 import io.infectnet.server.persistence.user.UserStorage;
 import io.infectnet.server.service.converter.ConverterService;
+import io.infectnet.server.service.encrypt.EncrypterService;
 import io.infectnet.server.service.user.exception.InvalidEmailException;
 import io.infectnet.server.service.user.exception.InvalidPasswordException;
 import io.infectnet.server.service.user.exception.InvalidTokenException;
@@ -18,11 +19,11 @@ import java.util.regex.Pattern;
 
 public class UserServiceImpl implements UserService {
 
-    public static final int PASSWORD_MIN_LENGTH = 8;
+    private static final int PASSWORD_MIN_LENGTH = 8;
 
-    public static final Pattern REGEX_AT_LEAST_ONE_NUMBER = Pattern.compile(".*\\d+.*");
+    private static final Pattern REGEX_AT_LEAST_ONE_NUMBER = Pattern.compile(".*\\d+.*");
 
-    public static final Pattern REGEX_AT_LEAST_ONE_UPPERCASE_LETTER = Pattern.compile(".*[A-Z]+.*");
+    private static final Pattern REGEX_AT_LEAST_ONE_UPPERCASE_LETTER = Pattern.compile(".*[A-Z]+.*");
 
     private final UserStorage userStorage;
 
@@ -30,11 +31,14 @@ public class UserServiceImpl implements UserService {
 
     private final ConverterService converterService;
 
-    public UserServiceImpl(UserStorage userStorage, TokenStorage tokenStorage, ConverterService converterService) {
+    private final EncrypterService encrypterService;
+
+    public UserServiceImpl(UserStorage userStorage, TokenStorage tokenStorage, ConverterService converterService, EncrypterService encrypterService) {
 
         this.userStorage = userStorage;
         this.tokenStorage = tokenStorage;
         this.converterService = converterService;
+        this.encrypterService = encrypterService;
     }
 
     @Override
@@ -46,23 +50,28 @@ public class UserServiceImpl implements UserService {
                     Objects.requireNonNull(username),
                     Objects.requireNonNull(password));
 
-            UserDTO newUser = new UserDTO(username, email, password, LocalDateTime.now());
+        String hashedPassword = encrypterService.hash(password);
 
-            User user = converterService.map(newUser, User.class);
-            userStorage.saveUser(user);
+        UserDTO newUser = new UserDTO(username, email, hashedPassword, LocalDateTime.now());
+
+        User user = converterService.map(newUser, User.class);
+        userStorage.saveUser(user);
 
 
-            Optional<Token> foundToken = tokenStorage.getTokenByTokenString(token);
-            tokenStorage.deleteToken(foundToken.get());
+        Optional<Token> foundToken = tokenStorage.getTokenByTokenString(token);
+        tokenStorage.deleteToken(foundToken.get());
 
-            return newUser;
+        return newUser;
     }
 
     @Override
     public Optional<UserDTO> login(String username, String password) {
+
         Optional<User> user = userStorage.getUserByUserName(Objects.requireNonNull(username));
 
-        if(user.isPresent() && user.get().getPassword().equals(password)){
+        if(user.isPresent()
+                && encrypterService.check(password, user.get().getPassword())){
+
             UserDTO userDTO = converterService.map(user.get(),UserDTO.class);
 
             return Optional.of(userDTO);
