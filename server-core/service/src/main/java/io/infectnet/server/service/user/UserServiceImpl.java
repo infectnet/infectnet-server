@@ -6,7 +6,6 @@ import io.infectnet.server.persistence.user.User;
 import io.infectnet.server.persistence.user.UserStorage;
 import io.infectnet.server.service.converter.ConverterService;
 import io.infectnet.server.service.encrypt.EncrypterService;
-import io.infectnet.server.service.encrypt.JBCryptEncrypterService;
 import io.infectnet.server.service.user.exception.InvalidEmailException;
 import io.infectnet.server.service.user.exception.InvalidPasswordException;
 import io.infectnet.server.service.user.exception.InvalidTokenException;
