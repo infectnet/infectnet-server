@@ -11,6 +11,8 @@ import io.infectnet.server.service.token.TokenServiceImpl;
 import io.infectnet.server.service.user.UserServiceImpl;
 import io.infectnet.server.service.token.mapping.TokenDtoConverterImpl;
 import io.infectnet.server.service.token.mapping.TokenEntityConverterImpl;
+import io.infectnet.server.service.user.mapping.UserDtoConverterImpl;
+import io.infectnet.server.service.user.mapping.UserEntityConverterImpl;
 
 import javax.inject.Singleton;
 import dagger.Module;
@@ -25,6 +27,8 @@ public class ServiceModule {
     ConverterService converterService = new ConverterServiceImpl();
     converterService.addConverterMapping(new TokenDtoConverterImpl());
     converterService.addConverterMapping(new TokenEntityConverterImpl());
+    converterService.addConverterMapping(new UserDtoConverterImpl());
+    converterService.addConverterMapping(new UserEntityConverterImpl());
 
     return converterService;
   }
