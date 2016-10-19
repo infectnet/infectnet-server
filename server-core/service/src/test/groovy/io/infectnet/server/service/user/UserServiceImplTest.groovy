@@ -89,7 +89,7 @@ class UserServiceImplTest extends Specification {
             1 * converterService.map(_ as UserDTO, User) >> user
             1 * encrypterService.hash(TEST_PASSWORD_1) >> TEST_HASHED_PASSWORD_1
 
-        when: "a user registers in with valid data"
+        when: "a user registers with valid data"
             userService.register(TEST_TOKEN,TEST_EMAIL_1,TEST_USERNAME_1,TEST_PASSWORD_1)
 
         then: "the new user will be saved in the storage"
@@ -97,20 +97,20 @@ class UserServiceImplTest extends Specification {
             1 * tokenStorage.deleteToken(token)
     }
 
-    def "new user tries to register in with expired token"(){
+    def "new user tries to register with expired token"(){
         given: "there is no valid token with given string but no conflicting user in the storage"
             tokenStorage.getTokenByTokenString(TEST_TOKEN) >> Optional.empty()
             userStorage.getUserByEmail(TEST_EMAIL_1) >> Optional.empty()
             userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.empty()
 
-        when: "a user registers in with invalid token"
+        when: "a user registers with invalid token"
             userService.register(TEST_TOKEN,TEST_EMAIL_1,TEST_USERNAME_1,TEST_PASSWORD_1)
 
         then: "InvalidTokenException is thrown"
             thrown(InvalidTokenException)
     }
 
-    def "new user tries to register in with invalid username"(){
+    def "new user tries to register with invalid username"(){
         given: "there is a valid token but conflicting user in the storage"
             def token = new Token(TEST_TOKEN,TEST_VALID_EXPIRATION_DATE)
             tokenStorage.getTokenByTokenString(TEST_TOKEN) >> Optional.of(token)
@@ -118,14 +118,14 @@ class UserServiceImplTest extends Specification {
             userStorage.getUserByEmail(TEST_EMAIL_1) >> Optional.empty()
             userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.of(user)
 
-        when: "a user registers in with invalid token"
+        when: "a user registers with invalid username"
             userService.register(TEST_TOKEN,TEST_EMAIL_1,TEST_USERNAME_1,TEST_PASSWORD_1)
 
         then: "InvalidUserNameException is thrown"
             thrown(InvalidUserNameException)
     }
 
-    def "new user tries to register in with invalid email"(){
+    def "new user tries to register with invalid email"(){
         given: "there is a valid token but a conflicting user in the storage"
             def token = new Token(TEST_TOKEN,TEST_VALID_EXPIRATION_DATE)
             tokenStorage.getTokenByTokenString(TEST_TOKEN) >> Optional.of(token)
@@ -133,25 +133,94 @@ class UserServiceImplTest extends Specification {
             userStorage.getUserByEmail(TEST_EMAIL_1) >> Optional.of(user)
             userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.empty()
 
-        when: "a user registers in with invalid token"
+        when: "a user registers with invalid email"
             userService.register(TEST_TOKEN,TEST_EMAIL_1,TEST_USERNAME_1,TEST_PASSWORD_1)
 
         then: "InvalidEmailException is thrown"
             thrown(InvalidEmailException)
     }
 
-    def "new user tries to register in with invalid password"(){
+    def "new user tries to register with invalid password"(){
         given: "there is a valid token but conflicting user in the storage"
             def token = new Token(TEST_TOKEN,TEST_VALID_EXPIRATION_DATE)
             tokenStorage.getTokenByTokenString(TEST_TOKEN) >> Optional.of(token)
             userStorage.getUserByEmail(TEST_EMAIL_1) >> Optional.empty()
             userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.empty()
 
-        when: "a user registers in with invalid token"
+        when: "a user registers with invalid password"
             userService.register(TEST_TOKEN,TEST_EMAIL_1,TEST_USERNAME_1,INVALID_PASSWORD)
 
         then: "InvalidPasswordException is thrown"
             thrown(InvalidPasswordException)
+    }
+
+    def "new user tries to register with invalid username and invalid password"(){
+        given: "there is a valid token but conflicting user in the storage"
+            def token = new Token(TEST_TOKEN,TEST_VALID_EXPIRATION_DATE)
+            tokenStorage.getTokenByTokenString(TEST_TOKEN) >> Optional.of(token)
+            def user = new User(TEST_USERNAME_1,TEST_EMAIL_1,TEST_PASSWORD_1,TEST_REGISTRATION_DATE)
+            userStorage.getUserByEmail(TEST_EMAIL_1) >> Optional.empty()
+            userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.of(user)
+
+        when: "a user registers with invalid password"
+            userService.register(TEST_TOKEN,TEST_EMAIL_1,TEST_USERNAME_1,INVALID_PASSWORD)
+
+        then: "InvalidUserNameException is thrown with InvalidPasswordException chained to it"
+            def ex = thrown(InvalidUserNameException)
+            ex.getTarget() == "username"
+            ex.getMessage() == "InvalidUserName"
+            def nextEx = ex.getNextException()
+            nextEx.getTarget() == "password"
+            nextEx.getMessage() == "InvalidPassword"
+
+    }
+
+    def "new user tries to register with invalid username, invalid email and invalid password"(){
+        given: "there is a valid token but conflicting user in the storage"
+            def token = new Token(TEST_TOKEN,TEST_VALID_EXPIRATION_DATE)
+            tokenStorage.getTokenByTokenString(TEST_TOKEN) >> Optional.of(token)
+            def user = new User(TEST_USERNAME_1,TEST_EMAIL_1,TEST_PASSWORD_1,TEST_REGISTRATION_DATE)
+            userStorage.getUserByEmail(TEST_EMAIL_1) >> Optional.of(user)
+            userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.of(user)
+
+        when: "a user registers with multiple invalid data"
+            userService.register(TEST_TOKEN,TEST_EMAIL_1,TEST_USERNAME_1,INVALID_PASSWORD)
+
+        then: "InvalidUserNameException is thrown with InvalidEmailException and InvalidPasswordException chained to it"
+            def ex = thrown(InvalidUserNameException)
+            ex.getTarget() == "username"
+            ex.getMessage() == "InvalidUserName"
+            def nextEx = ex.getNextException()
+            nextEx.getTarget() == "email"
+            nextEx.getMessage() == "InvalidEmail"
+            def secondChainedEx = nextEx.getNextException()
+            secondChainedEx.getTarget() == "password"
+            secondChainedEx.getMessage() == "InvalidPassword"
+    }
+
+    def "new user tries to register with invalid all invalid data throws multiple Exception in a chain"(){
+        given: "there is no valid token with given string and conflicting user in the storage"
+            tokenStorage.getTokenByTokenString(TEST_TOKEN) >> Optional.empty()
+            def user = new User(TEST_USERNAME_1,TEST_EMAIL_1,TEST_PASSWORD_1,TEST_REGISTRATION_DATE)
+            userStorage.getUserByEmail(TEST_EMAIL_1) >> Optional.of(user)
+            userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.of(user)
+
+        when: "a user registers with multiple invalid data"
+            userService.register(TEST_TOKEN,TEST_EMAIL_1,TEST_USERNAME_1,INVALID_PASSWORD)
+
+        then: "InvalidUserNameException is thrown with InvalidEmailException and InvalidPasswordException and InvalidTokenException chained to it"
+            def ex = thrown(InvalidUserNameException)
+            ex.getTarget() == "username"
+            ex.getMessage() == "InvalidUserName"
+            def nextEx = ex.getNextException()
+            nextEx.getTarget() == "email"
+            nextEx.getMessage() == "InvalidEmail"
+            def secondChainedEx = nextEx.getNextException()
+            secondChainedEx.getTarget() == "password"
+            secondChainedEx.getMessage() == "InvalidPassword"
+            def thirdChainedEx = secondChainedEx.getNextException()
+            thirdChainedEx.getTarget() == "token"
+            thirdChainedEx.getMessage() == "InvalidToken"
     }
 
     def "registered user logs in"(){
