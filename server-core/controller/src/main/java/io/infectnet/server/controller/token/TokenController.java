@@ -12,13 +12,17 @@ import io.infectnet.server.service.token.TokenDTO;
 import io.infectnet.server.service.token.TokenService;
 
 import java.util.Optional;
+import spark.Request;
+import spark.Response;
 
 /**
  * REST endpoint responsible for token retrieval, creation and deletion.
  */
 public class TokenController implements RestController {
 
-  private static final String URL_PATH = "/admin/token";
+  private static final String URL_PATH = "/admin/token/";
+
+  private static final String TOKEN_STRING_PARAMETER_NAME = ":tokenString";
 
   private TokenService tokenService;
 
@@ -26,29 +30,31 @@ public class TokenController implements RestController {
 
   @Override
   public void configure() {
-    createTokenRetrievalEndpoint();
-    createTokenCreationEndpoint();
-    createTokenDeletionEndpoint();
+    get(URL_PATH, this::tokenRetrievalEndpoint, gson::toJson);
+
+    post(URL_PATH, this::tokenCreationEndpoint, gson::toJson);
+
+    delete(URL_PATH + TOKEN_STRING_PARAMETER_NAME, this::tokenDeletionEndpoint);
   }
 
-  private void createTokenRetrievalEndpoint() {
-    get(URL_PATH, (req, resp) -> tokenService.getAllTokens(), gson::toJson);
+  private Object tokenRetrievalEndpoint(Request req, Response resp) {
+    return tokenService.getAllTokens();
   }
 
-  private void createTokenCreationEndpoint() {
-    post(URL_PATH, (req, resp) -> tokenService.createNewToken(), gson::toJson);
+  private Object tokenCreationEndpoint(Request req, Response resp) {
+    return tokenService.createNewToken();
   }
 
-  private void createTokenDeletionEndpoint() {
-    delete(URL_PATH + "/:tokenString", (req, resp) -> {
-      Optional<TokenDTO> token = tokenService.getTokenByTokenString(req.params(":tokenString"));
+  private Object tokenDeletionEndpoint(Request req, Response resp) {
+    Optional<TokenDTO>
+        token =
+        tokenService.getTokenByTokenString(req.params(TOKEN_STRING_PARAMETER_NAME));
 
-      if (token.isPresent()) {
-        tokenService.delete(token.get());
-      }
+    if (token.isPresent()) {
+      tokenService.delete(token.get());
+    }
 
-      return ResponseUtils.EMPTY_OK;
-    });
+    return ResponseUtils.EMPTY_OK;
   }
 
   public void setTokenService(TokenService tokenService) {
