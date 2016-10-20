@@ -4,12 +4,13 @@ import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import com.google.gson.Gson;
+
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.controller.utils.ResponseUtils;
 import io.infectnet.server.service.token.TokenDTO;
 import io.infectnet.server.service.token.TokenService;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,7 +18,11 @@ import java.util.Optional;
  */
 public class TokenController implements RestController {
 
+  private static final String URL_PATH = "/admin/token";
+
   private TokenService tokenService;
+
+  private Gson gson;
 
   @Override
   public void configure() {
@@ -27,19 +32,15 @@ public class TokenController implements RestController {
   }
 
   private void createTokenRetrievalEndpoint() {
-    get("/admin/token", (req, resp) -> {
-      List<TokenDTO> tokenList = tokenService.getAllTokens();
-
-      return tokenList.toString();
-    });
+    get(URL_PATH, (req, resp) -> tokenService.getAllTokens(), gson::toJson);
   }
 
   private void createTokenCreationEndpoint() {
-    post("/admin/token", (req, resp) -> tokenService.createNewToken());
+    post(URL_PATH, (req, resp) -> tokenService.createNewToken(), gson::toJson);
   }
 
   private void createTokenDeletionEndpoint() {
-    delete("/admin/token/:tokenString", (req, resp) -> {
+    delete(URL_PATH + "/:tokenString", (req, resp) -> {
       Optional<TokenDTO> token = tokenService.getTokenByTokenString(req.params(":tokenString"));
 
       if (token.isPresent()) {
@@ -50,8 +51,11 @@ public class TokenController implements RestController {
     });
   }
 
-
   public void setTokenService(TokenService tokenService) {
     this.tokenService = tokenService;
+  }
+
+  public void setGson(Gson gson) {
+    this.gson = gson;
   }
 }
