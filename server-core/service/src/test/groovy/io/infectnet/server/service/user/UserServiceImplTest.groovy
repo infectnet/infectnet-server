@@ -52,8 +52,6 @@ class UserServiceImplTest extends Specification {
 
     def final TEST_HASHED_PASSWORD_1 = "hashedPassword1"
 
-    def final TEST_HASHED_PASSWORD_2 = "hashedPassword2"
-
     def final TEST_VALID_EXPIRATION_DATE = LocalDateTime.now().plusMinutes(5)
 
     def userStorage
@@ -183,11 +181,11 @@ class UserServiceImplTest extends Specification {
 
         then: "InvalidUserNameException is thrown with InvalidPasswordException chained to it"
             def ex = thrown(InvalidUserNameException)
-            ex.getTarget() == USERNAME_TARGET
-            ex.getMessage() == INVALID_USERNAME_MESSAGE
-            def nextEx = ex.getNextException()
-            nextEx.getTarget() == PASSWORD_TARGET
-            nextEx.getMessage() == INVALID_PASSWORD_MESSAGE
+            ex.target == USERNAME_TARGET
+            ex.message == INVALID_USERNAME_MESSAGE
+            def nextEx = ex.nextException
+            nextEx.target == PASSWORD_TARGET
+            nextEx.message == INVALID_PASSWORD_MESSAGE
     }
 
     def "new user tries to register with invalid username, invalid email and invalid password"(){
@@ -203,17 +201,17 @@ class UserServiceImplTest extends Specification {
 
         then: "InvalidUserNameException is thrown with InvalidEmailException and InvalidPasswordException chained to it"
             def ex = thrown(InvalidUserNameException)
-            ex.getTarget() == USERNAME_TARGET
-            ex.getMessage() == INVALID_USERNAME_MESSAGE
-            def nextEx = ex.getNextException()
-            nextEx.getTarget() == EMAIL_TARGET
-            nextEx.getMessage() == INVALID_EMAIL_MESSAGE
-            def secondChainedEx = nextEx.getNextException()
-            secondChainedEx.getTarget() == PASSWORD_TARGET
-            secondChainedEx.getMessage() == INVALID_PASSWORD_MESSAGE
+            ex.target == USERNAME_TARGET
+            ex.message == INVALID_USERNAME_MESSAGE
+            def nextEx = ex.nextException
+            nextEx.target == EMAIL_TARGET
+            nextEx.message == INVALID_EMAIL_MESSAGE
+            def secondChainedEx = nextEx.nextException
+            secondChainedEx.target == PASSWORD_TARGET
+            secondChainedEx.message == INVALID_PASSWORD_MESSAGE
     }
 
-    def "new user tries to register with invalid all invalid data throws multiple Exception in a chain"(){
+    def "If new user tries to register with invalid data, throw multiple Exceptions linked in a chain"(){
         given: "there is no valid token with given string and conflicting user in the storage"
             tokenStorage.getTokenByTokenString(TEST_TOKEN) >> Optional.empty()
             def user = new User(TEST_USERNAME_1,TEST_EMAIL_1,TEST_PASSWORD_1,TEST_REGISTRATION_DATE)
@@ -225,17 +223,17 @@ class UserServiceImplTest extends Specification {
 
         then: "InvalidUserNameException is thrown with InvalidEmailException and InvalidPasswordException and InvalidTokenException chained to it"
             def ex = thrown(InvalidUserNameException)
-            ex.getTarget() == USERNAME_TARGET
-            ex.getMessage() == INVALID_USERNAME_MESSAGE
-            def nextEx = ex.getNextException()
-            nextEx.getTarget() == EMAIL_TARGET
-            nextEx.getMessage() == INVALID_EMAIL_MESSAGE
-            def secondChainedEx = nextEx.getNextException()
-            secondChainedEx.getTarget() == PASSWORD_TARGET
-            secondChainedEx.getMessage() == INVALID_PASSWORD_MESSAGE
-            def thirdChainedEx = secondChainedEx.getNextException()
-            thirdChainedEx.getTarget() == TOKEN_TARGET
-            thirdChainedEx.getMessage() == INVALID_TOKEN_MESSAGE
+            ex.target == USERNAME_TARGET
+            ex.message == INVALID_USERNAME_MESSAGE
+            def nextEx = ex.nextException
+            nextEx.target == EMAIL_TARGET
+            nextEx.message == INVALID_EMAIL_MESSAGE
+            def secondChainedEx = nextEx.nextException
+            secondChainedEx.target == PASSWORD_TARGET
+            secondChainedEx.message == INVALID_PASSWORD_MESSAGE
+            def thirdChainedEx = secondChainedEx.nextException
+            thirdChainedEx.target == TOKEN_TARGET
+            thirdChainedEx.message == INVALID_TOKEN_MESSAGE
     }
 
     def "registered user logs in"(){
@@ -248,7 +246,7 @@ class UserServiceImplTest extends Specification {
             1 * encrypterService.check(TEST_PASSWORD_1, TEST_HASHED_PASSWORD_1) >> true
 
         expect: "the user logs in"
-            userService.login(TEST_USERNAME_1, TEST_PASSWORD_1).equals(Optional.of(userDTO))
+            userService.login(TEST_USERNAME_1, TEST_PASSWORD_1) == Optional.of(userDTO)
     }
 
     def "user tries to log in with valid username but invalid password"(){
@@ -259,7 +257,7 @@ class UserServiceImplTest extends Specification {
             1 * encrypterService.check(TEST_PASSWORD_2, TEST_HASHED_PASSWORD_1) >> false
         
         expect: "the user logs in"
-            userService.login(TEST_USERNAME_1, TEST_PASSWORD_2).equals(Optional.empty())
+            userService.login(TEST_USERNAME_1, TEST_PASSWORD_2) == Optional.empty()
     }
 
     def "user tries to log in with invalid username"(){
@@ -267,6 +265,6 @@ class UserServiceImplTest extends Specification {
             userStorage.getUserByUserName(TEST_USERNAME_1) >> Optional.empty()
 
         expect: "the user logs in"
-            userService.login(TEST_USERNAME_1, TEST_PASSWORD_1).equals(Optional.empty())
+            userService.login(TEST_USERNAME_1, TEST_PASSWORD_1) == Optional.empty()
     }
 }
