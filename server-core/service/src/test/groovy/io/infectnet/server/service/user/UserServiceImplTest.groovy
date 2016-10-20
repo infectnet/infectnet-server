@@ -16,6 +16,22 @@ import java.time.LocalDateTime
 
 class UserServiceImplTest extends Specification {
 
+    def final INVALID_TOKEN_MESSAGE = "InvalidToken"
+
+    def final TOKEN_TARGET = "token"
+
+    def final INVALID_PASSWORD_MESSAGE = "InvalidPassword"
+
+    def final PASSWORD_TARGET = "password"
+
+    def final INVALID_USERNAME_MESSAGE = "InvalidUserName"
+
+    def final USERNAME_TARGET = "username"
+
+    def final INVALID_EMAIL_MESSAGE = "InvalidEmail"
+
+    def final EMAIL_TARGET = "email"
+
     def final TEST_USERNAME_1 = "test username"
 
     def final TEST_EMAIL_1 = "test@email.com"
@@ -167,12 +183,11 @@ class UserServiceImplTest extends Specification {
 
         then: "InvalidUserNameException is thrown with InvalidPasswordException chained to it"
             def ex = thrown(InvalidUserNameException)
-            ex.getTarget() == "username"
-            ex.getMessage() == "InvalidUserName"
+            ex.getTarget() == USERNAME_TARGET
+            ex.getMessage() == INVALID_USERNAME_MESSAGE
             def nextEx = ex.getNextException()
-            nextEx.getTarget() == "password"
-            nextEx.getMessage() == "InvalidPassword"
-
+            nextEx.getTarget() == PASSWORD_TARGET
+            nextEx.getMessage() == INVALID_PASSWORD_MESSAGE
     }
 
     def "new user tries to register with invalid username, invalid email and invalid password"(){
@@ -188,14 +203,14 @@ class UserServiceImplTest extends Specification {
 
         then: "InvalidUserNameException is thrown with InvalidEmailException and InvalidPasswordException chained to it"
             def ex = thrown(InvalidUserNameException)
-            ex.getTarget() == "username"
-            ex.getMessage() == "InvalidUserName"
+            ex.getTarget() == USERNAME_TARGET
+            ex.getMessage() == INVALID_USERNAME_MESSAGE
             def nextEx = ex.getNextException()
-            nextEx.getTarget() == "email"
-            nextEx.getMessage() == "InvalidEmail"
+            nextEx.getTarget() == EMAIL_TARGET
+            nextEx.getMessage() == INVALID_EMAIL_MESSAGE
             def secondChainedEx = nextEx.getNextException()
-            secondChainedEx.getTarget() == "password"
-            secondChainedEx.getMessage() == "InvalidPassword"
+            secondChainedEx.getTarget() == PASSWORD_TARGET
+            secondChainedEx.getMessage() == INVALID_PASSWORD_MESSAGE
     }
 
     def "new user tries to register with invalid all invalid data throws multiple Exception in a chain"(){
@@ -210,17 +225,17 @@ class UserServiceImplTest extends Specification {
 
         then: "InvalidUserNameException is thrown with InvalidEmailException and InvalidPasswordException and InvalidTokenException chained to it"
             def ex = thrown(InvalidUserNameException)
-            ex.getTarget() == "username"
-            ex.getMessage() == "InvalidUserName"
+            ex.getTarget() == USERNAME_TARGET
+            ex.getMessage() == INVALID_USERNAME_MESSAGE
             def nextEx = ex.getNextException()
-            nextEx.getTarget() == "email"
-            nextEx.getMessage() == "InvalidEmail"
+            nextEx.getTarget() == EMAIL_TARGET
+            nextEx.getMessage() == INVALID_EMAIL_MESSAGE
             def secondChainedEx = nextEx.getNextException()
-            secondChainedEx.getTarget() == "password"
-            secondChainedEx.getMessage() == "InvalidPassword"
+            secondChainedEx.getTarget() == PASSWORD_TARGET
+            secondChainedEx.getMessage() == INVALID_PASSWORD_MESSAGE
             def thirdChainedEx = secondChainedEx.getNextException()
-            thirdChainedEx.getTarget() == "token"
-            thirdChainedEx.getMessage() == "InvalidToken"
+            thirdChainedEx.getTarget() == TOKEN_TARGET
+            thirdChainedEx.getMessage() == INVALID_TOKEN_MESSAGE
     }
 
     def "registered user logs in"(){
