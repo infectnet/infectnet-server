@@ -1,11 +1,14 @@
 package io.infectnet.server.service.token;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
 
 public class TokenDTO {
 
   private String token;
 
+  @SerializedName("expDate")
   private LocalDateTime expirationDateTime;
 
   /**

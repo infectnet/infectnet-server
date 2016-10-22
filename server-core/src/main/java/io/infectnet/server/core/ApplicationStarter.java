@@ -1,36 +1,31 @@
 package io.infectnet.server.core;
 
+import static spark.Spark.after;
+
 import io.infectnet.server.controller.RestController;
-import io.infectnet.server.controller.user.RegistrationController;
-import io.infectnet.server.controller.token.TokenController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 
-public class ApplicationStarter {
+class ApplicationStarter {
 
   private static final Logger logger = LoggerFactory.getLogger(ApplicationStarter.class);
 
-  private final List<RestController> restControllers;
+  private final Set<RestController> restControllers;
 
   @Inject
-  public ApplicationStarter() {
-    // Notice that there is an Inject annotation even if there are no dependencies!
-
-    restControllers = Arrays.asList(
-        new RegistrationController(),
-        new TokenController()
-    );
+  ApplicationStarter(Set<RestController> restControllers) {
+    this.restControllers = restControllers;
   }
 
-  public void start() {
+  void start() {
+    restControllers.forEach(RestController::configure);
 
-    for (RestController controller : restControllers) {
-      controller.configure();
-    }
+    after((request, response) -> {
+      response.type("application/json");
+    });
 
     logger.info("Controllers configured!");
 

@@ -9,12 +9,12 @@ public class Application {
 
   @Singleton
   @Component(modules = {ControllerModule.class})
-  public interface Bootstrapper {
+  interface Bootstrapper {
     ApplicationStarter getApplicationStarter();
   }
 
   public static void main(String[] args) {
-    Bootstrapper bootstrapper = DaggerApplication_Bootstrapper.builder().build();
+    Bootstrapper bootstrapper = DaggerApplication_Bootstrapper.create();
     bootstrapper.getApplicationStarter().start();
 
   }
