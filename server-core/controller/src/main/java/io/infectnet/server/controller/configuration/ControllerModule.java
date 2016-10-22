@@ -21,24 +21,22 @@ public class ControllerModule {
   @Provides
   @Singleton
   public static Gson providesGson() {
-    GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
-    return setupGsonBuilder(gsonBuilder).create();
+    GsonBuilder gsonBuilder = new GsonBuilder()
+        .setPrettyPrinting();
+    gsonBuilder = setupTypeAdapters(gsonBuilder);
+    return gsonBuilder.create();
   }
 
   @Provides
   @IntoSet
   @Singleton
   public static RestController providesTokenController(TokenService tokenService, Gson gson) {
-    TokenController tokenController = new TokenController();
-    tokenController.setTokenService(tokenService);
-    tokenController.setGson(gson);
-    return tokenController;
+    return new TokenController(tokenService, gson);
   }
 
-  private static GsonBuilder setupGsonBuilder(GsonBuilder gsonBuilder) {
+  private static GsonBuilder setupTypeAdapters(GsonBuilder gsonBuilder) {
     gsonBuilder.registerTypeAdapter(LocalDateTime.class, new DateTimeJsonSerializer());
     return gsonBuilder;
   }
-
 
 }

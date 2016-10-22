@@ -20,13 +20,23 @@ import spark.Response;
  */
 public class TokenController implements RestController {
 
-  private static final String URL_PATH = "/admin/token/";
+  private static final String URL_PATH = "/admin/token";
 
   private static final String TOKEN_STRING_PARAMETER_NAME = ":tokenString";
 
-  private TokenService tokenService;
+  private final TokenService tokenService;
 
-  private Gson gson;
+  private final Gson gson;
+
+  /**
+   * Constructs a new controller providing token related endpoints using the given token service.
+   * @param tokenService the token service to be used
+   * @param gson the JSON transformer to be used
+   */
+  public TokenController(TokenService tokenService, Gson gson) {
+    this.tokenService = tokenService;
+    this.gson = gson;
+  }
 
   @Override
   public void configure() {
@@ -34,7 +44,7 @@ public class TokenController implements RestController {
 
     post(URL_PATH, this::tokenCreationEndpoint, gson::toJson);
 
-    delete(URL_PATH + TOKEN_STRING_PARAMETER_NAME, this::tokenDeletionEndpoint);
+    delete(URL_PATH + "/" + TOKEN_STRING_PARAMETER_NAME, this::tokenDeletionEndpoint);
   }
 
   private Object tokenRetrievalEndpoint(Request req, Response resp) {
@@ -57,11 +67,4 @@ public class TokenController implements RestController {
     return ResponseUtils.EMPTY_OK;
   }
 
-  public void setTokenService(TokenService tokenService) {
-    this.tokenService = tokenService;
-  }
-
-  public void setGson(Gson gson) {
-    this.gson = gson;
-  }
 }
