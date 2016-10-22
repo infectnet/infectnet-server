@@ -5,6 +5,8 @@ import io.infectnet.server.persistence.token.TokenStorage;
 import io.infectnet.server.persistence.user.UserStorage;
 import io.infectnet.server.service.converter.ConverterService;
 import io.infectnet.server.service.converter.ConverterServiceImpl;
+import io.infectnet.server.service.encrypt.EncrypterService;
+import io.infectnet.server.service.encrypt.JBCryptEncrypterService;
 import io.infectnet.server.service.token.TokenService;
 import io.infectnet.server.service.token.TokenServiceImpl;
 import io.infectnet.server.service.token.mapping.TokenDtoConverterImpl;
@@ -43,8 +45,15 @@ public class ServiceModule {
   @Provides
   @Singleton
   public static UserService providesUserService(UserStorage userStorage, TokenStorage tokenStorage,
-                                                ConverterService converterService) {
-    return new UserServiceImpl(userStorage, tokenStorage, converterService);
+                                                ConverterService converterService,
+                                                EncrypterService encrypterService) {
+    return new UserServiceImpl(userStorage, tokenStorage, converterService, encrypterService);
+  }
+
+  @Provides
+  @Singleton
+  public static EncrypterService providesEncrypterService() {
+    return new JBCryptEncrypterService();
   }
 
 }
