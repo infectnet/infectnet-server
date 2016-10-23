@@ -13,6 +13,8 @@ import io.infectnet.server.service.user.exception.InvalidUserNameException;
 import io.infectnet.server.service.user.exception.ValidationException;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -39,6 +41,15 @@ public class UserServiceImpl implements UserService {
         this.tokenStorage = tokenStorage;
         this.converterService = converterService;
         this.encrypterService = encrypterService;
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        List<User> userList = userStorage.getAllUsers();
+
+        List<UserDTO> userDTOList = converterService.map(userList, UserDTO.class);
+
+        return Collections.unmodifiableList(userDTOList);
     }
 
     @Override
