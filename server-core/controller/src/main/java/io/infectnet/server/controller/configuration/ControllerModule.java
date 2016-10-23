@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import io.infectnet.server.controller.RestController;
+import io.infectnet.server.controller.exception.ExceptionMapperController;
 import io.infectnet.server.controller.token.TokenController;
 import io.infectnet.server.controller.user.RegistrationController;
 import io.infectnet.server.controller.user.RegistrationDetails;
@@ -26,8 +27,16 @@ public class ControllerModule {
   public static Gson providesGson() {
     GsonBuilder gsonBuilder = new GsonBuilder()
         .setPrettyPrinting();
+
     gsonBuilder = setupTypeAdapters(gsonBuilder);
+
     return gsonBuilder.create();
+  }
+
+  @Provides
+  @Singleton
+  public static ExceptionMapperController providesExceptionMapperController(Gson gson) {
+    return new ExceptionMapperController(gson);
   }
 
   @Provides
