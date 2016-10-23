@@ -1,5 +1,6 @@
 package io.infectnet.server.controller.user;
 
+import static io.infectnet.server.controller.utils.ResponseUtils.EMPTY_OK;
 import static spark.Spark.post;
 
 import com.google.gson.Gson;
@@ -22,10 +23,14 @@ public class RegistrationController implements RestController {
 
   private final UserService userService;
 
+  private final Gson gson;
+
   public RegistrationController(TokenService tokenService,
-                                UserService userService) {
+                                UserService userService, Gson gson) {
     this.tokenService = tokenService;
     this.userService = userService;
+
+    this.gson = gson;
   }
 
   @Override
@@ -34,6 +39,19 @@ public class RegistrationController implements RestController {
   }
 
   private Object registrationEndpoint(Request req, Response res) {
-    return null;
+    RegistrationDetails details = gson.fromJson(req.body(), RegistrationDetails.class);
+
+    try {
+      userService.register(details.getToken(), details.getEmail(), details.getUsername(),
+        details.getPassword());
+
+      res.status(200);
+
+      return EMPTY_OK;
+    } catch (Exception e) {
+      res.status(400);
+
+      return EMPTY_OK;
+    }
   }
 }
