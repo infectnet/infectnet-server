@@ -2,7 +2,9 @@ package io.infectnet.server.common.configuration;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -29,14 +31,29 @@ public class PropertiesConfiguration implements Configuration {
       throw new IllegalArgumentException("The path must not point to a directory!");
     }
 
-    Properties props;
+    FileInputStream stream;
 
     try {
-      FileInputStream stream = new FileInputStream(file);
+      stream = new FileInputStream(file);
+    } catch (FileNotFoundException e) {
+      throw new ConfigurationCreationException(e);
+    }
 
-      props = new Properties();
+    return fromStream(stream);
+  }
 
-      props.load(stream);
+  /**
+   * Creates a new instance from the contents of the specified stream.
+   * @param inputStream the stream that acts as a source
+   * @return a new configuration that contains the keys loaded from the stream
+   * @throws ConfigurationCreationException if an I/O error occurs when processing the stream
+   */
+  public static PropertiesConfiguration fromStream(InputStream inputStream)
+      throws ConfigurationCreationException {
+    Properties props = new Properties();
+
+    try {
+      props.load(inputStream);
     } catch (IOException e) {
       throw new ConfigurationCreationException(e);
     }
