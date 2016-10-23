@@ -10,6 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
 
+/**
+ * Value object containing the details posted in a registration attempt.
+ */
 public class RegistrationDetails {
   private final String username;
 
