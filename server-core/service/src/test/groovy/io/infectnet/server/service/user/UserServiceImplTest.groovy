@@ -69,6 +69,43 @@ class UserServiceImplTest extends Specification {
     }
 
 
+    def "no users are listed when there are no users in the storage"() {
+        given: "there are no users in the storage"
+            1 * userStorage.getAllUsers() >> []
+            converterService.map(_, UserDTO) >> []
+
+        expect: "empty list is returned"
+            userService.getAllUsers() == []
+    }
+
+    def "one user is listed when there is one user in the storage"() {
+        given: "there is one user in the storage"
+            def userDTO = new UserDTO(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1,
+                                      TEST_REGISTRATION_DATE)
+            def userEntity = new User(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1,
+                                      TEST_REGISTRATION_DATE)
+
+            1 * userStorage.getAllUsers() >> [userEntity]
+            converterService.map([userEntity], UserDTO) >> [userDTO];
+
+        expect: "a list with a single element is returned"
+            userService.getAllUsers() == [userDTO]
+    }
+
+    def "multiple users are listed when there are multiple users in the storage"() {
+        given: "there is one user in the storage"
+            def userDTO = new UserDTO(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1,
+                                      TEST_REGISTRATION_DATE)
+            def userEntity = new User(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1,
+                                      TEST_REGISTRATION_DATE)
+
+            1 * userStorage.getAllUsers() >> [userEntity, userEntity, userEntity]
+            converterService.map(_, UserDTO) >> [userDTO, userDTO, userDTO];
+
+        expect: "a list with a single element is returned"
+            userService.getAllUsers() == [userDTO, userDTO, userDTO]
+    }
+
     def "user exists in the storage"() {
         given: "there is a user in the storage"
             def userDTO = new UserDTO(TEST_USERNAME_1,TEST_EMAIL_1,TEST_PASSWORD_1,TEST_REGISTRATION_DATE)

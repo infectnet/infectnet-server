@@ -2,9 +2,16 @@ package io.infectnet.server.service.user;
 
 import io.infectnet.server.service.user.exception.ValidationException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
+
+  /**
+   * Returns a list containing the registered users.
+   * @return a list of registered users
+   */
+  List<UserDTO> getAllUsers();
 
     /**
      * Validates the new registration using the token, the username and the password.

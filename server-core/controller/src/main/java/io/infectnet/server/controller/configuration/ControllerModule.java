@@ -8,9 +8,12 @@ import io.infectnet.server.controller.exception.ExceptionMapperController;
 import io.infectnet.server.controller.token.TokenController;
 import io.infectnet.server.controller.user.RegistrationController;
 import io.infectnet.server.controller.user.RegistrationDetails;
+import io.infectnet.server.controller.user.UserDTOSerializer;
+import io.infectnet.server.controller.user.UserListingController;
 import io.infectnet.server.controller.utils.json.DateTimeJsonSerializer;
 import io.infectnet.server.service.configuration.ServiceModule;
 import io.infectnet.server.service.token.TokenService;
+import io.infectnet.server.service.user.UserDTO;
 import io.infectnet.server.service.user.UserService;
 
 import java.time.LocalDateTime;
@@ -53,10 +56,18 @@ public class ControllerModule {
     return new RegistrationController(userService, gson);
   }
 
+  @Provides
+  @IntoSet
+  @Singleton
+  public static RestController providesUserListingController(UserService userService, Gson gson) {
+    return new UserListingController(userService, gson);
+  }
+
   private static GsonBuilder setupTypeAdapters(GsonBuilder gsonBuilder) {
     gsonBuilder
         .registerTypeAdapter(LocalDateTime.class, new DateTimeJsonSerializer())
-        .registerTypeAdapter(RegistrationDetails.class, new RegistrationDetails.Deserializer());
+        .registerTypeAdapter(RegistrationDetails.class, new RegistrationDetails.Deserializer())
+        .registerTypeAdapter(UserDTO.class, new UserDTOSerializer());
 
     return gsonBuilder;
   }
