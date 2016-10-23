@@ -49,9 +49,8 @@ public class ControllerModule {
   @Provides
   @IntoSet
   @Singleton
-  public static RestController providesRegistrationController(TokenService tokenService,
-                                                              UserService userService, Gson gson) {
-    return new RegistrationController(tokenService, userService, gson);
+  public static RestController providesRegistrationController(UserService userService, Gson gson) {
+    return new RegistrationController(userService, gson);
   }
 
   private static GsonBuilder setupTypeAdapters(GsonBuilder gsonBuilder) {

@@ -7,13 +7,12 @@ import com.google.gson.Gson;
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.controller.error.ErrorConvertibleException;
 
-import spark.ExceptionHandler;
 import spark.Request;
 import spark.Response;
 
 /**
  * {@code ExceptionMapperController} provides exception handling using the
- * {@link spark.Spark#exception(Class, ExceptionHandler)} method. Not a true controller in the
+ * {@link spark.Spark#exception(Class, spark.ExceptionHandler)} method. Not a true controller in the
  * sense, that it does not expose endpoints but only mappings.
  */
 public class ExceptionMapperController implements RestController {
@@ -21,7 +20,7 @@ public class ExceptionMapperController implements RestController {
 
   /**
    * Constructs a new instance that uses the given {@code Gson} instance. Sadly
-   * {@link spark.Spark#exception(Class, ExceptionHandler)} does not make it possible to use
+   * {@link spark.Spark#exception(Class, spark.ExceptionHandler)} does not make it possible to use
    * {@link spark.ResponseTransformer}s, therefore we have to inject a {@code Gson} instance and
    * used it by hand.
    * @param gson the {@code Gson} instance
