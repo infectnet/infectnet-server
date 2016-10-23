@@ -1,5 +1,6 @@
 package io.infectnet.server.controller.token;
 
+import static io.infectnet.server.controller.utils.ResponseUtils.sendEmptyOk;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -7,7 +8,6 @@ import static spark.Spark.post;
 import com.google.gson.Gson;
 
 import io.infectnet.server.controller.RestController;
-import io.infectnet.server.controller.utils.ResponseUtils;
 import io.infectnet.server.service.token.TokenDTO;
 import io.infectnet.server.service.token.TokenService;
 
@@ -64,7 +64,7 @@ public class TokenController implements RestController {
       tokenService.delete(token.get());
     }
 
-    return ResponseUtils.EMPTY_OK;
+    return sendEmptyOk(resp);
   }
 
 }

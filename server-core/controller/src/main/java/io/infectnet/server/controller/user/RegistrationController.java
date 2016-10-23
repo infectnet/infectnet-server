@@ -1,6 +1,7 @@
 package io.infectnet.server.controller.user;
 
-import static io.infectnet.server.controller.utils.ResponseUtils.EMPTY_OK;
+import static io.infectnet.server.controller.utils.ResponseUtils.sendEmptyOk;
+import static io.infectnet.server.controller.utils.ResponseUtils.sendEmptyWithStatusCode;
 import static spark.Spark.post;
 
 import com.google.gson.Gson;
@@ -38,20 +39,16 @@ public class RegistrationController implements RestController {
     post(URL_PATH, this::registrationEndpoint);
   }
 
-  private Object registrationEndpoint(Request req, Response res) {
+  private Object registrationEndpoint(Request req, Response resp) {
     RegistrationDetails details = gson.fromJson(req.body(), RegistrationDetails.class);
 
     try {
       userService.register(details.getToken(), details.getEmail(), details.getUsername(),
         details.getPassword());
 
-      res.status(200);
-
-      return EMPTY_OK;
+      return sendEmptyOk(resp);
     } catch (Exception e) {
-      res.status(400);
-
-      return EMPTY_OK;
+      return sendEmptyWithStatusCode(resp, 400);
     }
   }
 }
