@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.service.token.TokenService;
 import io.infectnet.server.service.user.UserService;
+import io.infectnet.server.service.user.exception.ValidationException;
 
 import spark.Request;
 import spark.Response;
@@ -39,16 +40,17 @@ public class RegistrationController implements RestController {
     post(URL_PATH, this::registrationEndpoint);
   }
 
-  private Object registrationEndpoint(Request req, Response resp) {
+  private Object registrationEndpoint(Request req, Response resp)
+      throws RegistrationFailedException {
     RegistrationDetails details = gson.fromJson(req.body(), RegistrationDetails.class);
 
     try {
       userService.register(details.getToken(), details.getEmail(), details.getUsername(),
         details.getPassword());
-
-      return sendEmptyOk(resp);
-    } catch (Exception e) {
-      return sendEmptyWithStatusCode(resp, 400);
+    } catch (ValidationException e) {
+      throw new RegistrationFailedException(e);
     }
+
+    return sendEmptyOk(resp);
   }
 }

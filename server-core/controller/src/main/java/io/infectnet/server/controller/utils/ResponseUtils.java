@@ -31,7 +31,7 @@ public final class ResponseUtils {
    * @return an empty String
    */
   public static String sendEmptyWithStatusCode(Response resp, int statusCode) {
-   resp.status(statusCode);
+    resp.status(statusCode);
 
     return StringUtils.EMPTY;
   }
