@@ -28,17 +28,23 @@ allprojects {
 project(':server-core') {
   dependencies {
     compile project(':server-core:controller')
+
+    compile project(':server-core:common')
   }
 }
 
 project(':server-core:service') {
   dependencies {
     compile project(':server-core:persistence')
+
+    compile project(':server-core:common')
   }
 }
 
 project(':server-core:controller') {
   dependencies {
     compile project(':server-core:service')
+
+    compile project(':server-core:common')
   }
 }
