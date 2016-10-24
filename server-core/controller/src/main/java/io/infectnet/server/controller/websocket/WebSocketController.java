@@ -6,12 +6,10 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import java.io.IOException;
-
 @WebSocket
 public class WebSocketController {
   @OnWebSocketConnect
-  public void connected(Session session) throws IOException {
+  public void connected(Session session) {
     /**
      * Placeholder method.
      */
@@ -26,7 +24,7 @@ public class WebSocketController {
   }
 
   @OnWebSocketMessage
-  public void message(Session session, String message) throws IOException {
+  public void message(Session session, String message) {
     System.out.println(message);
   }
 
