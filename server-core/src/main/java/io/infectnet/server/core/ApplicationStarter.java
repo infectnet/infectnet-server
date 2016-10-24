@@ -1,9 +1,11 @@
 package io.infectnet.server.core;
 
 import static spark.Spark.after;
+import static spark.Spark.webSocket;
 
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.controller.exception.ExceptionMapperController;
+import io.infectnet.server.controller.websocket.WebSocketController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,9 @@ class ApplicationStarter {
   }
 
   void start() {
+    // Must be defined before regular HTTP routes!
+    webSocket("/ws", WebSocketController.class);
+
     restControllers.forEach(RestController::configure);
 
     exceptionMapperController.configure();
