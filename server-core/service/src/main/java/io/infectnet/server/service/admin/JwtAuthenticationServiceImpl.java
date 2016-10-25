@@ -9,11 +9,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * JWT implementation of the {@code AuthenticationService}.
+ */
 public class JwtAuthenticationServiceImpl implements AuthenticationService {
   private static final String JWT_SECRET_KEY = "admin_jwt_secret";
 
