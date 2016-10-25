@@ -3,15 +3,16 @@ package io.infectnet.server.service.admin;
 import java.util.Optional;
 
 /**
- * Service interface that must be implemented by classes that provide authentication methods
- * for administrators.
+ * Service interface that must be implemented by classes that provide authentication methods for
+ * administrators.
  */
 public interface AuthenticationService {
   /**
    * Matches the passed credentials with the stored administrator username and password.
    * @param username the administrator username
    * @param password the administrator password
-   * @return an {@code Optional} containing a token if the login succeeds, an empty {@code Optional} otherwise
+   * @return an {@code Optional} containing a token if the login succeeds, an empty {@code Optional}
+   * otherwise
    */
   Optional<String> login(String username, String password);
 

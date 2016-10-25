@@ -136,13 +136,15 @@ class JwtAuthenticationServiceImplTest extends Specification {
     given: "a completely valid token"
       Claims claims = Jwts.claims().setIssuer(JWT_ISSUER);
 
-      claims.put(JWT_USERNAME_FIELD, REAL_USERNAME);
+      claims.put(JWT_USERNAME_FIELD, "user");
 
       def token = Jwts.builder()
           .signWith(SignatureAlgorithm.HS256, JWT_SECRET.bytes)
           .setClaims(claims)
-          .setExpiration(Date.from(Instant.now().plusSeconds(60)))
+          .setExpiration(Date.from(Instant.now().plusSeconds(600)))
           .compact();
+
+    println token
 
     expect: "isAuthenticated returns true"
       jwtAuthenticationService.isAuthenticated(token);

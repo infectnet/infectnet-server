@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import io.infectnet.server.controller.RestController;
+import io.infectnet.server.controller.admin.AuthenticationController;
 import io.infectnet.server.controller.exception.ExceptionMapperController;
 import io.infectnet.server.controller.token.TokenController;
 import io.infectnet.server.controller.user.RegistrationController;
@@ -11,6 +12,7 @@ import io.infectnet.server.controller.user.RegistrationDetails;
 import io.infectnet.server.controller.user.UserDTOSerializer;
 import io.infectnet.server.controller.user.UserListingController;
 import io.infectnet.server.controller.utils.json.DateTimeJsonSerializer;
+import io.infectnet.server.service.admin.AuthenticationService;
 import io.infectnet.server.service.configuration.ServiceModule;
 import io.infectnet.server.service.token.TokenService;
 import io.infectnet.server.service.user.UserDTO;
@@ -61,6 +63,14 @@ public class ControllerModule {
   @Singleton
   public static RestController providesUserListingController(UserService userService, Gson gson) {
     return new UserListingController(userService, gson);
+  }
+
+  @Provides
+  @IntoSet
+  @Singleton
+  public static RestController providesAuthenticationController(
+      AuthenticationService authenticationService) {
+    return new AuthenticationController(authenticationService);
   }
 
   private static GsonBuilder setupTypeAdapters(GsonBuilder gsonBuilder) {
