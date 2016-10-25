@@ -41,6 +41,8 @@ public class AuthenticationController implements RestController {
     before(ROUTE_PREFIX + "/*", this::filterRequests);
 
     post(LOGIN_URL, this::login, gson::toJson);
+
+    post(RENEW_URL, this::renew, gson::toJson);
   }
 
   private void filterRequests(Request req, Response resp)
@@ -50,7 +52,7 @@ public class AuthenticationController implements RestController {
       return;
     }
 
-    Optional<String> tokenOptional = extractToken(req);
+    Optional<String> tokenOptional = extractTokenFromHeader(req);
 
     if (!tokenOptional.isPresent()) {
       throw new MissingTokenException(req.pathInfo());
@@ -74,7 +76,26 @@ public class AuthenticationController implements RestController {
     return Collections.singletonMap("token", tokenOptional.get());
   }
 
-  private Optional<String> extractToken(Request req) {
+  private Object renew(Request req, Response resp) throws UnauthorizedTokenException {
+    Optional<String> oldTokenOptional = extractTokenFromHeader(req);
+
+    // At this point we can be sure, that the header contains a token
+    // but better be safe than sorry.
+    if (!oldTokenOptional.isPresent()) {
+      throw new UnauthorizedTokenException(RENEW_URL);
+    }
+
+    Optional<String> newTokenOptional =
+        authenticationService.renewToken(oldTokenOptional.get());
+
+    if (!newTokenOptional.isPresent()) {
+      throw new UnauthorizedTokenException(RENEW_URL);
+    }
+
+    return Collections.singletonMap("token", newTokenOptional.get());
+  }
+
+  private Optional<String> extractTokenFromHeader(Request req) {
     String authHeader = req.headers(AUTHORIZATION_HEADER);
 
     if (authHeader == null) {

@@ -144,8 +144,6 @@ class JwtAuthenticationServiceImplTest extends Specification {
           .setExpiration(Date.from(Instant.now().plusSeconds(60)))
           .compact();
 
-    println token
-
     expect: "isAuthenticated returns true"
       jwtAuthenticationService.isAuthenticated(token);
   }
