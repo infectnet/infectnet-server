@@ -15,6 +15,9 @@ import java.util.regex.Pattern;
 import spark.Request;
 import spark.Response;
 
+/**
+ * Controller class that exposes endpoints for administrator login and token renewal.
+ */
 public class AuthenticationController implements RestController {
   private static final String ROUTE_PREFIX = "/admin";
 
