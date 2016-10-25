@@ -1,6 +1,7 @@
 package io.infectnet.server.core;
 
 import static spark.Spark.after;
+import static spark.Spark.webSocket;
 
 import io.infectnet.server.common.configuration.Configuration;
 import io.infectnet.server.common.configuration.ConfigurationCreationException;
@@ -8,6 +9,7 @@ import io.infectnet.server.common.configuration.ConfigurationHolder;
 import io.infectnet.server.common.configuration.PropertiesConfiguration;
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.controller.exception.ExceptionMapperController;
+import io.infectnet.server.controller.websocket.WebSocketController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,9 @@ class ApplicationStarter {
     }
 
     ConfigurationHolder.INSTANCE.setActiveConfiguration(configuration.get());
+
+    // Must be defined before regular HTTP routes!
+    webSocket("/ws", WebSocketController.class);
 
     restControllers.forEach(RestController::configure);
 
