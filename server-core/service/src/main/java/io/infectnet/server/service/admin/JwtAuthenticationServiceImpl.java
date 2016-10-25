@@ -87,8 +87,8 @@ public class JwtAuthenticationServiceImpl implements AuthenticationService {
   private boolean credentialsMatch(String username, String password) {
     AdminCredentials credentials = AdminCredentials.fetchFromConfiguration();
 
-    return username.equals(credentials.getUsername())
-        && password.equals(credentials.getPassword());
+    return credentials.getUsername().equals(username)
+        && credentials.getPassword().equals(password);
   }
 
   private String fetchJwtSecret() {

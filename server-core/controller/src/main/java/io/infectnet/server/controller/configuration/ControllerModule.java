@@ -69,8 +69,8 @@ public class ControllerModule {
   @IntoSet
   @Singleton
   public static RestController providesAuthenticationController(
-      AuthenticationService authenticationService) {
-    return new AuthenticationController(authenticationService);
+      AuthenticationService authenticationService, Gson gson) {
+    return new AuthenticationController(authenticationService, gson);
   }
 
   private static GsonBuilder setupTypeAdapters(GsonBuilder gsonBuilder) {

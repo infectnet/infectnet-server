@@ -3,9 +3,12 @@ package io.infectnet.server.controller.admin;
 import static spark.Spark.before;
 import static spark.Spark.post;
 
+import com.google.gson.Gson;
+
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.service.admin.AuthenticationService;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,13 +28,19 @@ public class AuthenticationController implements RestController {
 
   private final AuthenticationService authenticationService;
 
-  public AuthenticationController(AuthenticationService authenticationService) {
+  private final Gson gson;
+
+  public AuthenticationController(AuthenticationService authenticationService, Gson gson) {
     this.authenticationService = authenticationService;
+
+    this.gson = gson;
   }
 
   @Override
   public void configure() {
     before(ROUTE_PREFIX + "/*", this::filterRequests);
+
+    post(LOGIN_URL, this::login, gson::toJson);
   }
 
   private void filterRequests(Request req, Response resp)
@@ -52,6 +61,19 @@ public class AuthenticationController implements RestController {
     }
   }
 
+  private Object login(Request req, Response resp) throws LoginFailedException {
+    LoginCredentials credentials = gson.fromJson(req.body(), LoginCredentials.class);
+
+    Optional<String> tokenOptional =
+        authenticationService.login(credentials.getUsername(), credentials.getPassword());
+
+    if (!tokenOptional.isPresent()) {
+      throw new LoginFailedException();
+    }
+
+    return Collections.singletonMap("token", tokenOptional.get());
+  }
+
   private Optional<String> extractToken(Request req) {
     String authHeader = req.headers(AUTHORIZATION_HEADER);
 
@@ -66,5 +88,27 @@ public class AuthenticationController implements RestController {
     }
 
     return Optional.ofNullable(headerMatcher.group(1));
+  }
+
+  private static class LoginCredentials {
+    private String username;
+
+    private String password;
+
+    public String getUsername() {
+      return username;
+    }
+
+    public void setUsername(String username) {
+      this.username = username;
+    }
+
+    public String getPassword() {
+      return password;
+    }
+
+    public void setPassword(String password) {
+      this.password = password;
+    }
   }
 }
