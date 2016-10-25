@@ -2,8 +2,10 @@ package io.infectnet.server.service.admin;
 
 import io.infectnet.server.common.configuration.Configuration;
 import io.infectnet.server.common.configuration.ConfigurationHolder;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -63,9 +65,13 @@ public class JwtAuthenticationServiceImpl implements AuthenticationService {
   }
 
   private String produceToken(AdminCredentials credentials) {
+    Claims claims = Jwts.claims().setIssuer(JWT_ISSUER);
+
+    claims.put(JWT_USERNAME_FIELD, credentials.getUsername());
+
     return Jwts.builder()
-        .setIssuer(JWT_ISSUER)
-        .setClaims(Collections.singletonMap(JWT_USERNAME_FIELD, credentials.getUsername()))
+        .signWith(SignatureAlgorithm.HS256, fetchJwtSecret().getBytes())
+        .setClaims(claims)
         .setExpiration(calculateExpirationDate())
         .compact();
   }
