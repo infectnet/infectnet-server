@@ -2,6 +2,7 @@ package io.infectnet.server.controller.info;
 
 import com.google.gson.Gson;
 
+import io.infectnet.server.common.VersionHolder;
 import io.infectnet.server.controller.RestController;
 
 import spark.Request;
@@ -26,6 +27,20 @@ public class InfoController implements RestController {
 
   private Object infoEndpoint(Request req, Response resp) {
     return new InfoView();
+  }
+
+  private class InfoView {
+
+    private final Fingerprint fingerprint = new Fingerprint();
+
+    private class Fingerprint {
+
+      private final String name = "InfectNet";
+
+      private final String version = VersionHolder.VERSION_NUMBER;
+
+    }
+
   }
 
 }
