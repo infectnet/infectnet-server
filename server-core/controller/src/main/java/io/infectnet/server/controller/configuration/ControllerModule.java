@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.controller.admin.AuthenticationController;
 import io.infectnet.server.controller.exception.ExceptionMapperController;
+import io.infectnet.server.controller.info.InfoController;
 import io.infectnet.server.controller.token.TokenController;
 import io.infectnet.server.controller.user.RegistrationController;
 import io.infectnet.server.controller.user.RegistrationDetails;
@@ -71,6 +72,13 @@ public class ControllerModule {
   public static RestController providesAuthenticationController(
       AuthenticationService authenticationService, Gson gson) {
     return new AuthenticationController(authenticationService, gson);
+  }
+
+  @Provides
+  @IntoSet
+  @Singleton
+  public static RestController providesInfoController(Gson gson) {
+    return new InfoController(gson);
   }
 
   private static GsonBuilder setupTypeAdapters(GsonBuilder gsonBuilder) {
