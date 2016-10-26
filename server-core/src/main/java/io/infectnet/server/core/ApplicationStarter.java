@@ -52,7 +52,7 @@ class ApplicationStarter {
     // Must be defined before regular HTTP routes!
     webSocket("/ws", WebSocketController.class);
 
-    enableCORS("*", "*", "*");
+    enableCORS("*", "POST, GET, OPTIONS, PUT, DELETE", "Content-Type, Accept, Authorization");
 
     restControllers.forEach(RestController::configure);
 
