@@ -20,7 +20,7 @@ import spark.Response;
  */
 public class TokenController implements RestController {
 
-  private static final String URL_PATH = "/admin/token";
+  private static final String URL_PATH = "/admin/tokens";
 
   private static final String TOKEN_STRING_PARAMETER_NAME = ":tokenString";
 

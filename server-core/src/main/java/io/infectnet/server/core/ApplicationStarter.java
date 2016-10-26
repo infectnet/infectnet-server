@@ -65,6 +65,7 @@ class ApplicationStarter {
     logger.info("Controllers configured!");
   }
 
+
   private Optional<Configuration> ensureConfiguration() {
     Optional<Configuration> configOptional = loadFileConfiguration();
 
@@ -121,7 +122,7 @@ class ApplicationStarter {
 
     before((request, response) -> {
       response.header("Access-Control-Allow-Origin", origin);
-      response.header("Access-Control-Request-Method", methods);
+      response.header("Access-Control-Allow-Method", methods);
       response.header("Access-Control-Allow-Headers", headers);
     });
   }
