@@ -55,6 +55,10 @@ public class AuthenticationController implements RestController {
       return;
     }
 
+    if (req.requestMethod().equals("OPTIONS")) {
+      return;
+    }
+
     Optional<String> tokenOptional = extractTokenFromHeader(req);
 
     if (!tokenOptional.isPresent()) {
