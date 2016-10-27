@@ -1,0 +1,6 @@
+include 'server-core'
+include 'bootstrapper'
+include 'server-core:controller'
+include 'server-core:persistence'
+include 'server-core:service'
+include 'server-core:common'
