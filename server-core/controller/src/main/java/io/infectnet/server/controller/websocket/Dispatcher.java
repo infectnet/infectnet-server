@@ -80,7 +80,7 @@ public class Dispatcher {
             Action action = Action.valueOf(actionStr);
             return new Message(action, arguments);
         }catch (Exception e){
-            throw new MalformedMessageException(message);
+            throw new MalformedMessageException(message, e);
         }
     }
 
