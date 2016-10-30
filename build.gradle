@@ -19,6 +19,7 @@ allprojects {
 
 subprojects {
   apply plugin: 'java'
+  apply plugin: 'groovy'
   apply plugin: 'idea'
 
   sourceCompatibility = 1.8
