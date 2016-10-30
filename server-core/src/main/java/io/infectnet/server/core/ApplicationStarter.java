@@ -1,20 +1,20 @@
 package io.infectnet.server.core;
 
-import static spark.Spark.after;
-import static spark.Spark.webSocket;
-
 import io.infectnet.server.common.configuration.Configuration;
 import io.infectnet.server.common.configuration.ConfigurationHolder;
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.controller.exception.ExceptionMapperController;
-import io.infectnet.server.controller.websocket.WebSocketController;
+import io.infectnet.server.controller.websocket.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.Spark;
 
+import javax.inject.Inject;
 import java.util.Optional;
 import java.util.Set;
-import javax.inject.Inject;
-import spark.Spark;
+
+import static spark.Spark.after;
+import static spark.Spark.webSocket;
 
 class ApplicationStarter {
   private static final Logger logger = LoggerFactory.getLogger(ApplicationStarter.class);
@@ -43,7 +43,7 @@ class ApplicationStarter {
     ConfigurationHolder.INSTANCE.setActiveConfiguration(configuration.get());
 
     // Must be defined before regular HTTP routes!
-    webSocket("/ws", WebSocketController.class);
+    webSocket("/ws", Dispatcher.class);
 
     // CORS only should be enabled after WebSocket initialization
     CorsSupporter.enableCORS();
