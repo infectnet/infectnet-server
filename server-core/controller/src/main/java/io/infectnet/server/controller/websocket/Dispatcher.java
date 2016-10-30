@@ -3,6 +3,7 @@ package io.infectnet.server.controller.websocket;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.infectnet.server.controller.exception.MalformedMessageException;
 import io.infectnet.server.controller.websocket.handler.OnCloseHandler;
 import io.infectnet.server.controller.websocket.handler.OnConnectHandler;
 import io.infectnet.server.controller.websocket.handler.OnMessageHandler;
@@ -12,27 +13,24 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebSocket
 public class Dispatcher {
 
-    private List<OnConnectHandler> onConnectHandlers;
+    private final List<OnConnectHandler> onConnectHandlers;
 
-    private List<OnCloseHandler> onCloseHandlers;
+    private final List<OnCloseHandler> onCloseHandlers;
 
-    private Map<Action, OnMessageHandler> onMessageHandlerHashMap;
+    private final Map<Action, OnMessageHandler> onMessageHandlerHashMap;
 
-    private JsonParser jsonParser;
+    private final JsonParser jsonParser;
 
-    public Dispatcher() {
+    public Dispatcher(JsonParser jsonParser) {
         this.onConnectHandlers = new ArrayList();
         this.onCloseHandlers = new ArrayList();
         this.onMessageHandlerHashMap = new EnumMap(Action.class);
-        this.jsonParser = new JsonParser();
+        this.jsonParser = jsonParser;
     }
 
     @OnWebSocketConnect
@@ -51,31 +49,50 @@ public class Dispatcher {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
-        JsonElement jsonElement = jsonParser.parse(message);
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-
-        Action action = Action.valueOf(jsonObject.get("action").getAsString());
-        String arguments = jsonObject.get("arguments").getAsString();
-
-        OnMessageHandler handler = onMessageHandlerHashMap.get(action);
-        handler.handle(session, arguments);
+        try{
+            Message msg = getMessage(message);
+            OnMessageHandler handler = onMessageHandlerHashMap.get(msg.action);
+            handler.handle(session, msg.arguments);
+        }catch (MalformedMessageException e){
+            //TODO
+        }
     }
 
     public void registerOnConnect(OnConnectHandler handler) {
-        if(handler != null){
-            onConnectHandlers.add(handler);
-        }
+        onConnectHandlers.add(Objects.requireNonNull(handler));
     }
 
     public void registerOnClose(OnCloseHandler handler) {
-        if(handler != null){
-            onCloseHandlers.add(handler);
-        }
+        onCloseHandlers.add(Objects.requireNonNull(handler));
     }
 
     public void registerOnMessage(Action action, OnMessageHandler handler) {
-        if(handler != null){
-            onMessageHandlerHashMap.put(action, handler);
+        onMessageHandlerHashMap.put(Objects.requireNonNull(action), Objects.requireNonNull(handler));
+    }
+
+    private Message getMessage(String message) throws MalformedMessageException{
+        try {
+            JsonElement jsonElement = jsonParser.parse(message);
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+            String actionStr = jsonObject.get("action").getAsString();
+            String arguments = jsonObject.get("arguments").getAsString();
+            Action action = Action.valueOf(actionStr);
+            return new Message(action, arguments);
+        }catch (Exception e){
+            throw new MalformedMessageException(message);
+        }
+    }
+
+    private class Message{
+
+        private final Action action;
+
+        private final String arguments;
+
+        public Message(Action action, String arguments) {
+            this.action = action;
+            this.arguments = arguments;
         }
     }
 }
