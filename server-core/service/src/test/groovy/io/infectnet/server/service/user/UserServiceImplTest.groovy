@@ -17,19 +17,19 @@ import java.time.LocalDateTime
 
 class UserServiceImplTest extends Specification {
 
-  def final INVALID_TOKEN_MESSAGE = "InvalidToken"
+  def final INVALID_TOKEN_MESSAGE = "Invalid token"
 
   def final TOKEN_TARGET = "token"
 
-  def final INVALID_PASSWORD_MESSAGE = "InvalidPassword"
+  def final INVALID_PASSWORD_MESSAGE = "Invalid password"
 
   def final PASSWORD_TARGET = "password"
 
-  def final INVALID_USERNAME_MESSAGE = "InvalidUserName"
+  def final INVALID_USERNAME_MESSAGE = "Invalid username"
 
   def final USERNAME_TARGET = "username"
 
-  def final INVALID_EMAIL_MESSAGE = "InvalidEmail"
+  def final INVALID_EMAIL_MESSAGE = "Invalid email"
 
   def final EMAIL_TARGET = "email"
 
