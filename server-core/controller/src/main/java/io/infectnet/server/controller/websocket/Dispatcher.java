@@ -22,14 +22,14 @@ public class Dispatcher {
 
     private final List<OnCloseHandler> onCloseHandlers;
 
-    private final Map<Action, OnMessageHandler> onMessageHandlerHashMap;
+    private final Map<Action, OnMessageHandler> onMessageHandlerMap;
 
     private final JsonParser jsonParser;
 
     public Dispatcher(JsonParser jsonParser) {
         this.onConnectHandlers = new ArrayList();
         this.onCloseHandlers = new ArrayList();
-        this.onMessageHandlerHashMap = new EnumMap(Action.class);
+        this.onMessageHandlerMap = new EnumMap(Action.class);
         this.jsonParser = jsonParser;
     }
 
@@ -51,7 +51,7 @@ public class Dispatcher {
     public void onMessage(Session session, String message) {
         try{
             Message msg = getMessage(message);
-            OnMessageHandler handler = onMessageHandlerHashMap.get(msg.action);
+            OnMessageHandler handler = onMessageHandlerMap.get(msg.action);
             handler.handle(session, msg.arguments);
         }catch (MalformedMessageException e){
             //TODO
@@ -67,7 +67,7 @@ public class Dispatcher {
     }
 
     public void registerOnMessage(Action action, OnMessageHandler handler) {
-        onMessageHandlerHashMap.put(Objects.requireNonNull(action), Objects.requireNonNull(handler));
+        onMessageHandlerMap.put(Objects.requireNonNull(action), Objects.requireNonNull(handler));
     }
 
     private Message getMessage(String message) throws MalformedMessageException{
