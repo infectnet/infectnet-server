@@ -42,7 +42,12 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
         }
     }
 
-    Optional<UserDTO> verifyAuthentication(Session session, SocketMessage socketMessage){
-        return Optional.empty();
+    Optional<UserDTO> verifyAuthentication(Session session){
+            for(Map.Entry<UserDTO, Session> entry: sessionMap.entrySet()){
+                if(entry.getValue().equals(session)){
+                    return Optional.of(entry.getKey());
+                }
+            }
+            return Optional.empty();
     }
 }
