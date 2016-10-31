@@ -3,6 +3,7 @@ package io.infectnet.server.controller.websocket;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.infectnet.server.controller.exception.AuthenticationFailedException;
 import io.infectnet.server.controller.exception.MalformedMessageException;
 import io.infectnet.server.controller.websocket.handler.OnCloseHandler;
 import io.infectnet.server.controller.websocket.handler.OnConnectHandler;
@@ -26,11 +27,14 @@ public class Dispatcher {
 
     private final JsonParser jsonParser;
 
-    public Dispatcher(JsonParser jsonParser) {
+    private final SessionAuthenticatorImpl sessionAuthenticator;
+
+    public Dispatcher(JsonParser jsonParser, SessionAuthenticatorImpl sessionAuthenticator) {
         this.onConnectHandlers = new ArrayList();
         this.onCloseHandlers = new ArrayList();
         this.onMessageHandlerMap = new EnumMap(Action.class);
         this.jsonParser = jsonParser;
+        this.sessionAuthenticator = sessionAuthenticator;
     }
 
     @OnWebSocketConnect
@@ -50,11 +54,17 @@ public class Dispatcher {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
         try{
-            SocketMessage msg = getMessage(message);
-            OnMessageHandler handler = onMessageHandlerMap.get(msg.getAction());
-            handler.handle(session, msg.getArguments());
+            SocketMessage socketMessage = getMessage(message);
+            Action action = socketMessage.getAction();
+            if(action == Action.AUTH){
+                sessionAuthenticator.authenticate(session, socketMessage);
+            }
+            OnMessageHandler handler = onMessageHandlerMap.get(action);
+            handler.handle(session, socketMessage.getArguments());
         }catch (MalformedMessageException e){
-            //TODO
+            //TODO exception handle
+        } catch (AuthenticationFailedException e) {
+            //TODO exception handle
         }
     }
 
