@@ -50,9 +50,9 @@ public class Dispatcher {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
         try{
-            Message msg = getMessage(message);
-            OnMessageHandler handler = onMessageHandlerMap.get(msg.action);
-            handler.handle(session, msg.arguments);
+            SocketMessage msg = getMessage(message);
+            OnMessageHandler handler = onMessageHandlerMap.get(msg.getAction());
+            handler.handle(session, msg.getArguments());
         }catch (MalformedMessageException e){
             //TODO
         }
@@ -70,7 +70,7 @@ public class Dispatcher {
         onMessageHandlerMap.put(Objects.requireNonNull(action), Objects.requireNonNull(handler));
     }
 
-    private Message getMessage(String message) throws MalformedMessageException{
+    private SocketMessage getMessage(String message) throws MalformedMessageException{
         try {
             JsonElement jsonElement = jsonParser.parse(message);
             JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -78,21 +78,9 @@ public class Dispatcher {
             String actionStr = jsonObject.get("action").getAsString();
             String arguments = jsonObject.get("arguments").getAsString();
             Action action = Action.valueOf(actionStr);
-            return new Message(action, arguments);
+            return new SocketMessage(action, arguments);
         }catch (Exception e){
             throw new MalformedMessageException(message, e);
-        }
-    }
-
-    private class Message{
-
-        private final Action action;
-
-        private final String arguments;
-
-        public Message(Action action, String arguments) {
-            this.action = action;
-            this.arguments = arguments;
         }
     }
 }
