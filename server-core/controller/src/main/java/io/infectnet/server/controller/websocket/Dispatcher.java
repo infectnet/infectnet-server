@@ -58,9 +58,10 @@ public class Dispatcher {
             Action action = socketMessage.getAction();
             if(action == Action.AUTH){
                 sessionAuthenticator.authenticate(session, socketMessage);
+            }else {
+                OnMessageHandler handler = onMessageHandlerMap.get(action);
+                handler.handle(session, socketMessage.getArguments());
             }
-            OnMessageHandler handler = onMessageHandlerMap.get(action);
-            handler.handle(session, socketMessage.getArguments());
         }catch (MalformedMessageException e){
             //TODO exception handle
         } catch (AuthenticationFailedException e) {

@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionAuthenticatorImpl implements SessionAuthenticator {
 
-    private Map<Session, UserDTO> sessionMap;
+    private Map<UserDTO, Session> sessionMap;
 
     private final UserService userService;
 
@@ -26,7 +26,7 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
         this.jsonParser = jsonParser;
     }
 
-    boolean authenticate(Session session, SocketMessage socketMessage) throws AuthenticationFailedException {
+    void authenticate(Session session, SocketMessage socketMessage) throws AuthenticationFailedException {
         try{
             JsonElement jsonElement = jsonParser.parse(socketMessage.getArguments());
             JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -35,9 +35,8 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
             Optional<UserDTO> userOpt = userService.login(username, password);
             if(userOpt.isPresent()){
                 UserDTO user = userOpt.get();
-                sessionMap.put(session,user);
+                sessionMap.put(user,session);
             }
-            return true;
         }catch (Exception e){
             throw new AuthenticationFailedException("Authentication failed",e);
         }
