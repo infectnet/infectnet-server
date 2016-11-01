@@ -1,8 +1,9 @@
 package io.infectnet.server.controller.websocket.handler;
 
-import org.eclipse.jetty.websocket.api.Session;
+import io.infectnet.server.controller.websocket.SocketMessage;
+import io.infectnet.server.service.user.UserDTO;
 
 @FunctionalInterface
 public interface OnMessageHandler {
-    void handle(Session session, String arguments);
+    void handle(UserDTO user, SocketMessage socketMessage);
 }

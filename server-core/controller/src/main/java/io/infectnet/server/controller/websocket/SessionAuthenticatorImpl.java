@@ -3,7 +3,8 @@ package io.infectnet.server.controller.websocket;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.infectnet.server.controller.exception.AuthenticationFailedException;
+import io.infectnet.server.controller.websocket.exception.AuthenticationFailedException;
+import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
 import io.infectnet.server.service.user.UserDTO;
 import io.infectnet.server.service.user.UserService;
 import org.eclipse.jetty.websocket.api.Session;
@@ -21,28 +22,34 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
     private final JsonParser jsonParser;
 
     public SessionAuthenticatorImpl(UserService userService, JsonParser jsonParser) {
-        sessionMap = new ConcurrentHashMap();
+        sessionMap = new ConcurrentHashMap<>();
         this.userService = userService;
         this.jsonParser = jsonParser;
     }
 
-    void authenticate(Session session, SocketMessage socketMessage) throws AuthenticationFailedException {
-        try{
+    public void authenticate(Session session, SocketMessage socketMessage) throws AuthenticationFailedException, MalformedMessageException {
+        String username = null;
+        String password = null;
+        try {
             JsonElement jsonElement = jsonParser.parse(socketMessage.getArguments());
             JsonObject jsonObject = jsonElement.getAsJsonObject();
-            String username = jsonObject.get("username").getAsString();
-            String password = jsonObject.get("password").getAsString();
+            username = jsonObject.get("username").getAsString();
+            password = jsonObject.get("password").getAsString();
+        }catch (Exception e) {
+            throw new MalformedMessageException("Malformed message", e);
+        }
+        try{
             Optional<UserDTO> userOpt = userService.login(username, password);
             if(userOpt.isPresent()){
                 UserDTO user = userOpt.get();
                 sessionMap.put(user,session);
             }
         }catch (Exception e){
-            throw new AuthenticationFailedException("Authentication failed",e);
+            throw new AuthenticationFailedException(username,e);
         }
     }
 
-    Optional<UserDTO> verifyAuthentication(Session session){
+    public Optional<UserDTO> verifyAuthentication(Session session){
             for(Map.Entry<UserDTO, Session> entry: sessionMap.entrySet()){
                 if(entry.getValue().equals(session)){
                     return Optional.of(entry.getKey());
