@@ -36,7 +36,7 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
             username = jsonObject.get("username").getAsString();
             password = jsonObject.get("password").getAsString();
         }catch (Exception e) {
-            throw new MalformedMessageException("Malformed message", e);
+            throw new MalformedMessageException(e);
         }
         try{
             Optional<UserDTO> userOpt = userService.login(username, password);

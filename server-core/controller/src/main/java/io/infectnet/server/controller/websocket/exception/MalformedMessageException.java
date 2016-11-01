@@ -5,11 +5,10 @@ import io.infectnet.server.controller.error.ErrorConvertibleException;
 
 public class MalformedMessageException extends ErrorConvertibleException {
 
-    private final String code;
+    private final String code = "Malformed message";
 
-    public MalformedMessageException(String message, Throwable cause) {
+    public MalformedMessageException(Throwable cause) {
         super(cause);
-        code = message;
     }
 
     @Override
