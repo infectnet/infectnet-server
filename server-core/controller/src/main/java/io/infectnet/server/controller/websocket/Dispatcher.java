@@ -56,22 +56,19 @@ public class Dispatcher {
     public void onMessage(Session session, String message) {
         try{
             SocketMessage socketMessage = getMessage(message);
-            Action action = socketMessage.getAction();
-            if(action == Action.AUTH){
-                sessionAuthenticator.authenticate(session, socketMessage);
-            }else {
-                OnMessageHandler handler = onMessageHandlerMap.get(action);
-                Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);
-                if(user.isPresent()){
-                    handler.handle(user.get(), socketMessage);
-                }
-            }
+
+            dispatch(session, socketMessage);
         }catch (MalformedMessageException e){
-            //TODO exception handle
-        } catch (AuthenticationFailedException e) {
             //TODO exception handle
         }
     }
+
+    private void dispatch(Session session, SocketMessage socketMessage) throws MalformedMessageException {
+        OnMessageHandler handler = onMessageHandlerMap.get(socketMessage.getAction());
+
+        handler.handle(session, socketMessage);
+    }
+
 
     public void registerOnConnect(OnConnectHandler handler) {
         onConnectHandlers.add(Objects.requireNonNull(handler));

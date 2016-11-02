@@ -29,7 +29,7 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
 
-@Module(includes = ServiceModule.class)
+@Module(includes = { ServiceModule.class, WebSocketModule.class })
 public class ControllerModule {
 
   @Provides
@@ -76,24 +76,6 @@ public class ControllerModule {
   public static RestController providesAuthenticationController(
       AuthenticationService authenticationService, Gson gson) {
     return new AuthenticationController(authenticationService, gson);
-  }
-
-  @Provides
-  @Singleton
-  public static JsonParser providesJsonParser(){
-    return new JsonParser();
-  }
-
-  @Provides
-  @Singleton
-  public static SessionAuthenticator providesSessionAuthenticator(UserService userService, JsonParser jsonParser){
-    return new SessionAuthenticatorImpl(userService, jsonParser);
-  }
-
-  @Provides
-  @Singleton
-  public static Dispatcher providesDispatcher(JsonParser jsonParser, SessionAuthenticator sessionAuthenticator){
-    return new Dispatcher(jsonParser, sessionAuthenticator);
   }
 
   @Provides

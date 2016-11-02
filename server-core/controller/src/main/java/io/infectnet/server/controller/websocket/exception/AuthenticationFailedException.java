@@ -9,8 +9,7 @@ public class AuthenticationFailedException extends ErrorConvertibleException{
 
     private final String username;
 
-    public AuthenticationFailedException (String username, Throwable cause){
-        super(cause);
+    public AuthenticationFailedException (String username){
         this.username = username;
     }
 

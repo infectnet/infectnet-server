@@ -19,33 +19,19 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
 
     private final UserService userService;
 
-    private final JsonParser jsonParser;
-
-    public SessionAuthenticatorImpl(UserService userService, JsonParser jsonParser) {
+    public SessionAuthenticatorImpl(UserService userService) {
         sessionMap = new ConcurrentHashMap<>();
         this.userService = userService;
-        this.jsonParser = jsonParser;
     }
 
-    public void authenticate(Session session, SocketMessage socketMessage) throws AuthenticationFailedException, MalformedMessageException {
-        String username = null;
-        String password = null;
-        try {
-            JsonElement jsonElement = jsonParser.parse(socketMessage.getArguments());
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            username = jsonObject.get("username").getAsString();
-            password = jsonObject.get("password").getAsString();
-        }catch (Exception e) {
-            throw new MalformedMessageException(e);
-        }
-        try{
-            Optional<UserDTO> userOpt = userService.login(username, password);
-            if(userOpt.isPresent()){
-                UserDTO user = userOpt.get();
-                sessionMap.put(user,session);
-            }
-        }catch (Exception e){
-            throw new AuthenticationFailedException(username,e);
+    public void authenticate(Session session, String username, String password) throws AuthenticationFailedException {
+        Optional<UserDTO> userOpt = userService.login(username, password);
+
+        if(userOpt.isPresent()){
+            UserDTO user = userOpt.get();
+            sessionMap.put(user,session);
+        }else{
+            throw new AuthenticationFailedException(username);
         }
     }
 
