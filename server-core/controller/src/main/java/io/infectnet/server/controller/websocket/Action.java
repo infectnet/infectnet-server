@@ -7,5 +7,6 @@ package io.infectnet.server.controller.websocket;
 public enum Action {
     AUTH,
     SUBSCRIBE,
-    NEW_CODE;
+    NEW_CODE,
+    ERROR;
 }

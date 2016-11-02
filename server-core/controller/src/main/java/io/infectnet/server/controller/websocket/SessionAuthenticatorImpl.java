@@ -1,10 +1,6 @@
 package io.infectnet.server.controller.websocket;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.infectnet.server.controller.websocket.exception.AuthenticationFailedException;
-import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
 import io.infectnet.server.service.user.UserDTO;
 import io.infectnet.server.service.user.UserService;
 import org.eclipse.jetty.websocket.api.Session;
@@ -24,6 +20,7 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
         this.userService = userService;
     }
 
+    @Override
     public void authenticate(Session session, String username, String password) throws AuthenticationFailedException {
         Optional<UserDTO> userOpt = userService.login(username, password);
 
@@ -35,6 +32,7 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
         }
     }
 
+    @Override
     public Optional<UserDTO> verifyAuthentication(Session session){
             for(Map.Entry<UserDTO, Session> entry: sessionMap.entrySet()){
                 if(entry.getValue().equals(session)){
