@@ -24,8 +24,14 @@ public class WebSocketModule {
 
     @Provides
     @Singleton
-    public static AuthenticationController providesAuthenticationController(SessionAuthenticator sessionAuthenticator, JsonParser jsonParser){
-        return new AuthenticationController(sessionAuthenticator,jsonParser);
+    public static AuthenticationController providesAuthenticationController(SessionAuthenticator sessionAuthenticator, JsonParser jsonParser, MessageTransmitter messageTransmitter){
+        return new AuthenticationController(sessionAuthenticator,jsonParser, messageTransmitter);
+    }
+
+    @Provides
+    @Singleton
+    public static MessageTransmitter providesMessageTransmitter(){
+        return new MessageTransmitterImpl();
     }
 
     @Provides

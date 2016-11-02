@@ -8,18 +8,23 @@ import io.infectnet.server.controller.websocket.exception.AuthenticationFailedEx
 import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.io.IOException;
+
 public class AuthenticationController {
 
     private final SessionAuthenticator sessionAuthenticator;
 
     private final JsonParser jsonParser;
 
-    public AuthenticationController(SessionAuthenticator sessionAuthenticator, JsonParser jsonParser) {
+    private final MessageTransmitter messageTransmitter;
+
+    public AuthenticationController(SessionAuthenticator sessionAuthenticator, JsonParser jsonParser, MessageTransmitter messageTransmitter) {
         this.sessionAuthenticator = sessionAuthenticator;
         this.jsonParser = jsonParser;
+        this.messageTransmitter = messageTransmitter;
     }
 
-    public void handleAuthentication(Session session, SocketMessage socketMessage) throws MalformedMessageException {
+    public void handleAuthentication(Session session, SocketMessage socketMessage) throws MalformedMessageException, IOException {
         String username = null;
         String password = null;
         try {
@@ -34,7 +39,7 @@ public class AuthenticationController {
         try {
             sessionAuthenticator.authenticate(session, username, password);
         } catch (AuthenticationFailedException e) {
-            //TODO send back error
+           messageTransmitter.transmitString(session, WebSocketUtils.convertError(e));
         }
     }
 }

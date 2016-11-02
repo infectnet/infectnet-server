@@ -14,11 +14,16 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.*;
 
 @WebSocket
 public class Dispatcher {
+
+    private static final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
     private final List<OnConnectHandler> onConnectHandlers;
 
@@ -66,9 +71,12 @@ public class Dispatcher {
     private void dispatch(Session session, SocketMessage socketMessage) throws MalformedMessageException {
         OnMessageHandler handler = onMessageHandlerMap.get(socketMessage.getAction());
 
-        handler.handle(session, socketMessage);
+        try {
+            handler.handle(session, socketMessage);
+        } catch (IOException e) {
+            logger.warn(e.toString());
+        }
     }
-
 
     public void registerOnConnect(OnConnectHandler handler) {
         onConnectHandlers.add(Objects.requireNonNull(handler));

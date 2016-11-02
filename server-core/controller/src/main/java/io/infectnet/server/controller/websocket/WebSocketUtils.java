@@ -16,7 +16,7 @@ public final class WebSocketUtils {
     public static String convertError(ErrorConvertibleException exception){
         JsonObject obj = new JsonObject();
         obj.addProperty("action",Action.ERROR.toString());
-        obj.add("arguments", gson.toJsonTree(exception));
+        obj.add("arguments", gson.toJsonTree(exception.toError()));
         return obj.toString();
     }
 }
