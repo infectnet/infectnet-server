@@ -1,7 +1,6 @@
-package io.infectnet.server.controller.websocket;
+package io.infectnet.server.controller.websocket.authentication;
 
 import io.infectnet.server.controller.websocket.exception.AuthenticationFailedException;
-import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
 import io.infectnet.server.service.user.UserDTO;
 import org.eclipse.jetty.websocket.api.Session;
 

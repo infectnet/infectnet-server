@@ -1,4 +1,4 @@
-package io.infectnet.server.controller.websocket;
+package io.infectnet.server.controller.websocket.messaging;
 
 import org.eclipse.jetty.websocket.api.Session;
 

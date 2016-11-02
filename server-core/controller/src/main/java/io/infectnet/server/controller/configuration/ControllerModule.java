@@ -3,7 +3,6 @@ package io.infectnet.server.controller.configuration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import com.google.gson.JsonParser;
 import io.infectnet.server.controller.RestController;
 import io.infectnet.server.controller.admin.AuthenticationController;
 import io.infectnet.server.controller.exception.ExceptionMapperController;
@@ -14,9 +13,6 @@ import io.infectnet.server.controller.user.RegistrationDetails;
 import io.infectnet.server.controller.user.UserDTOSerializer;
 import io.infectnet.server.controller.user.UserListingController;
 import io.infectnet.server.controller.utils.json.DateTimeJsonSerializer;
-import io.infectnet.server.controller.websocket.Dispatcher;
-import io.infectnet.server.controller.websocket.SessionAuthenticator;
-import io.infectnet.server.controller.websocket.SessionAuthenticatorImpl;
 import io.infectnet.server.service.admin.AuthenticationService;
 import io.infectnet.server.service.configuration.ServiceModule;
 import io.infectnet.server.service.token.TokenService;

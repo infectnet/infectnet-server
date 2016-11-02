@@ -1,6 +1,6 @@
 package io.infectnet.server.controller.websocket.handler;
 
-import io.infectnet.server.controller.websocket.SocketMessage;
+import io.infectnet.server.controller.websocket.messaging.SocketMessage;
 import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
 import org.eclipse.jetty.websocket.api.Session;
 
