@@ -23,12 +23,17 @@ class ApplicationStarter {
 
   private final ExceptionMapperController exceptionMapperController;
 
+  private final Dispatcher dispatcher;
+
   @Inject
   ApplicationStarter(Set<RestController> restControllers,
-                     ExceptionMapperController exceptionMapperController) {
+                     ExceptionMapperController exceptionMapperController,
+                     Dispatcher dispatcher) {
     this.restControllers = restControllers;
 
     this.exceptionMapperController = exceptionMapperController;
+
+    this.dispatcher = dispatcher;
   }
 
   void start() {
@@ -43,7 +48,7 @@ class ApplicationStarter {
     ConfigurationHolder.INSTANCE.setActiveConfiguration(configuration.get());
 
     // Must be defined before regular HTTP routes!
-    webSocket("/ws", Dispatcher.class);
+    webSocket("/ws", dispatcher);
 
     // CORS only should be enabled after WebSocket initialization
     CorsSupporter.enableCORS();

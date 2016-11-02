@@ -95,7 +95,7 @@ public class Dispatcher {
             Action action = Action.valueOf(actionStr);
             return new SocketMessage(action, arguments);
         }catch (Exception e){
-            throw new MalformedMessageException(message, e);
+            throw new MalformedMessageException(e);
         }
     }
 }
