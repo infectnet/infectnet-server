@@ -4,5 +4,5 @@ import org.eclipse.jetty.websocket.api.Session;
 
 @FunctionalInterface
 public interface OnConnectHandler {
-    void handle(Session session);
+  void handle(Session session);
 }

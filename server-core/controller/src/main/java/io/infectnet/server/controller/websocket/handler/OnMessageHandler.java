@@ -7,5 +7,5 @@ import java.io.IOException;
 
 @FunctionalInterface
 public interface OnMessageHandler {
-    void handle(Session session, String arguments) throws MalformedMessageException, IOException;
+  void handle(Session session, String arguments) throws MalformedMessageException, IOException;
 }

@@ -6,7 +6,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import java.io.IOException;
 
 public interface MessageTransmitter {
-    <T> void transmitString(Session session, SocketMessage<T> socketMessage) throws IOException;
+  <T> void transmitString(Session session, SocketMessage<T> socketMessage) throws IOException;
 
-    void transmitException(Session session, ErrorConvertibleException exception) throws IOException;
+  void transmitException(Session session, ErrorConvertibleException exception) throws IOException;
 }
