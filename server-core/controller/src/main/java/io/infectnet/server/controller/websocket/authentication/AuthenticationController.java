@@ -3,10 +3,12 @@ package io.infectnet.server.controller.websocket.authentication;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
-import io.infectnet.server.controller.websocket.messaging.MessageFactory;
+import io.infectnet.server.controller.websocket.messaging.Action;
 import io.infectnet.server.controller.websocket.messaging.MessageTransmitter;
 import io.infectnet.server.controller.websocket.exception.AuthenticationFailedException;
 import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
+import io.infectnet.server.controller.websocket.messaging.SocketMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
@@ -19,15 +21,11 @@ public class AuthenticationController {
 
     private final MessageTransmitter messageTransmitter;
 
-    private final MessageFactory messageFactory;
-
     public AuthenticationController(SessionAuthenticator sessionAuthenticator,
-                                    Gson gson, MessageTransmitter messageTransmitter,
-                                    MessageFactory messageFactory) {
+                                    Gson gson, MessageTransmitter messageTransmitter) {
         this.sessionAuthenticator = sessionAuthenticator;
         this.gson = gson;
         this.messageTransmitter = messageTransmitter;
-        this.messageFactory = messageFactory;
     }
 
     public void handleAuthentication(Session session, String arguments) throws MalformedMessageException, IOException {
@@ -40,10 +38,20 @@ public class AuthenticationController {
         }
 
         try {
-            sessionAuthenticator.authenticate(session, credentials.username, credentials.password);
+            authenticate(session, credentials);
         } catch (AuthenticationFailedException e) {
            messageTransmitter.transmitException(session, e);
         }
+    }
+
+    private void authenticate(Session session, Credentials credentials)
+        throws AuthenticationFailedException, IOException {
+        sessionAuthenticator.authenticate(session, credentials.username, credentials.password);
+
+        SocketMessage<String> message =
+            new SocketMessage<>(Action.OK, StringUtils.EMPTY, String.class);
+
+        messageTransmitter.transmitString(session, message);
     }
 
     private static class Credentials {

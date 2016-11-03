@@ -3,11 +3,15 @@ package io.infectnet.server.controller.websocket;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import io.infectnet.server.controller.error.ErrorConvertibleException;
 import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
+import io.infectnet.server.controller.websocket.exception.UnsupportedActionException;
 import io.infectnet.server.controller.websocket.handler.OnCloseHandler;
 import io.infectnet.server.controller.websocket.handler.OnConnectHandler;
 import io.infectnet.server.controller.websocket.handler.OnMessageHandler;
 import io.infectnet.server.controller.websocket.messaging.Action;
+import io.infectnet.server.controller.websocket.messaging.MessageTransmitter;
 import io.infectnet.server.controller.websocket.messaging.SocketMessage;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -33,11 +37,14 @@ public class Dispatcher {
 
     private final JsonParser jsonParser;
 
-    public Dispatcher(JsonParser jsonParser) {
+    private final MessageTransmitter messageTransmitter;
+
+    public Dispatcher(JsonParser jsonParser, MessageTransmitter messageTransmitter) {
         this.onConnectHandlers = new ArrayList<>();
         this.onCloseHandlers = new ArrayList<>();
         this.onMessageHandlerMap = new EnumMap<>(Action.class);
         this.jsonParser = jsonParser;
+        this.messageTransmitter = messageTransmitter;
     }
 
     @OnWebSocketConnect
@@ -60,12 +67,25 @@ public class Dispatcher {
             RawMessage rawMessage = getMessage(message);
 
             dispatch(session, rawMessage);
-        } catch (MalformedMessageException e){
-            //TODO exception handle
+        } catch (MalformedMessageException | UnsupportedActionException e){
+            reportDispatcherException(session, e);
         }
     }
 
-    private void dispatch(Session session, RawMessage rawMessage) throws MalformedMessageException {
+    private void reportDispatcherException(Session session, ErrorConvertibleException exception) {
+        try {
+            messageTransmitter.transmitException(session, exception);
+        } catch (IOException e) {
+            logger.warn(e.toString());
+        }
+    }
+
+    private void dispatch(Session session, RawMessage rawMessage)
+        throws MalformedMessageException, UnsupportedActionException {
+        if (!onMessageHandlerMap.containsKey(rawMessage.action)) {
+            throw new UnsupportedActionException(rawMessage.action);
+        }
+
         OnMessageHandler handler = onMessageHandlerMap.get(rawMessage.action);
 
         try {

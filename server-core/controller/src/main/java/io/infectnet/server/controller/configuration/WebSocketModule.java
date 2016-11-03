@@ -34,9 +34,8 @@ public class WebSocketModule {
 
     @Provides
     @Singleton
-    public static AuthenticationController providesAuthenticationController(SessionAuthenticator sessionAuthenticator, Gson gson, MessageTransmitter messageTransmitter, MessageFactory messageFactory){
-        return new AuthenticationController(sessionAuthenticator, gson, messageTransmitter,
-            messageFactory);
+    public static AuthenticationController providesAuthenticationController(SessionAuthenticator sessionAuthenticator, Gson gson, MessageTransmitter messageTransmitter){
+        return new AuthenticationController(sessionAuthenticator, gson, messageTransmitter);
     }
 
     @Provides
@@ -53,8 +52,8 @@ public class WebSocketModule {
 
     @Provides
     @Singleton
-    public static Dispatcher providesDispatcher(JsonParser jsonParser, AuthenticationController authenticationController){
-        Dispatcher dispatcher = new Dispatcher(jsonParser);
+    public static Dispatcher providesDispatcher(JsonParser jsonParser, MessageTransmitter messageTransmitter, AuthenticationController authenticationController){
+        Dispatcher dispatcher = new Dispatcher(jsonParser, messageTransmitter);
         dispatcher.registerOnMessage(Action.AUTH, authenticationController::handleAuthentication);
         return dispatcher;
     }

@@ -41,6 +41,7 @@ public class SocketMessage<T> {
 
             obj.addProperty("action", src.action.toString());
 
+            @SuppressWarnings("unchecked")
             JsonElement arguments =
                 context.serialize(src.arguments, TypeToken.get(src.argumentClass).getType());
 

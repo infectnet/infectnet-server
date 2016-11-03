@@ -8,5 +8,6 @@ public enum Action {
   AUTH,
   SUBSCRIBE,
   NEW_CODE,
-  ERROR
+  ERROR,
+  OK
 }

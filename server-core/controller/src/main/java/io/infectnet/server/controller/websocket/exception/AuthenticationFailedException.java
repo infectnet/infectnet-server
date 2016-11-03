@@ -17,4 +17,8 @@ public class AuthenticationFailedException extends ErrorConvertibleException{
     public Error toError() {
         return new Error(code,username);
     }
+
+    public String getUsername() {
+        return username;
+    }
 }
