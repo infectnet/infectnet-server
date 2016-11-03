@@ -6,6 +6,7 @@ import io.infectnet.server.service.user.UserService;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +24,11 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
   @Override
   public void authenticate(Session session, String username, String password)
       throws AuthenticationFailedException {
-    Optional<UserDTO> userOpt = userService.login(username, password);
+    Objects.requireNonNull(session);
+
+    Optional<UserDTO> userOpt = userService.login(
+        Objects.requireNonNull(username),
+        Objects.requireNonNull(password));
 
     if (userOpt.isPresent()) {
       UserDTO user = userOpt.get();
@@ -35,6 +40,8 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
 
   @Override
   public Optional<UserDTO> verifyAuthentication(Session session) {
+    Objects.requireNonNull(session);
+
     for (Map.Entry<UserDTO, Session> entry : sessionMap.entrySet()) {
       if (entry.getValue().equals(session)) {
         return Optional.of(entry.getKey());

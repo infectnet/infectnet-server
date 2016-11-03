@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class AuthenticationController {
 
@@ -34,7 +35,10 @@ public class AuthenticationController {
 
     try {
       credentials = gson.fromJson(arguments, Credentials.class);
-    } catch (JsonParseException e) {
+
+      Objects.requireNonNull(credentials.username);
+      Objects.requireNonNull(credentials.password);
+    } catch (JsonParseException | NullPointerException e) {
       throw new MalformedMessageException(e);
     }
 
