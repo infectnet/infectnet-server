@@ -1,7 +1,6 @@
 package io.infectnet.server.controller.configuration;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import dagger.Module;
 import dagger.Provides;
