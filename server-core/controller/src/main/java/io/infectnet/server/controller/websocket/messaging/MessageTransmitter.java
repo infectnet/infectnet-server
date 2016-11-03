@@ -1,12 +1,12 @@
 package io.infectnet.server.controller.websocket.messaging;
 
+import io.infectnet.server.controller.error.ErrorConvertibleException;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public interface MessageTransmitter {
-    void transmitString(Session session, String message) throws IOException;
+    <T> void transmitString(Session session, SocketMessage<T> socketMessage) throws IOException;
 
-    void transmitBytes(Session session, ByteBuffer bytes) throws IOException;
+    void transmitException(Session session, ErrorConvertibleException exception) throws IOException;
 }

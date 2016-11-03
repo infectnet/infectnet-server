@@ -1,34 +1,52 @@
 package io.infectnet.server.controller.websocket.messaging;
 
-import io.infectnet.server.controller.websocket.Dispatcher;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 
-public class SocketMessage {
+import java.lang.reflect.Type;
 
+public class SocketMessage<T> {
     private final Action action;
 
-    private final String arguments;
+    private final T arguments;
 
-    public SocketMessage(Action action, String arguments) {
+    private final Class<T> argumentClass;
+
+    public SocketMessage(Action action, T arguments, Class<T> argumentClass) {
         this.action = action;
         this.arguments = arguments;
+        this.argumentClass = argumentClass;
     }
 
     public Action getAction() {
         return action;
     }
 
-    public String getArguments() {
+    public T getArguments() {
         return arguments;
     }
 
-    /**
-     * An enum for the different type of actions the User can make, which will go through the WebSocket,
-     * and the {@link Dispatcher}
-     */
-    public enum Action {
-        AUTH,
-        SUBSCRIBE,
-        NEW_CODE,
-        ERROR
+    public Class<T> getArgumentClass() {
+        return argumentClass;
+    }
+
+    public static class Serializer implements JsonSerializer<SocketMessage> {
+        @Override
+        public JsonElement serialize(SocketMessage src, Type typeOfSrc,
+                                     JsonSerializationContext context) {
+            JsonObject obj = new JsonObject();
+
+            obj.addProperty("action", src.action.toString());
+
+            JsonElement arguments =
+                context.serialize(src.arguments, TypeToken.get(src.argumentClass).getType());
+
+            obj.add("arguments", arguments);
+
+            return obj;
+        }
     }
 }

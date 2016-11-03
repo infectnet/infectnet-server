@@ -1,6 +1,5 @@
 package io.infectnet.server.controller.websocket.authentication;
 
-import io.infectnet.server.controller.websocket.authentication.SessionAuthenticator;
 import io.infectnet.server.controller.websocket.exception.AuthenticationFailedException;
 import io.infectnet.server.service.user.UserDTO;
 import io.infectnet.server.service.user.UserService;
