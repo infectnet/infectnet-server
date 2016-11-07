@@ -1,4 +1,4 @@
-package io.infectnet.server.engine.dsl.script;
+package io.infectnet.server.engine.script.generation;
 
 import groovy.lang.Script;
 

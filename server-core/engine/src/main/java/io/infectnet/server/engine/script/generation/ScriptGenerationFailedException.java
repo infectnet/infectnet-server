@@ -1,4 +1,4 @@
-package io.infectnet.server.engine.dsl.script;
+package io.infectnet.server.engine.script.generation;
 
 public class ScriptGenerationFailedException extends Exception {
   public ScriptGenerationFailedException(Throwable cause) {

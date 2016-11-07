@@ -1,6 +1,6 @@
 package io.infectnet.server.engine.configuration;
 
-import io.infectnet.server.engine.dsl.script.ScriptModule;
+import io.infectnet.server.engine.script.ScriptModule;
 
 import dagger.Module;
 

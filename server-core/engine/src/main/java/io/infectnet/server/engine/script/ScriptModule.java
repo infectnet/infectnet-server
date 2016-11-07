@@ -1,5 +1,7 @@
-package io.infectnet.server.engine.dsl.script;
+package io.infectnet.server.engine.script;
 
+import io.infectnet.server.engine.script.generation.ScriptGenerator;
+import io.infectnet.server.engine.script.generation.ScriptGeneratorImpl;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 
 import java.util.Set;
