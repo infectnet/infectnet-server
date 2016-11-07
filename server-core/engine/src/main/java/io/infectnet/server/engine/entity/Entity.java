@@ -9,6 +9,8 @@ public class Entity {
 
   private TypeComponent typeComponent;
 
+  private ViewComponent viewComponent;
+
   private Entity() {
     /**
      * Cannot be constructed from outside, just using the Builder.
@@ -23,6 +25,10 @@ public class Entity {
     return typeComponent;
   }
 
+  public ViewComponent getViewComponent() {
+    return viewComponent;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -34,6 +40,8 @@ public class Entity {
     private HealthComponent healthComponent;
 
     private TypeComponent typeComponent;
+
+    private ViewComponent viewComponent;
 
     public Builder healthComponent(HealthComponent component) {
       this.healthComponent = component;
@@ -47,12 +55,20 @@ public class Entity {
       return this;
     }
 
+    public Builder viewComponent(ViewComponent component) {
+      this.viewComponent = component;
+
+      return this;
+    }
+
     public Entity build() {
       Entity entity = new Entity();
 
       entity.healthComponent = this.healthComponent;
 
       entity.typeComponent = this.typeComponent;
+
+      entity.viewComponent = this.viewComponent;
 
       return entity;
     }
