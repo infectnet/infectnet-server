@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.util;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -8,9 +9,15 @@ import java.util.Queue;
 import java.util.function.Consumer;
 
 /**
- * A queue that allows listeners to be registered. These listeners are called whenever
- * processing an element with the matching {@link Class}. Only one listener is allowed to be
- * registered per class.
+ * A queue that allows listeners to be registered. {@code ListenableQueue} is something like a
+ * job queue in the sense that it does not allow elements to be removed. Instead elements get
+ * processed by the registered listeners. Listeners can be registered in conjunction with a
+ * {@link Class} they listen to. Whenever an element gets processed, the listener registered
+ * with the appropriate {@code Class} will be called to process the element.
+ * <p>
+ *   <b>Note</b> that listeners are allowed to add elements as they are called, but this
+ *   must be used with exceptional care to avoid feedback loops.
+ * </p>
  * @param <E> the type of the elements to be stored in the queue
  */
 public class ListenableQueue<E> {
@@ -57,6 +64,15 @@ public class ListenableQueue<E> {
    */
   public void add(E element) {
     storage.add(Objects.requireNonNull(element));
+  }
+
+  /**
+   * Adds all of the elements from the specified collection the end of the queue.
+   * @param elements the elements to add
+   * @throws NullPointerException if the collection is {@code null}
+   */
+  public void addAll(Collection<? extends E> elements) {
+    storage.addAll(Objects.requireNonNull(elements));
   }
 
   /**
