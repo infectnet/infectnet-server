@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.entity.component;
 
+import io.infectnet.server.engine.entity.Category;
 import io.infectnet.server.engine.entity.Entity;
 
 import java.util.Optional;
@@ -11,15 +12,15 @@ import java.util.Optional;
 public abstract class TypeComponent {
   private final TypeComponent parent;
 
-  private final String category;
+  private final Category category;
 
   private final String name;
 
-  public TypeComponent(String category, String name) {
+  public TypeComponent(Category category, String name) {
     this(null, category, name);
   }
 
-  public TypeComponent(TypeComponent parent, String category, String name) {
+  public TypeComponent(TypeComponent parent, Category category, String name) {
     this.parent = parent;
 
     this.category = category;
@@ -33,7 +34,7 @@ public abstract class TypeComponent {
     return Optional.ofNullable(parent);
   }
 
-  public String getCategory() {
+  public Category getCategory() {
     return category;
   }
 
