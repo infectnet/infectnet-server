@@ -7,11 +7,11 @@ class Selectors {
   public static <T> Map all(Collection<? extends T> elements) {
     return [
         that: { Closure<Boolean> filter ->
-          [do: { Closure<Void> action ->
+          [execute: { Closure<Void> action ->
             doForAll(filter, action, elements);
           }]
         },
-        do  : { Closure<Void> action ->
+        execute  : { Closure<Void> action ->
           doForAll(Selectors.&trueFilter, action, elements);
         }
     ];
@@ -24,11 +24,11 @@ class Selectors {
   public static <T> Map only(Collection<? extends T> elements) {
     return [
         that: { Closure<Boolean> filter ->
-          [do: { Closure<Void> action ->
+          [execute: { Closure<Void> action ->
             doForOne(filter, action, elements);
           }]
         },
-        do: { Closure<Void> action ->
+        execute: { Closure<Void> action ->
           doForOne(Selectors.&trueFilter, action, elements);
         }
     ];
@@ -51,7 +51,7 @@ class Selectors {
   private static <T> void doForOne(Closure<Boolean> filter, Closure<Void> action,
                                    Collection<? extends T> elements) {
     for (T element : elements) {
-      def closureDelegate = [it: element];
+      def closureDelegate = [current: element];
 
       filter.delegate = closureDelegate;
 
@@ -68,7 +68,7 @@ class Selectors {
   private static <T> void doForAll(Closure<Boolean> filter, Closure<Void> action,
                                    Collection<? extends T> elements) {
     for (T element : elements) {
-      def closureDelegate = [it: element];
+      def closureDelegate = [current: element];
 
       filter.delegate = closureDelegate;
 
