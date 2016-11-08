@@ -1,4 +1,6 @@
-package io.infectnet.server.engine.entity;
+package io.infectnet.server.engine.entity.component;
+
+import io.infectnet.server.engine.entity.Entity;
 
 /**
  * {@code ViewComponent} adds view radius to an {@link Entity}. The view radius determines

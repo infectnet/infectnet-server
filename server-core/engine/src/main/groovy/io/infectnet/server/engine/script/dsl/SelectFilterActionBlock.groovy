@@ -3,7 +3,7 @@ package io.infectnet.server.engine.script.dsl
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class Selectors {
+class SelectFilterActionBlock {
   public static <T> Map all(Collection<? extends T> elements) {
     return [
         that: { Closure<Boolean> filter ->
@@ -12,7 +12,7 @@ class Selectors {
           }]
         },
         execute  : { Closure<Void> action ->
-          doForAll(Selectors.&trueFilter, action, elements);
+          doForAll(SelectFilterActionBlock.&trueFilter, action, elements);
         }
     ];
   }
@@ -29,7 +29,7 @@ class Selectors {
           }]
         },
         execute: { Closure<Void> action ->
-          doForOne(Selectors.&trueFilter, action, elements);
+          doForOne(SelectFilterActionBlock.&trueFilter, action, elements);
         }
     ];
   }

@@ -1,4 +1,6 @@
-package io.infectnet.server.engine.entity;
+package io.infectnet.server.engine.entity.component;
+
+import io.infectnet.server.engine.entity.Entity;
 
 /**
  * Component storing an {@link Entity}'s health points.

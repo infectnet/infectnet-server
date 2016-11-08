@@ -1,5 +1,9 @@
 package io.infectnet.server.engine.entity;
 
+import io.infectnet.server.engine.entity.component.HealthComponent;
+import io.infectnet.server.engine.entity.component.TypeComponent;
+import io.infectnet.server.engine.entity.component.ViewComponent;
+
 /**
  * This class represents a generic entity in the game world. It does not contain behaviour, nor
  * actual data, instead it consists of components.
