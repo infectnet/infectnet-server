@@ -32,21 +32,24 @@ public interface EntityManager {
 
   interface Query {
     /**
-     * Filters the entities returning the ones owned by the specified {@code Player}.
+     * Filters the entities returning the ones owned by the specified {@code Player}. This filter
+     * cannot be omitted. Subsequent calls will replace the previously specified {@code Player}.
      * @param player the owner of the entities
      * @return a {@code Query} with this filter set
      */
     Query ofPlayer(Player player);
 
     /**
-     * Filters the entities returning the ones with the specified {@code Category}.
+     * Filters the entities returning the ones with the specified {@code Category}. This filter
+     * cannot be omitted. Subsequent calls will replace the previously specified {@code Category}.
      * @param category the filtering {@code Category}
      * @return a {@code Query} with this filter set
      */
     Query inCategory(Category category);
 
     /**
-     * Filters the entities with the specified predicate.
+     * Filters the entities with the specified predicate. Multiple predicates can be specified.
+     * Multiple predicates will be {@code AND}'d.
      * @param predicate the predicate to be satisfied by the entitie
      * @return a {@code Query} with this filter set
      */
