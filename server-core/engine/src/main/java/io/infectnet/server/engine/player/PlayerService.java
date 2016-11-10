@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.player;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -7,6 +8,12 @@ import java.util.Optional;
  * be thread-safe to ensure multiple thread creating and querying {@code Player} data simultaneously.
  */
 public interface PlayerService {
+  /**
+   * Gets the list containing all {@code Player}s.
+   * @return the list of {@code Player}s
+   */
+  List<Player> getAllPlayers();
+
   /**
    * Creates a new {@code Player} instance with the specified username and returns it. If there is
    * a {@code Player} with the same username or some other error happened during the process,
@@ -34,6 +41,12 @@ public interface PlayerService {
    * @return whether the {@code Player} is observed
    */
   boolean isPlayerObserved(Player player);
+
+  /**
+   * Gets the list of currently observed {@code Player}s.
+   * @return the list of observed {@code Player}s
+   */
+  List<Player> getObservedPlayerList();
 
   /**
    * Sets the {@code Player} as observed. For the meaning of being observed, please refer to

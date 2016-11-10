@@ -1,5 +1,7 @@
 package io.infectnet.server.engine.player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +32,11 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
+  public List<Player> getAllPlayers() {
+    return new ArrayList<>(playerMap.values());
+  }
+
+  @Override
   public Optional<Player> createPlayer(String username) {
     // avoid throwing NPE in favor of Optional
     if (playerMap.containsKey(username) || username == null) {
@@ -55,6 +62,11 @@ public class PlayerServiceImpl implements PlayerService {
   @Override
   public boolean isPlayerObserved(Player player) {
     return observedPlayers.contains(player);
+  }
+
+  @Override
+  public List<Player> getObservedPlayerList() {
+    return new ArrayList<>(observedPlayers);
   }
 
   @Override
