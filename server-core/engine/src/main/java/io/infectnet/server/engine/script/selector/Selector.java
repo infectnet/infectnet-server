@@ -18,7 +18,7 @@ import io.infectnet.server.engine.player.Player;
  * </p>
  * <p>
  * Please provide both singular and plural named versions of the same selector. This means that both
- * {@code getWorker()} and {@code getWorkers()} should be declred with the same functionality.
+ * {@code getWorker()} and {@code getWorkers()} should be declared with the same functionality.
  * </p>
  * <p>
  * Groovy enables users to use named parameters, therefore please expose descriptive parameter

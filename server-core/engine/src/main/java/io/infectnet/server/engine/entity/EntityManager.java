@@ -30,6 +30,10 @@ public interface EntityManager {
    */
   void removeEntity(Entity entity);
 
+  /**
+   * Fluent interface that enables clients to query {@link Entity} instances from an
+   * {@code EntityManager} in a comfortable way.
+   */
   interface Query {
     /**
      * Filters the entities returning the ones owned by the specified {@code Player}. This filter

@@ -45,6 +45,11 @@ public abstract class TypeComponent {
     this.name = Objects.requireNonNull(name);
   }
 
+  /**
+   * Constructs a new blank {@code Entity} with its {@code TypeComponent} set to this instance. May
+   * also set other fields to type-default values.
+   * @return a new {@code Entity}
+   */
   public abstract Entity createEntityOfType();
 
   public Optional<TypeComponent> getParent() {
@@ -59,6 +64,12 @@ public abstract class TypeComponent {
     return name;
   }
 
+  /**
+   * Determines whether this {@code TypeComponent} is a descendant of the passed
+   * {@code TypeComponent}.
+   * @param baseType the type to check against
+   * @return whether this {@code TypeComponent} is a descendant of the passed {@code TypeComponent}
+   */
   public boolean isDescendantOf(TypeComponent baseType) {
     Optional<TypeComponent> parentOptional = this.getParent();
 
