@@ -18,14 +18,13 @@ public interface TypeRepository {
    * @throws NameAlreadyRegisteredException if a {@code TypeComponent} with the same name is
    * already registered
    */
-  <T extends TypeComponent> void registerType(T typeComponent) throws NameAlreadyRegisteredException;
+  <T extends TypeComponent> void registerType(T typeComponent);
 
   /**
-   * Removes the specified {@code TypeComponent}.
-   * @param typeComponent the type to be removed
-   * @param <T> the actual type of the {@code TypeComponent}
+   * Removes the specified {@code TypeComponent} with the specified name.
+   * @param name the name of the type to be removed
    */
-  <T extends TypeComponent> void removeType(T typeComponent);
+  void removeTypeWithName(String name);
 
   /**
    * Gets the {@code TypeComponent} that has the specified name.
