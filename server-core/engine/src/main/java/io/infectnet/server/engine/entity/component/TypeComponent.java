@@ -6,8 +6,9 @@ import io.infectnet.server.engine.entity.Entity;
 import java.util.Optional;
 
 /**
- * Abstract base class for entity types. The actual type of an {@link Entity} instance is determined
- * by its {@code TypeComponent}.
+ * Abstract base class for entity types. The actual type of an
+ * {@link io.infectnet.server.engine.entity.Entity} instance is determined by its
+ * {@code TypeComponent}.
  */
 public abstract class TypeComponent {
   private final TypeComponent parent;

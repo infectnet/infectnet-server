@@ -1,10 +1,8 @@
 package io.infectnet.server.engine.entity.component;
 
-import io.infectnet.server.engine.entity.Entity;
-
 /**
- * {@code ViewComponent} adds view radius to an {@link Entity}. The view radius determines
- * whether an {@code Entity} see a tile or not.
+ * {@code ViewComponent} adds view radius to an {@link io.infectnet.server.engine.entity.Entity}.
+ * The view radius determines whether an {@code Entity} see a tile or not.
  */
 public class ViewComponent {
   private static final int DEFAULT_VIEW_RADIUS = 0;

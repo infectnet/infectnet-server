@@ -1,9 +1,7 @@
 package io.infectnet.server.engine.entity.component;
 
-import io.infectnet.server.engine.entity.Entity;
-
 /**
- * Component storing an {@link Entity}'s health points.
+ * Component storing an {@link io.infectnet.server.engine.entity.Entity}'s health points.
  */
 public class HealthComponent {
   private static final int DEFAULT_HEALTH = 0;

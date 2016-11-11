@@ -1,6 +1,7 @@
 package io.infectnet.server.engine.entity;
 
 import io.infectnet.server.engine.entity.component.HealthComponent;
+import io.infectnet.server.engine.entity.component.OwnerComponent;
 import io.infectnet.server.engine.entity.component.TypeComponent;
 import io.infectnet.server.engine.entity.component.ViewComponent;
 
@@ -14,6 +15,8 @@ public class Entity {
   private TypeComponent typeComponent;
 
   private ViewComponent viewComponent;
+
+  private OwnerComponent ownerComponent;
 
   private Entity() {
     /**
@@ -33,6 +36,10 @@ public class Entity {
     return viewComponent;
   }
 
+  public OwnerComponent getOwnerComponent() {
+    return ownerComponent;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -46,6 +53,8 @@ public class Entity {
     private TypeComponent typeComponent;
 
     private ViewComponent viewComponent;
+
+    private OwnerComponent ownerComponent;
 
     public Builder healthComponent(HealthComponent component) {
       this.healthComponent = component;
@@ -65,6 +74,12 @@ public class Entity {
       return this;
     }
 
+    public Builder ownerComponent(OwnerComponent component) {
+      this.ownerComponent = component;
+
+      return this;
+    }
+
     public Entity build() {
       Entity entity = new Entity();
 
@@ -73,6 +88,8 @@ public class Entity {
       entity.typeComponent = this.typeComponent;
 
       entity.viewComponent = this.viewComponent;
+
+      entity.ownerComponent = this.ownerComponent;
 
       return entity;
     }
