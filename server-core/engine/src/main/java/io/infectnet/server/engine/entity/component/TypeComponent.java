@@ -3,6 +3,9 @@ package io.infectnet.server.engine.entity.component;
 import io.infectnet.server.engine.entity.Category;
 import io.infectnet.server.engine.entity.Entity;
 
+import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -17,16 +20,29 @@ public abstract class TypeComponent {
 
   private final String name;
 
+  /**
+   * Constructs a new instance with the specified category and name and parent set to {@code null}.
+   * @param category the category
+   * @param name the name
+   * @throws NullPointerException if any of the parameters is {@code null}
+   */
   public TypeComponent(Category category, String name) {
     this(null, category, name);
   }
 
+  /**
+   * Constructs a new instance with the specified attributes.
+   * @param parent the parent type
+   * @param category the category
+   * @param name the name
+   * @throws NullPointerException if any of the parameters is {@code null}
+   */
   public TypeComponent(TypeComponent parent, Category category, String name) {
     this.parent = parent;
 
-    this.category = category;
+    this.category = Objects.requireNonNull(category);
 
-    this.name = name;
+    this.name = Objects.requireNonNull(name);
   }
 
   public abstract Entity createEntityOfType();
