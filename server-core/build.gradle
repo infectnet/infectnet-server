@@ -50,3 +50,26 @@ project(':server-core:controller') {
     compile project(':server-core:common')
   }
 }
+
+project(':server-core:engine') {
+  /*
+   * Allows joint compilation of Java and Groovy..
+   * Source: http://stackoverflow.com/a/22164339
+   */
+  sourceSets {
+    main {
+      groovy {
+        /*
+         * Override the default locations, rather than adding additional ones
+         */
+        srcDirs = ['src/main/groovy', 'src/main/java']
+      }
+      java {
+        /*
+         * Don't compile Java code twice
+         */
+        srcDirs = []
+      }
+    }
+  }
+}
