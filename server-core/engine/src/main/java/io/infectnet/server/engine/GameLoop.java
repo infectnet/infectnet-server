@@ -1,12 +1,13 @@
 package io.infectnet.server.engine;
 
 import io.infectnet.server.engine.entity.wrapper.Action;
+import io.infectnet.server.engine.script.Request;
 import io.infectnet.server.engine.script.code.Code;
 import io.infectnet.server.engine.script.code.CodeRepository;
 import io.infectnet.server.engine.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.util.ListenableQueue;
 
-class GameLoop {
+public class GameLoop {
   private final ListenableQueue<Action> actionQueue;
 
   private final ListenableQueue<Request> requestQueue;

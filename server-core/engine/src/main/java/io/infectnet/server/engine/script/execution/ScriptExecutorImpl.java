@@ -8,6 +8,7 @@ import io.infectnet.server.engine.script.selector.SelectorFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -29,12 +30,17 @@ public class ScriptExecutorImpl implements ScriptExecutor {
 
   @Override
   public void execute(Script script, Player owner) {
-    Binding binding = createOrGetBinding(owner);
+    Objects.requireNonNull(script);
+
+    Binding binding = createOrGetBinding(Objects.requireNonNull(owner));
 
     script.setBinding(binding);
 
     script.run();
 
+    /*
+     * Reset the binding.
+     */
     script.setBinding(null);
   }
 

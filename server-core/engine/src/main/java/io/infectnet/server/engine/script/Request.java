@@ -1,4 +1,4 @@
-package io.infectnet.server.engine;
+package io.infectnet.server.engine.script;
 
 import io.infectnet.server.engine.entity.Entity;
 
