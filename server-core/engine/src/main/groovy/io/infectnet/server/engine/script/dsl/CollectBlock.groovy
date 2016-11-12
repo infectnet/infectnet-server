@@ -3,7 +3,7 @@ package io.infectnet.server.engine.script.dsl
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class CollectBlock {
+class CollectBlock implements DslBindingCustomizer {
   public static <T> Map collect(Collection<? extends T> elements) {
     return [
         that: { Closure<Boolean> filter ->
@@ -22,5 +22,10 @@ class CollectBlock {
           return result;
         }
     ];
+  }
+
+  @Override
+  public void customize(Binding binding) {
+    binding.setVariable("collect", CollectBlock.&collect);
   }
 }

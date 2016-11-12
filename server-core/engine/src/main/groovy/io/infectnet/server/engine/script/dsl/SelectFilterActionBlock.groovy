@@ -3,7 +3,7 @@ package io.infectnet.server.engine.script.dsl
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class SelectFilterActionBlock {
+class SelectFilterActionBlock implements DslBindingCustomizer {
   public static <T> Map all(Collection<? extends T> elements) {
     return [
         that: { Closure<Boolean> filter ->
@@ -32,6 +32,15 @@ class SelectFilterActionBlock {
           doForOne(SelectFilterActionBlock.&trueFilter, action, elements);
         }
     ];
+  }
+
+  @Override
+  void customize(Binding binding) {
+    binding.setVariable("all", SelectFilterActionBlock.&all);
+
+    binding.setVariable("any", SelectFilterActionBlock.&any);
+
+    binding.setVariable("only", SelectFilterActionBlock.&only);
   }
 
   /**
