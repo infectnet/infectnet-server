@@ -2,6 +2,8 @@ package io.infectnet.server.engine.entity.wrapper;
 
 import io.infectnet.server.engine.entity.Entity;
 
+import java.util.function.Consumer;
+
 /**
  * Wrapper (or proxy class) for {@link Entity} in order to make it safe to expose them to
  * Groovy DSL code.
@@ -18,10 +20,18 @@ public abstract class EntityWrapper {
   protected final Entity wrappedEntity;
 
   /**
+   * A {@code Consumer} that takes actions and propagates them towards the engine.
+   */
+  protected final Consumer<Action> actionConsumer;
+
+  /**
    * Constructs a new instance wrapping the specified {@code Entity}.
    * @param wrappedEntity the {@code Entity} to be wrapped
+   * @param actionConsumer a consumer that accepts created actions and propagates them to the engine
    */
-  public EntityWrapper(Entity wrappedEntity) {
+  public EntityWrapper(Entity wrappedEntity, Consumer<Action> actionConsumer) {
     this.wrappedEntity = wrappedEntity;
+
+    this.actionConsumer = actionConsumer;
   }
 }
