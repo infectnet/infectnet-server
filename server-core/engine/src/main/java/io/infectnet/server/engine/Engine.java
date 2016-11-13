@@ -1,6 +1,8 @@
 package io.infectnet.server.engine;
 
-import io.infectnet.server.engine.configuration.EngineModule;
+import io.infectnet.server.engine.configuration.EngineConfigurator;
+import io.infectnet.server.engine.configuration.core.CoreModule;
+import io.infectnet.server.engine.configuration.content.ContentModule;
 
 import javax.inject.Singleton;
 import dagger.Component;
@@ -8,7 +10,7 @@ import dagger.Component;
 public class Engine {
 
   @Singleton
-  @Component(modules = { EngineModule.class })
+  @Component(modules = { CoreModule.class, ContentModule.class })
   interface Bootstrapper {
     EngineConfigurator getEngineConfigurator();
   }

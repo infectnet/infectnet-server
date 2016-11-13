@@ -1,4 +1,4 @@
-package io.infectnet.server.engine.configuration;
+package io.infectnet.server.engine.configuration.content;
 
 import io.infectnet.server.engine.entity.EntityManager;
 import io.infectnet.server.engine.entity.wrapper.EntityWrapperRepository;

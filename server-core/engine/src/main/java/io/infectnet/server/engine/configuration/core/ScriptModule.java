@@ -1,8 +1,11 @@
-package io.infectnet.server.engine.configuration;
+package io.infectnet.server.engine.configuration.core;
 
 import groovy.lang.Binding;
+import io.infectnet.server.engine.configuration.content.DslModule;
+import io.infectnet.server.engine.configuration.content.SelectorModule;
 import io.infectnet.server.engine.script.code.CodeRepository;
 import io.infectnet.server.engine.script.code.CodeRepositoryImpl;
+import io.infectnet.server.engine.script.dsl.DslBindingCustomizer;
 import io.infectnet.server.engine.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.script.execution.ScriptExecutorImpl;
 import io.infectnet.server.engine.script.generation.ScriptGenerator;
@@ -37,5 +40,17 @@ public class ScriptModule {
   @Singleton
   public static CodeRepository providesCodeRepository() {
     return new CodeRepositoryImpl();
+  }
+
+  @Provides
+  @Singleton
+  public static Supplier<Binding> providesBindingSupplier(Set<DslBindingCustomizer> customizerSet) {
+    return () -> {
+      Binding binding = new Binding();
+
+      customizerSet.forEach(c -> c.customize(binding));
+
+      return binding;
+    };
   }
 }

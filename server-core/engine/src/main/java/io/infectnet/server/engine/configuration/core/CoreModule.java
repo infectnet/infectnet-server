@@ -1,4 +1,4 @@
-package io.infectnet.server.engine.configuration;
+package io.infectnet.server.engine.configuration.core;
 
 import io.infectnet.server.engine.GameLoop;
 import io.infectnet.server.engine.entity.wrapper.Action;
@@ -12,8 +12,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(includes = {ScriptModule.class, EntityModule.class})
-public class EngineModule {
+@Module(includes = {ScriptModule.class, EntityModule.class, PlayerModule.class})
+public class CoreModule {
   @Provides
   @Singleton
   @Named("Action Queue")
