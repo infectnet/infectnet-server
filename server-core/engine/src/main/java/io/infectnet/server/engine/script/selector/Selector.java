@@ -35,8 +35,4 @@ public abstract class Selector {
   Selector(Player player) {
     this.player = player;
   }
-
-  public Player getPlayer() {
-    return player;
-  }
 }
