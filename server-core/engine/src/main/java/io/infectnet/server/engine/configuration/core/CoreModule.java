@@ -24,7 +24,7 @@ public class CoreModule {
   @Provides
   @Singleton
   @Named("Request Queue")
-  public static ListenableQueue<Action> providesRequestQueue() {
+  public static ListenableQueue<Request> providesRequestQueue() {
     return new ListenableQueue<>();
   }
 
