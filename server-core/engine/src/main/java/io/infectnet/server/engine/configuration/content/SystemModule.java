@@ -12,7 +12,7 @@ import dagger.multibindings.ElementsIntoSet;
 public class SystemModule {
   @Provides
   @ElementsIntoSet
-  Set<ProcessorSystem> providesEmptyProcessorSystemSet() {
+  public static Set<ProcessorSystem> providesEmptyProcessorSystemSet() {
     return Collections.emptySet();
   }
 }
