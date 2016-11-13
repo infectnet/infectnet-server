@@ -144,7 +144,7 @@ public class GameLoop {
 
     try {
       /*
-       * Wait three game ticks. This
+       * Wait three game ticks. This must be enough is most cases.
        */
       if (!gameLoopExecutorService.awaitTermination(3 * desiredTickDurationMillis(), MILLISECONDS)) {
         /*
