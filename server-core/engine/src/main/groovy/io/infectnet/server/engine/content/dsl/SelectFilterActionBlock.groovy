@@ -1,4 +1,4 @@
-package io.infectnet.server.engine.core.script.dsl
+package io.infectnet.server.engine.content.dsl
 
 import groovy.transform.CompileStatic
 

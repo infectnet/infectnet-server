@@ -1,10 +1,11 @@
 package io.infectnet.server.engine.core.script.selector;
 
+import io.infectnet.server.engine.content.dsl.SelectFilterActionBlock;
 import io.infectnet.server.engine.core.player.Player;
 
 /**
  * Base class for expressions that can be used in SFA blocks
- * (see {@link io.infectnet.server.engine.core.script.dsl.SelectFilterActionBlock}). Please note that all
+ * (see {@link SelectFilterActionBlock}). Please note that all
  * public methods will be available in the Groovy DSL. The {@link Player} passed to an instance is
  * the player whose code uses the instance.
  * <p>

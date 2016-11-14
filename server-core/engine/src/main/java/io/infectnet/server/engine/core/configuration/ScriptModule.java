@@ -5,7 +5,7 @@ import io.infectnet.server.engine.content.configuration.DslModule;
 import io.infectnet.server.engine.content.configuration.SelectorModule;
 import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.code.CodeRepositoryImpl;
-import io.infectnet.server.engine.core.script.dsl.DslBindingCustomizer;
+import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutorImpl;
 import io.infectnet.server.engine.core.script.generation.ScriptGenerator;

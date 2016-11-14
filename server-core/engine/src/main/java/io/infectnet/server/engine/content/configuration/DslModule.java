@@ -1,8 +1,8 @@
 package io.infectnet.server.engine.content.configuration;
 
-import io.infectnet.server.engine.core.script.dsl.CollectBlock;
-import io.infectnet.server.engine.core.script.dsl.DslBindingCustomizer;
-import io.infectnet.server.engine.core.script.dsl.SelectFilterActionBlock;
+import io.infectnet.server.engine.content.dsl.CollectBlock;
+import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
+import io.infectnet.server.engine.content.dsl.SelectFilterActionBlock;
 
 import javax.inject.Singleton;
 import dagger.Module;
