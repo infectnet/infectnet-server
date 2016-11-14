@@ -73,3 +73,15 @@ project(':server-core:engine') {
     }
   }
 }
+
+project(':server-core:workbench') {
+  mainClassName = "io.infectnet.server.workbench.Hephaestus"
+
+  run {
+    standardInput = System.in
+  }
+
+  dependencies {
+    compile project(':server-core:engine')
+  }
+}

@@ -79,7 +79,7 @@ public class ListenableQueue<E> {
    * Instructs the queue to remove the element from the front of thr queue and call the listener
    * corresponding to the element's class.
    */
-  public void processOne() {
+  public final void processOne() {
     processElement(storage.remove());
   }
 
@@ -87,8 +87,8 @@ public class ListenableQueue<E> {
    * Instructs the queue to process all queued elements. After this call the queue will be empty.
    */
   public void processAll() {
-    for (E element : storage) {
-      processElement(element);
+    while (!storage.isEmpty()) {
+      processOne();
     }
   }
 

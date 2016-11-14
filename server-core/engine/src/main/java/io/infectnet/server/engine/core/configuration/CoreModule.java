@@ -7,6 +7,7 @@ import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 
+import java.util.function.Consumer;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import dagger.Module;
@@ -35,5 +36,12 @@ public class CoreModule {
       @Named("Request Queue") ListenableQueue<Request> requestQueue,
       CodeRepository codeRepository, ScriptExecutor scriptExecutor) {
     return new GameLoop(actionQueue, requestQueue, codeRepository, scriptExecutor);
+  }
+
+  @Provides
+  @Singleton
+  public static Consumer<Action> actionConsumer(
+      @Named("Action Queue") ListenableQueue<Action> actionQueue) {
+    return actionQueue::add;
   }
 }

@@ -1,18 +1,21 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.print.PrintSystem;
+import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
+import io.infectnet.server.engine.core.util.ListenableQueue;
 
-import java.util.Collections;
-import java.util.Set;
+import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
-import dagger.multibindings.ElementsIntoSet;
+import dagger.multibindings.IntoSet;
 
 @Module
 public class SystemModule {
   @Provides
-  @ElementsIntoSet
-  public static Set<ProcessorSystem> providesEmptyProcessorSystemSet() {
-    return Collections.emptySet();
+  @IntoSet
+  public static ProcessorSystem providesPrintSystem(
+      @Named("Request Queue") ListenableQueue<Request> requestQueue) {
+    return new PrintSystem(requestQueue);
   }
 }
