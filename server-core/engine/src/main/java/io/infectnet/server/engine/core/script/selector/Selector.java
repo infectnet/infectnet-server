@@ -33,7 +33,7 @@ public abstract class Selector {
    * Constructs a new instance with the specified {@code Player}.
    * @param player the {@code Player} whose code uses the instance
    */
-  Selector(Player player) {
+  public Selector(Player player) {
     this.player = player;
   }
 }
