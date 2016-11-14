@@ -1,8 +1,7 @@
 package io.infectnet.server.engine;
 
-import io.infectnet.server.engine.configuration.EngineConfigurator;
-import io.infectnet.server.engine.configuration.core.CoreModule;
-import io.infectnet.server.engine.configuration.content.ContentModule;
+import io.infectnet.server.engine.core.configuration.CoreModule;
+import io.infectnet.server.engine.content.configuration.ContentModule;
 
 import javax.inject.Singleton;
 import dagger.Component;
