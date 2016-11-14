@@ -2,22 +2,20 @@ package io.infectnet.server.engine.configuration.content;
 
 import io.infectnet.server.engine.entity.EntityManager;
 import io.infectnet.server.engine.entity.wrapper.EntityWrapperRepository;
-import io.infectnet.server.engine.script.selector.OwnSelectorFactory;
 import io.infectnet.server.engine.script.selector.Selector;
 import io.infectnet.server.engine.script.selector.SelectorFactory;
 
-import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.Set;
 import dagger.Module;
 import dagger.Provides;
-import dagger.multibindings.IntoSet;
+import dagger.multibindings.ElementsIntoSet;
 
 @Module
 public class SelectorModule {
   @Provides
-  @Singleton
-  @IntoSet
-  public static SelectorFactory<? extends Selector> providesOwnSelector(EntityManager entityManager,
-    EntityWrapperRepository entityWrapperRepository) {
-    return new OwnSelectorFactory(entityManager, entityWrapperRepository);
+  @ElementsIntoSet
+  public static Set<SelectorFactory<? extends Selector>> providesEmptySelectorSet() {
+    return Collections.emptySet();
   }
 }
