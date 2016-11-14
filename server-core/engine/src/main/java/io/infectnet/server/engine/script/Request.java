@@ -1,35 +1,39 @@
 package io.infectnet.server.engine.script;
 
 import io.infectnet.server.engine.entity.Entity;
+import io.infectnet.server.engine.entity.wrapper.Action;
 
 import java.util.Optional;
 
 /**
- * A request that can be processed. Although identical to
- * {@link io.infectnet.server.engine.entity.wrapper.Action} this class has a completely different
- * usage, so they must not be used in place of each other. {@code Request} represents a change
- * request to the state of the game (the World, the Entity System, etc.).
+ * A request that can be processed. {@code Request} represents a change request to the state of the
+ * game (the World, the Entity System, etc.). {@code Request}s can have an origin {@link Action}
+ * they were created from.
  */
 public abstract class Request {
   private final Entity target;
 
-  /**
-   * Constructs a new instance with no target.
-   */
-  public Request() {
-    this.target = null;
-  }
+  private final Action origin;
 
   /**
-   * Constructs a new instance with the specified target {@code Entity}. The target of the request
-   * is the {@code Entity} to be modified.
+   * Constructs a new instance with the specified target {@code Entity} and origin {@code Action}.
+   * The target of the request is the {@code Entity} to be modified. This parameter can be
+   * {@code null}. The origin is the {@code Action} this {@code Request} was produced from. Origin
+   * can be {@code null} too.
    * @param target the target {@code Entity} of the {@code Request}
+   * @param origin the origin {@code Action}
    */
-  public Request(Entity target) {
+  public Request(Entity target, Action origin) {
     this.target = target;
+
+    this.origin = origin;
   }
 
   public Optional<Entity> getTarget() {
     return Optional.ofNullable(target);
+  }
+
+  public Optional<Action> getOrigin() {
+    return Optional.ofNullable(origin);
   }
 }
