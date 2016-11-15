@@ -11,9 +11,5 @@ import dagger.multibindings.ElementsIntoSet;
 
 @Module
 public class SelectorModule {
-  @Provides
-  @ElementsIntoSet
-  public static Set<SelectorFactory<? extends Selector>> providesEmptySelectorSet() {
-    return Collections.emptySet();
-  }
+
 }
