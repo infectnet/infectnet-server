@@ -2,7 +2,7 @@ package io.infectnet.server.engine.core.entity.wrapper;
 
 import io.infectnet.server.engine.core.entity.Entity;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * Wrapper (or proxy class) for {@link Entity} in order to make it safe to expose them to
@@ -20,18 +20,36 @@ public abstract class EntityWrapper {
   protected final Entity wrappedEntity;
 
   /**
-   * A {@code Consumer} that takes actions and propagates them towards the engine.
+   * A {@code Consumer} that accepts created actions and propagates them to the engine
+   * along with the current mutable state of the wrapper
    */
-  protected final Consumer<Action> actionConsumer;
+  protected final BiConsumer<WrapperState, Action> actionConsumer;
+
+  protected final WrapperState state;
 
   /**
    * Constructs a new instance wrapping the specified {@code Entity}.
    * @param wrappedEntity the {@code Entity} to be wrapped
    * @param actionConsumer a consumer that accepts created actions and propagates them to the engine
+   * along with the current mutable state of the wrapper
    */
-  public EntityWrapper(Entity wrappedEntity, Consumer<Action> actionConsumer) {
+  public EntityWrapper(Entity wrappedEntity, BiConsumer<WrapperState, Action> actionConsumer) {
     this.wrappedEntity = wrappedEntity;
 
     this.actionConsumer = actionConsumer;
+
+    this.state = this.new WrapperState();
+  }
+
+  public class WrapperState {
+    private boolean interactedWith;
+
+    public boolean isInteractedWith() {
+      return interactedWith;
+    }
+
+    public void setInteractedWith(boolean interactedWith) {
+      this.interactedWith = interactedWith;
+    }
   }
 }
