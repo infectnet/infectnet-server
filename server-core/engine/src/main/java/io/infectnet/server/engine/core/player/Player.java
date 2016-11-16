@@ -19,4 +19,11 @@ public class Player {
   public String getUsername() {
     return username;
   }
+
+  @Override
+  public String toString() {
+    return "Player{" +
+        "username='" + username + '\'' +
+        '}';
+  }
 }
