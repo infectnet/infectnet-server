@@ -18,11 +18,24 @@ public class MapImpl implements Map {
   private HashMap<Entity,Tile> entityPositionMap;
 
   /**
+   * The height of the map, the number pf positions available on the y-axis.
+   */
+  private final int height;
+
+  /**
+   * The width of the map, the number pf positions available on the x-axis.
+   */
+  private final int width;
+
+  /**
    * Creates a new Map in a size defined by the parameters. All its tiles are generated at random.
    * @param height limitation of the number of tiles on the y-axis
    * @param width limitation of the number of tiles on x-axis
    */
   public MapImpl(int height, int width) {
+    this.height = height;
+    this.width = width;
+
     tiles = new Tile[height][width];
     entityPositionMap = new HashMap<>();
 
@@ -39,13 +52,17 @@ public class MapImpl implements Map {
    * Generates a new array of Tiles with a Cellular Automaton.
    */
   private void generateNewMap() {
-    //TODO Cellular Automaton Implementation
+    CellularAutomaton cellularAutomaton = new CellularAutomaton(height, width);
+
+    boolean[][] cells = cellularAutomaton.generateMap();
 
     for(int i = 0; i < tiles.length; ++i){
       for(int j = 0; j < tiles[i].length; ++j){
         if(isBorder(i,j)){
           tiles[i][j] = new Tile(TileType.ROCK);
-        }else{
+        } else if(cells[i][j]){
+          tiles[i][j] = new Tile(TileType.ROCK);
+        } else {
           tiles[i][j] = new Tile(TileType.CAVE);
         }
       }
@@ -73,8 +90,6 @@ public class MapImpl implements Map {
 
   public void addEntityOnTile(Entity entity){
     //TODO add PositionComponent to Entity
-
-    //entityPositionMap.put(entity, entity.getPositionComponent().getTile())
-
+    //TODO entityPositionMap.put(entity, entity.getPositionComponent().getTile())
   }
 }
