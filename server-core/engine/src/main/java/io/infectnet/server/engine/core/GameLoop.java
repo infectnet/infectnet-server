@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * separate thread which can be started and stopped by methods of this class.
  */
 public class GameLoop {
-  
+
   private static final Logger logger = LoggerFactory.getLogger(GameLoop.class);
 
   private static final long NO_DELAY = 0L;
@@ -77,7 +77,7 @@ public class GameLoop {
    * @throws IllegalArgumentException if the duration is negative
    * @throws IllegalStateException if the game loop is currently running
    */
-  public void setDesiredTickDuration(Duration desiredTickDuration) {
+  private void setDesiredTickDuration(Duration desiredTickDuration) {
     Duration duration = Objects.requireNonNull(desiredTickDuration);
 
     if (duration.isNegative()) {
@@ -95,10 +95,12 @@ public class GameLoop {
    * Starts the game loop in a separate thread. Subsequent invocations of this method have no
    * effect.
    */
-  public void start() {
+  public void start(long desiredTickDuration) {
     if (isLoopRunning.get()) {
       return;
     }
+
+    setDesiredTickDuration(Duration.ofMillis(desiredTickDuration));
 
     gameLoopExecutorService = Executors.newSingleThreadScheduledExecutor();
 

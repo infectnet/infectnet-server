@@ -48,6 +48,8 @@ project(':server-core:controller') {
     compile project(':server-core:service')
 
     compile project(':server-core:common')
+
+    compile project(':server-core:engine')
   }
 }
 

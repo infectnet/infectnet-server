@@ -1,20 +1,21 @@
 package io.infectnet.server.core;
 
+import static spark.Spark.after;
+import static spark.Spark.webSocket;
+
 import io.infectnet.server.common.configuration.Configuration;
 import io.infectnet.server.common.configuration.ConfigurationHolder;
 import io.infectnet.server.controller.RestController;
+import io.infectnet.server.controller.engine.EngineConnector;
 import io.infectnet.server.controller.exception.ExceptionMapperController;
 import io.infectnet.server.controller.websocket.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spark.Spark;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.Set;
-
-import static spark.Spark.after;
-import static spark.Spark.webSocket;
+import javax.inject.Inject;
+import spark.Spark;
 
 class ApplicationStarter {
   private static final Logger logger = LoggerFactory.getLogger(ApplicationStarter.class);
@@ -25,15 +26,21 @@ class ApplicationStarter {
 
   private final Dispatcher dispatcher;
 
+  private final EngineConnector engineConnector;
+
   @Inject
   ApplicationStarter(Set<RestController> restControllers,
                      ExceptionMapperController exceptionMapperController,
-                     Dispatcher dispatcher) {
+                     Dispatcher dispatcher,
+                     EngineConnector engineConnector) {
     this.restControllers = restControllers;
 
     this.exceptionMapperController = exceptionMapperController;
 
     this.dispatcher = dispatcher;
+
+    this.engineConnector = engineConnector;
+
   }
 
   void start() {
@@ -62,6 +69,9 @@ class ApplicationStarter {
     after((request, response) -> response.type("application/json"));
 
     logger.info("Controllers configured!");
+
+    // Starts the main game engine
+    engineConnector.start();
   }
 
 
