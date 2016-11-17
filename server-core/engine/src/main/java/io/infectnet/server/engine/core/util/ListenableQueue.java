@@ -59,7 +59,7 @@ public class ListenableQueue<E> {
 
     listenerMap.get(listenedClass).add(listener);
 
-    logger.info("Listener for {} added to {}: {}", listenedClass, this, listener);
+    logger.info("Listener for {} added: {}", listenedClass, listener);
   }
 
   /**
@@ -82,7 +82,7 @@ public class ListenableQueue<E> {
         listenerMap.remove(listenedClass);
       }
 
-      logger.info("Removed listener for {} from {}: {}", listenedClass, this, listener);
+      logger.info("Removed listener for {}: {}", listenedClass, listener);
     }
   }
 
