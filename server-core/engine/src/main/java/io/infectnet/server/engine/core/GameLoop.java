@@ -23,9 +23,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * separate thread which can be started and stopped by methods of this class.
  */
 public class GameLoop {
-  private static final long NO_DELAY = 0L;
-
+  
   private static final Logger logger = LoggerFactory.getLogger(GameLoop.class);
+
+  private static final long NO_DELAY = 0L;
 
   private final ListenableQueue<Action> actionQueue;
 

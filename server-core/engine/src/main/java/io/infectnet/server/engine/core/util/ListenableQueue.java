@@ -82,7 +82,7 @@ public class ListenableQueue<E> {
         listenerMap.remove(listenedClass);
       }
 
-      logger.info("Removed listener for {} from {}: {}", listenedClass, this, listener);
+      logger.info("Removed listener for {}: {}", listenedClass, listener);
     }
   }
 

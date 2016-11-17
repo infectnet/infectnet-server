@@ -24,7 +24,7 @@ public class EntityWrapperRepositoryImpl implements EntityWrapperRepository {
                                                                EntityWrapperFactory<T> wrapperFactory) {
     factoryMap.put(typeComponent, wrapperFactory);
 
-    logger.info("Registered EntityWrapperFactory for: {}", typeComponent);
+    logger.info("Registered EntityWrapperFactory for {}", typeComponent);
   }
 
   @Override
