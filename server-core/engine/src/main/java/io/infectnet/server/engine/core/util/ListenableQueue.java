@@ -1,5 +1,8 @@
 package io.infectnet.server.engine.core.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,12 +20,15 @@ import java.util.function.Consumer;
  * {@link Class} they listen to. Whenever an element gets processed, the listener registered
  * with the appropriate {@code Class} will be called to process the element.
  * <p>
- *   <b>Note</b> that listeners are allowed to add elements as they are called, but this
- *   must be used with exceptional care to avoid feedback loops.
+ * <b>Note</b> that listeners are allowed to add elements as they are called, but this
+ * must be used with exceptional care to avoid feedback loops.
  * </p>
  * @param <E> the type of the elements to be stored in the queue
  */
 public class ListenableQueue<E> {
+
+  private static final Logger logger = LoggerFactory.getLogger(ListenableQueue.class);
+
   private final Map<Class<? extends E>, List<Consumer<E>>> listenerMap;
 
   private final Queue<E> storage;
@@ -52,6 +58,8 @@ public class ListenableQueue<E> {
     }
 
     listenerMap.get(listenedClass).add(listener);
+
+    logger.info("Listener for {} added: {}", listenedClass, listener);
   }
 
   /**
@@ -73,6 +81,8 @@ public class ListenableQueue<E> {
       if (consumers.isEmpty()) {
         listenerMap.remove(listenedClass);
       }
+
+      logger.info("Removed listener for {}: {}", listenedClass, listener);
     }
   }
 

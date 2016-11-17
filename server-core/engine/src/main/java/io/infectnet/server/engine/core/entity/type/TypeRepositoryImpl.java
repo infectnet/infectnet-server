@@ -1,6 +1,8 @@
 package io.infectnet.server.engine.core.entity.type;
 
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +12,9 @@ import java.util.Optional;
 import java.util.Set;
 
 public class TypeRepositoryImpl implements TypeRepository {
+
+  private static final Logger logger = LoggerFactory.getLogger(TypeRepositoryImpl.class);
+
   private final Map<String, TypeComponent> typeMap;
 
   public TypeRepositoryImpl() {
@@ -22,6 +27,8 @@ public class TypeRepositoryImpl implements TypeRepository {
 
     if (!typeMap.containsKey(type.getName())) {
       typeMap.put(type.getName(), type);
+
+      logger.info("Registered new TypeComponent with name: {}", type.getName());
     } else {
       throw new NameAlreadyRegisteredException(type.getName());
     }
@@ -29,7 +36,9 @@ public class TypeRepositoryImpl implements TypeRepository {
 
   @Override
   public void removeTypeWithName(String name) {
-    typeMap.remove(name);
+    TypeComponent removedTypeComponent = typeMap.remove(name);
+
+    logger.info("Removed registered TypeComponent: {}", removedTypeComponent);
   }
 
   @Override

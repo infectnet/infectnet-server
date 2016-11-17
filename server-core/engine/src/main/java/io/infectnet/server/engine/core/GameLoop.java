@@ -8,6 +8,8 @@ import io.infectnet.server.engine.core.script.code.Code;
 import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.core.util.ListenableQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -21,6 +23,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * separate thread which can be started and stopped by methods of this class.
  */
 public class GameLoop {
+  
+  private static final Logger logger = LoggerFactory.getLogger(GameLoop.class);
+
   private static final long NO_DELAY = 0L;
 
   private final ListenableQueue<Action> actionQueue;
@@ -41,9 +46,10 @@ public class GameLoop {
    * Constructs a new instance that works on the specified queues and executes the code pulled from
    * the specified {@code CodeRepository} with the passes {@code ScriptExecutor}.
    * @param actionQueue the queue that stores the {@code Action}s to be processed
-   * @param requestQueue the queue in which the {@code Request}s will be put and will be pulled from
-   * @param codeRepository the repository storing the codes submitted by the
-   * {@link io.infectnet.server.engine.core.player.Player}s
+   * @param requestQueue the queue in which the {@code Request}s will be put and will be pulled
+   * from
+   * @param codeRepository the repository storing the codes submitted by the {@link
+   * io.infectnet.server.engine.core.player.Player}s
    * @param scriptExecutor the executor that will run the DSL code
    */
   public GameLoop(ListenableQueue<Action> actionQueue, ListenableQueue<Request> requestQueue,
@@ -86,7 +92,8 @@ public class GameLoop {
   }
 
   /**
-   * Starts the game loop in a separate thread. Subsequent invocations of this method have no effect.
+   * Starts the game loop in a separate thread. Subsequent invocations of this method have no
+   * effect.
    */
   public void start() {
     if (isLoopRunning.get()) {
@@ -96,6 +103,8 @@ public class GameLoop {
     gameLoopExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     isLoopRunning.set(true);
+
+    logger.info("Game loop started!");
 
     gameLoopExecutorService.schedule(this::loop, NO_DELAY, MILLISECONDS);
   }
@@ -116,6 +125,8 @@ public class GameLoop {
     gameLoopExecutorService.shutdown();
 
     isLoopRunning.set(false);
+
+    logger.info("Game loop stopped asynchronously!");
   }
 
   /**
@@ -146,11 +157,14 @@ public class GameLoop {
       /*
        * Wait three game ticks. This must be enough is most cases.
        */
-      if (!gameLoopExecutorService.awaitTermination(3 * desiredTickDurationMillis(), MILLISECONDS)) {
+      if (!gameLoopExecutorService
+          .awaitTermination(3 * desiredTickDurationMillis(), MILLISECONDS)) {
         /*
          * Force shutdown by cancelling the currently executed task.
          */
         gameLoopExecutorService.shutdownNow();
+
+        logger.info("Waiting to game loop to be stopped...");
 
         /*
          * Wait a game tick again, just to be sure.
@@ -169,6 +183,8 @@ public class GameLoop {
        * Preserve interrupt status, so callers can inspect it.
        */
       Thread.currentThread().interrupt();
+
+      logger.warn("Game loop stop was interrupted!");
 
       return false;
     }
@@ -242,6 +258,9 @@ public class GameLoop {
     Duration actualTickDuration = Duration.between(startTime, endTime);
 
     Duration waitTime = desiredTickDuration.minus(actualTickDuration);
+
+    logger.info("Tick time: {}", actualTickDuration);
+    logger.info("Next tick after: {}", waitTime);
 
     /*
      * If the current tick was longer than desired, we will schedule the loop with no delay.

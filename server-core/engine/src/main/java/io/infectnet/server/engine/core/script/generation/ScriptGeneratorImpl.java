@@ -5,6 +5,8 @@ import groovy.lang.Script;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.Set;
@@ -14,6 +16,9 @@ import java.util.Set;
  * {@link Script} objects.
  */
 public class ScriptGeneratorImpl implements ScriptGenerator {
+
+  private static final Logger logger = LoggerFactory.getLogger(ScriptGeneratorImpl.class);
+
   private final GroovyShell groovyShell;
 
   /**
@@ -34,6 +39,8 @@ public class ScriptGeneratorImpl implements ScriptGenerator {
     try {
       return groovyShell.parse(Objects.requireNonNull(sourceCode));
     } catch (CompilationFailedException e) {
+      logger.debug("Syntax error found during Script generation: {}", e.getMessage());
+
       throw new ScriptGenerationFailedException(e);
     }
   }

@@ -1,5 +1,8 @@
 package io.infectnet.server.engine.core.player;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +13,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 
 public class PlayerServiceImpl implements PlayerService {
+
+  private static final Logger logger = LoggerFactory.getLogger(PlayerServiceImpl.class);
+
   private final Map<String, Player> playerMap;
 
   private final Set<Player> observedPlayers;
@@ -48,8 +54,13 @@ public class PlayerServiceImpl implements PlayerService {
 
       playerMap.put(username, initializedPlayer);
 
+      logger.info("New player created: {}", String.valueOf(initializedPlayer));
+
       return Optional.of(initializedPlayer);
     } catch (Exception e) {
+
+      logger.warn("Player creation failed! Cause: {}", e.getMessage());
+
       return Optional.empty();
     }
   }

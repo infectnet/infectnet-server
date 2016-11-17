@@ -1,6 +1,8 @@
 package io.infectnet.server.engine.core.entity;
 
 import io.infectnet.server.engine.core.player.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +15,9 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public class EntityManagerImpl implements EntityManager {
+
+  private static final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
+
   /**
    * Store by username instead of by {@link Player} instance because {@code String}
    * is immutable so hashCode and equals values won't change.
@@ -57,6 +62,8 @@ public class EntityManagerImpl implements EntityManager {
       storage = new PlayerStorage();
 
       playerMap.put(player.getUsername(), storage);
+
+      logger.info("New PlayerStorage initialized for {}", player);
     }
 
     return storage;
