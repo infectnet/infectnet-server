@@ -10,17 +10,19 @@ import dagger.Component;
 
 public class Engine {
 
+  private final Bootstrapper bootstrapper;
+  
   @Singleton
   @Component(modules = {CoreModule.class, ContentModule.class})
   interface Bootstrapper {
+
     EngineConfigurator getEngineConfigurator();
 
     GameLoop getGameLoop();
 
     CodeRepository getCodeRepository();
-  }
 
-  private final Bootstrapper bootstrapper;
+  }
 
   public static Engine create() {
     return new Engine();
