@@ -2,15 +2,15 @@ package io.infectnet.server.engine.content.wrapper;
 
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.wrapper.Action;
+import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperFactory;
-import io.infectnet.server.engine.core.util.ListenableQueue;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class WorkerWrapperFactory implements EntityWrapperFactory<WorkerWrapper> {
-  private final Consumer<Action> actionConsumer;
+  private final BiConsumer<EntityWrapper.WrapperState, Action> actionConsumer;
 
-  public WorkerWrapperFactory(Consumer<Action> actionConsumer) {
+  public WorkerWrapperFactory(BiConsumer<EntityWrapper.WrapperState, Action> actionConsumer) {
     this.actionConsumer = actionConsumer;
   }
 

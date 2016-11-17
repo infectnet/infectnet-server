@@ -2,12 +2,17 @@ package io.infectnet.server.engine.core.entity.wrapper;
 
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class EntityWrapperRepositoryImpl implements EntityWrapperRepository {
+
+  private static final Logger logger = LoggerFactory.getLogger(EntityWrapperRepositoryImpl.class);
+
   private final Map<TypeComponent, EntityWrapperFactory<? extends EntityWrapper>> factoryMap;
 
   public EntityWrapperRepositoryImpl() {
@@ -18,6 +23,8 @@ public class EntityWrapperRepositoryImpl implements EntityWrapperRepository {
   public <T extends EntityWrapper> void registerFactoryForType(TypeComponent typeComponent,
                                                                EntityWrapperFactory<T> wrapperFactory) {
     factoryMap.put(typeComponent, wrapperFactory);
+
+    logger.info("Registered EntityWrapperFactory for: {}", typeComponent);
   }
 
   @Override

@@ -14,11 +14,13 @@ import io.infectnet.server.engine.core.script.selector.Selector;
 import io.infectnet.server.engine.core.script.selector.SelectorFactory;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.function.Supplier;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.ElementsIntoSet;
 
 @Module(includes = { DslModule.class, SelectorModule.class })
 public class ScriptModule {
@@ -40,6 +42,24 @@ public class ScriptModule {
   @Singleton
   public static CodeRepository providesCodeRepository() {
     return new CodeRepositoryImpl();
+  }
+
+  @Provides
+  @ElementsIntoSet
+  public static Set<CompilationCustomizer> providesDefaultEmptyCompilationCustomizerSet() {
+    return Collections.emptySet();
+  }
+
+  @Provides
+  @ElementsIntoSet
+  public static Set<DslBindingCustomizer> providesDefaultEmptyDslBindingCustomizerSet() {
+    return Collections.emptySet();
+  }
+
+  @Provides
+  @ElementsIntoSet
+  public static Set<SelectorFactory<? extends Selector>> providesDefaultEmptySelectorFactorySet() {
+    return Collections.emptySet();
   }
 
   @Provides

@@ -5,6 +5,8 @@ import groovy.lang.Script;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.script.selector.Selector;
 import io.infectnet.server.engine.core.script.selector.SelectorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +15,9 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class ScriptExecutorImpl implements ScriptExecutor {
+
+  private static final Logger logger = LoggerFactory.getLogger(ScriptExecutorImpl.class);
+
   private final Set<SelectorFactory<? extends Selector>> selectorFactories;
 
   private final Map<String, Binding> bindingMap;
@@ -37,6 +42,8 @@ public class ScriptExecutorImpl implements ScriptExecutor {
     script.setBinding(binding);
 
     script.run();
+
+    logger.debug("Code of {} executed!", owner);
 
     /*
      * Reset the binding.

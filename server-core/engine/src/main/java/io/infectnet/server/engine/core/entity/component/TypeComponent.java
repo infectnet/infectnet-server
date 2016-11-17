@@ -81,4 +81,13 @@ public abstract class TypeComponent {
 
     return false;
   }
+
+  @Override
+  public String toString() {
+    return "TypeComponent{" +
+        "parent=" + parent +
+        ", category=" + category +
+        ", name='" + name + '\'' +
+        '}';
+  }
 }

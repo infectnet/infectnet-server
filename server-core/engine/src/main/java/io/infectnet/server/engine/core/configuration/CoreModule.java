@@ -2,16 +2,21 @@ package io.infectnet.server.engine.core.configuration;
 
 import io.infectnet.server.engine.core.GameLoop;
 import io.infectnet.server.engine.core.entity.wrapper.Action;
+import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
+import io.infectnet.server.engine.core.system.ProcessorSystem;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 
-import java.util.function.Consumer;
+import java.util.Collections;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.ElementsIntoSet;
 
 @Module(includes = {ScriptModule.class, EntityModule.class, PlayerModule.class})
 public class CoreModule {
@@ -40,8 +45,20 @@ public class CoreModule {
 
   @Provides
   @Singleton
-  public static Consumer<Action> actionConsumer(
+  public static BiConsumer<EntityWrapper.WrapperState, Action> providesActionConsumer(
       @Named("Action Queue") ListenableQueue<Action> actionQueue) {
-    return actionQueue::add;
+    return (state, action) -> {
+      if (!state.isInteractedWith()) {
+        state.setInteractedWith(true);
+
+        actionQueue.add(action);
+      }
+    };
+  }
+
+  @Provides
+  @ElementsIntoSet
+  public static Set<ProcessorSystem> providesDefaultEmptyProcessorSystemSet() {
+    return Collections.emptySet();
   }
 }

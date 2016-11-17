@@ -18,4 +18,5 @@ public class SystemModule {
       @Named("Request Queue") ListenableQueue<Request> requestQueue) {
     return new PrintSystem(requestQueue);
   }
+
 }

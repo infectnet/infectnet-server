@@ -1,8 +1,13 @@
 package io.infectnet.server.engine.core.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
@@ -15,13 +20,16 @@ import java.util.function.Consumer;
  * {@link Class} they listen to. Whenever an element gets processed, the listener registered
  * with the appropriate {@code Class} will be called to process the element.
  * <p>
- *   <b>Note</b> that listeners are allowed to add elements as they are called, but this
- *   must be used with exceptional care to avoid feedback loops.
+ * <b>Note</b> that listeners are allowed to add elements as they are called, but this
+ * must be used with exceptional care to avoid feedback loops.
  * </p>
  * @param <E> the type of the elements to be stored in the queue
  */
 public class ListenableQueue<E> {
-  private final Map<Class<? extends E>, Consumer<E>> listenerMap;
+
+  private static final Logger logger = LoggerFactory.getLogger(ListenableQueue.class);
+
+  private final Map<Class<? extends E>, List<Consumer<E>>> listenerMap;
 
   private final Queue<E> storage;
 
@@ -36,25 +44,46 @@ public class ListenableQueue<E> {
 
   /**
    * Adds a listener to the queue, that will be called if an element with the listened class
-   * gets processed. If there's already a listener registered for the class, it'll be replaced
-   * with the one specified in this call.
+   * gets processed. Multiple listeners can be added to the same class.
    * @param listenedClass the class the listener will listen to
    * @param listener the listener to register
    * @throws NullPointerException if any of the arguments is {@code null}
    */
   public void addListener(Class<? extends E> listenedClass, Consumer<E> listener) {
-    listenerMap.put(Objects.requireNonNull(listenedClass),
-                    Objects.requireNonNull(listener));
+    Objects.requireNonNull(listenedClass);
+    Objects.requireNonNull(listener);
+
+    if (!listenerMap.containsKey(listenedClass)) {
+      listenerMap.put(listenedClass, new ArrayList<>());
+    }
+
+    listenerMap.get(listenedClass).add(listener);
+
+    logger.info("Listener for {} added: {}", listenedClass, listener);
   }
 
   /**
-   * Removes the class and its listener from the list of listeners. After this call, processing an
-   * element with the specified class will not fire a listener.
-   * @param listenedClass the class to remove
-   * @throws NullPointerException if the class is {@code null}
+   * Removes the specified listener from the list of listeners of the passed class. After this call,
+   * processing an element with the specified class will not fire a listener.
+   * @param listenedClass the class the listener was registered to
+   * @param listener the listener to be removed
+   * @throws NullPointerException if the class or the listener is {@code null}
    */
-  public void removeListenedClass(Class<E> listenedClass) {
-    listenerMap.remove(Objects.requireNonNull(listenedClass));
+  public void removeListener(Class<? extends E> listenedClass, Consumer<E> listener) {
+    Objects.requireNonNull(listenedClass);
+    Objects.requireNonNull(listener);
+
+    List<Consumer<E>> consumers = listenerMap.get(listenedClass);
+
+    if (consumers != null) {
+      consumers.remove(listener);
+
+      if (consumers.isEmpty()) {
+        listenerMap.remove(listenedClass);
+      }
+
+      logger.info("Removed listener for {} from {}: {}", listenedClass, this, listener);
+    }
   }
 
   /**
@@ -87,8 +116,9 @@ public class ListenableQueue<E> {
    * Instructs the queue to process all queued elements. After this call the queue will be empty.
    */
   public void processAll() {
-    while (!storage.isEmpty()) {
-      processOne();
+
+    while (storage.size() > 0) {
+      processElement(storage.remove());
     }
   }
 
@@ -109,10 +139,12 @@ public class ListenableQueue<E> {
   }
 
   private void processElement(E element) {
-    Consumer<E> consumer = listenerMap.get(element.getClass());
+    List<Consumer<E>> consumers = listenerMap.get(element.getClass());
 
-    if (consumer != null) {
-      consumer.accept(element);
+    if (consumers != null) {
+      for (Consumer<E> consumer : consumers) {
+        consumer.accept(element);
+      }
     }
   }
 }

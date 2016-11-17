@@ -6,6 +6,7 @@ import io.infectnet.server.engine.core.entity.wrapper.Action;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperFactory;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import dagger.Module;
 import dagger.Provides;
@@ -18,7 +19,7 @@ public class WrapperModule {
   @IntoMap
   @StringKey(WorkerTypeComponent.TYPE_NAME)
   public static EntityWrapperFactory<? extends EntityWrapper> providesWorkerWrapperFactory(
-      Consumer<Action> actionConsumer) {
+      BiConsumer<EntityWrapper.WrapperState, Action> actionConsumer) {
     return new WorkerWrapperFactory(actionConsumer);
   }
 }

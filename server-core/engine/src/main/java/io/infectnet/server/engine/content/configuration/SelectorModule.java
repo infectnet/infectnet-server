@@ -6,11 +6,8 @@ import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperRepository;
 import io.infectnet.server.engine.core.script.selector.Selector;
 import io.infectnet.server.engine.core.script.selector.SelectorFactory;
 
-import java.util.Collections;
-import java.util.Set;
 import dagger.Module;
 import dagger.Provides;
-import dagger.multibindings.ElementsIntoSet;
 import dagger.multibindings.IntoSet;
 
 @Module
@@ -21,4 +18,5 @@ public class SelectorModule {
       EntityManager entityManager, EntityWrapperRepository entityWrapperRepository) {
     return new OwnSelectorFactory(entityManager, entityWrapperRepository);
   }
+
 }

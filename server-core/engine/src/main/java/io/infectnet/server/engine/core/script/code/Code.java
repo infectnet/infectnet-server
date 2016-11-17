@@ -58,6 +58,6 @@ public class Code {
   }
 
   public boolean isRunnable() {
-    return !(script == null);
+    return script != null;
   }
 }
