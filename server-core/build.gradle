@@ -2,28 +2,20 @@ allprojects {
   apply plugin: "net.ltgt.apt"
   apply plugin: 'application'
 
-
   mainClassName = "io.infectnet.server.core.Application"
 
   dependencies {
-    compile "com.sparkjava:spark-core:2.5.1"
-    compile "org.slf4j:slf4j-simple:1.7.21"
+    compile libs.slf4jSimple
 
-    compile 'com.google.code.gson:gson:2.7'
+    compile libs.dagger
+    apt libs.daggerCompiler
 
-    compile 'com.google.dagger:dagger:2.7'
-    apt 'com.google.dagger:dagger-compiler:2.7'
+    compile libs.commonsLang3
 
-    compile 'org.apache.commons:commons-lang3:3.4'
-
-    compile "org.codehaus.groovy:groovy-all:2.4.1"
-    testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
-    testRuntime "cglib:cglib-nodep:3.1"
-    testCompile "org.hamcrest:hamcrest-core:1.3"
-
-    compile 'org.mindrot:jbcrypt:0.3m'
-
-    compile 'io.jsonwebtoken:jjwt:0.7.0'
+    compile libs.groovy
+    testCompile libs.spockCore
+    testRuntime libs.cglib
+    testCompile libs.hamcrestCore
   }
 }
 
@@ -32,6 +24,8 @@ project(':server-core') {
     compile project(':server-core:controller')
 
     compile project(':server-core:common')
+
+    compile libs.sparkCore
   }
 }
 
@@ -40,6 +34,12 @@ project(':server-core:service') {
     compile project(':server-core:persistence')
 
     compile project(':server-core:common')
+
+    compile libs.gson
+
+    compile libs.jbcrypt
+
+    compile libs.jjwt
   }
 }
 
@@ -50,6 +50,10 @@ project(':server-core:controller') {
     compile project(':server-core:common')
 
     compile project(':server-core:engine')
+
+    compile libs.gson
+
+    compile libs.sparkCore
   }
 }
 
