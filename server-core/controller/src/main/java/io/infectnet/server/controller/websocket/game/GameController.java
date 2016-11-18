@@ -2,7 +2,6 @@ package io.infectnet.server.controller.websocket.game;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-
 import io.infectnet.server.controller.engine.EngineConnector;
 import io.infectnet.server.controller.error.ErrorConvertibleException;
 import io.infectnet.server.controller.websocket.authentication.SessionAuthenticator;
@@ -14,12 +13,16 @@ import io.infectnet.server.controller.websocket.messaging.SocketMessage;
 import io.infectnet.server.service.user.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
 public class GameController {
+
+  private static final Logger logger = LoggerFactory.getLogger(GameController.class);
 
   private final EngineConnector engineConnector;
 
@@ -57,19 +60,9 @@ public class GameController {
       engineConnector.compileAndUploadForUser(user.get(), sourceCode.source)
           .whenComplete(((aVoid, throwable) -> {
             if (throwable == null) {
-              try {
-                sendSuccessfulMessage(session);
-              } catch (IOException e) {
-                //TODO
-                e.printStackTrace();
-              }
+              sendSuccessfulMessage(session);
             } else {
-              try {
-                sendExceptionMessage(session, new CompileFailedException(throwable));
-              } catch (IOException e) {
-                //TODO
-                e.printStackTrace();
-              }
+              sendExceptionMessage(session, new CompilationFailedException(throwable));
             }
           }));
 
@@ -79,14 +72,21 @@ public class GameController {
 
   }
 
-  private void sendExceptionMessage(Session session, ErrorConvertibleException e)
-      throws IOException {
-    messageTransmitter.transmitException(session, e);
+  private void sendSuccessfulMessage(Session session) {
+    try {
+      messageTransmitter
+          .transmitString(session, new SocketMessage<>(Action.OK, StringUtils.EMPTY, String.class));
+    } catch (IOException e) {
+      logger.warn(e.toString());
+    }
   }
 
-  private void sendSuccessfulMessage(Session session) throws IOException {
-    messageTransmitter
-        .transmitString(session, new SocketMessage<>(Action.OK, StringUtils.EMPTY, String.class));
+  private void sendExceptionMessage(Session session, ErrorConvertibleException e) {
+    try {
+      messageTransmitter.transmitException(session, e);
+    } catch (IOException e1) {
+      logger.warn(e.toString());
+    }
   }
 
   private static class SourceCode {
