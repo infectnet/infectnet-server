@@ -37,6 +37,8 @@ public class ScriptGeneratorImpl implements ScriptGenerator {
   @Override
   public Script generateFromCode(String sourceCode) throws ScriptGenerationFailedException {
     try {
+      logger.debug("Compiling new source: {} ...", sourceCode.substring(0, 15));
+
       return groovyShell.parse(Objects.requireNonNull(sourceCode));
     } catch (CompilationFailedException e) {
       logger.debug("Syntax error found during Script generation: {}", e.getMessage());
