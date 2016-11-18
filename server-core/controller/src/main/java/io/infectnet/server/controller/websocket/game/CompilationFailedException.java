@@ -1,7 +1,7 @@
 package io.infectnet.server.controller.websocket.game;
 
-import io.infectnet.server.controller.error.Error;
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.Error;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 
 /**
  * Exception thrown when code uploaded by the user has syntax errors and we notify the user.

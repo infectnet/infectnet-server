@@ -1,7 +1,7 @@
-package io.infectnet.server.controller.admin;
+package io.infectnet.server.controller.rest.admin;
 
-import io.infectnet.server.controller.error.Error;
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.Error;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 
 /**
  * This kind of exception is thrown when there's no token in a request sent to an administrator

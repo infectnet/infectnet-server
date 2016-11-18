@@ -5,9 +5,9 @@ import static spark.Spark.webSocket;
 
 import io.infectnet.server.common.configuration.Configuration;
 import io.infectnet.server.common.configuration.ConfigurationHolder;
-import io.infectnet.server.controller.RestController;
+import io.infectnet.server.controller.rest.RestController;
 import io.infectnet.server.controller.engine.EngineConnector;
-import io.infectnet.server.controller.exception.ExceptionMapperController;
+import io.infectnet.server.controller.rest.exception.ExceptionMapperController;
 import io.infectnet.server.controller.websocket.WebSocketDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

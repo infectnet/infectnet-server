@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 import io.infectnet.server.controller.engine.EngineConnector;
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 import io.infectnet.server.controller.websocket.WebSocketController;
 import io.infectnet.server.controller.websocket.WebSocketDispatcher;
 import io.infectnet.server.controller.websocket.authentication.SessionAuthenticator;

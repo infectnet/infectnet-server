@@ -1,6 +1,6 @@
 package io.infectnet.server.controller.websocket.messaging;
 
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;

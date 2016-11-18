@@ -1,4 +1,4 @@
-package io.infectnet.server.controller.error;
+package io.infectnet.server.controller.utils.error;
 
 /**
  * Abstract exception class that provides a method to be converted to an {@link Error} object.

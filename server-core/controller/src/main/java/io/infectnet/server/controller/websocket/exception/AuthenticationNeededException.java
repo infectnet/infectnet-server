@@ -1,7 +1,7 @@
 package io.infectnet.server.controller.websocket.exception;
 
-import io.infectnet.server.controller.error.Error;
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.Error;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 
 /**
  * Exception thrown when a WebSocket controller requires authenticated session and the session is

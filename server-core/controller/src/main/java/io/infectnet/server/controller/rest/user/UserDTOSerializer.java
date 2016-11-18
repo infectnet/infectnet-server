@@ -1,4 +1,4 @@
-package io.infectnet.server.controller.user;
+package io.infectnet.server.controller.rest.user;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

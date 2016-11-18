@@ -1,7 +1,7 @@
-package io.infectnet.server.controller.user;
+package io.infectnet.server.controller.rest.user;
 
-import io.infectnet.server.controller.error.Error;
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.Error;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 import io.infectnet.server.service.user.exception.ValidationException;
 
 /**

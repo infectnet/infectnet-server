@@ -1,4 +1,4 @@
-package io.infectnet.server.controller.error;
+package io.infectnet.server.controller.utils.error;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
 import io.infectnet.server.controller.websocket.exception.UnsupportedActionException;
 import io.infectnet.server.controller.websocket.handler.OnCloseHandler;
