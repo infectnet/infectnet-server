@@ -1,8 +1,8 @@
 allprojects {
-  apply plugin: "net.ltgt.apt"
+  apply plugin: 'net.ltgt.apt'
   apply plugin: 'application'
 
-  mainClassName = "io.infectnet.server.core.Application"
+  mainClassName = 'io.infectnet.server.core.Application'
 
   dependencies {
     compile libs.slf4jSimple
