@@ -5,10 +5,10 @@ import com.google.gson.JsonParser;
 
 import io.infectnet.server.controller.engine.EngineConnector;
 import io.infectnet.server.controller.websocket.Dispatcher;
-import io.infectnet.server.controller.websocket.GameController;
 import io.infectnet.server.controller.websocket.authentication.AuthenticationController;
 import io.infectnet.server.controller.websocket.authentication.SessionAuthenticator;
 import io.infectnet.server.controller.websocket.authentication.SessionAuthenticatorImpl;
+import io.infectnet.server.controller.websocket.game.GameController;
 import io.infectnet.server.controller.websocket.messaging.Action;
 import io.infectnet.server.controller.websocket.messaging.GsonMessageFactoryImpl;
 import io.infectnet.server.controller.websocket.messaging.MessageFactory;
@@ -43,8 +43,10 @@ public class WebSocketModule {
 
   @Provides
   @Singleton
-  public static GameController providesGameController(EngineConnector engineConnector) {
-    return new GameController(engineConnector);
+  public static GameController providesGameController(EngineConnector engineConnector, Gson gson,
+                                                      SessionAuthenticator sessionAuthenticator,
+                                                      MessageTransmitter messageTransmitter) {
+    return new GameController(engineConnector, gson, sessionAuthenticator, messageTransmitter);
   }
 
   @Provides
@@ -63,9 +65,11 @@ public class WebSocketModule {
   @Singleton
   public static Dispatcher providesDispatcher(JsonParser jsonParser,
                                               MessageTransmitter messageTransmitter,
-                                              AuthenticationController authenticationController) {
+                                              AuthenticationController authenticationController,
+                                              GameController gameController) {
     Dispatcher dispatcher = new Dispatcher(jsonParser, messageTransmitter);
     dispatcher.registerOnMessage(Action.AUTH, authenticationController::handleAuthentication);
+    dispatcher.registerOnMessage(Action.NEW_CODE, gameController::handleNewCodeUpload);
     return dispatcher;
   }
 
