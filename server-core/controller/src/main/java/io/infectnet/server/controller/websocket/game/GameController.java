@@ -2,8 +2,11 @@ package io.infectnet.server.controller.websocket.game;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+
 import io.infectnet.server.controller.engine.EngineConnector;
 import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.websocket.WebSocketController;
+import io.infectnet.server.controller.websocket.WebSocketDispatcher;
 import io.infectnet.server.controller.websocket.authentication.SessionAuthenticator;
 import io.infectnet.server.controller.websocket.exception.AuthenticationNeededException;
 import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
@@ -20,7 +23,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
-public class GameController {
+public class GameController implements WebSocketController {
 
   private static final Logger logger = LoggerFactory.getLogger(GameController.class);
 
@@ -41,7 +44,12 @@ public class GameController {
     this.messageTransmitter = messageTransmitter;
   }
 
-  public void handleNewCodeUpload(Session session, String arguments)
+  @Override
+  public void configure(WebSocketDispatcher webSocketDispatcher) {
+    webSocketDispatcher.registerOnMessage(Action.NEW_CODE, this::handleNewCodeUpload);
+  }
+
+  private void handleNewCodeUpload(Session session, String arguments)
       throws MalformedMessageException, IOException {
 
     Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);

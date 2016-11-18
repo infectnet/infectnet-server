@@ -3,6 +3,8 @@ package io.infectnet.server.controller.websocket.authentication;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
+import io.infectnet.server.controller.websocket.WebSocketController;
+import io.infectnet.server.controller.websocket.WebSocketDispatcher;
 import io.infectnet.server.controller.websocket.exception.AuthenticationFailedException;
 import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
 import io.infectnet.server.controller.websocket.messaging.Action;
@@ -14,7 +16,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import java.io.IOException;
 import java.util.Objects;
 
-public class AuthenticationController {
+public class AuthenticationController implements WebSocketController {
 
   private final SessionAuthenticator sessionAuthenticator;
 
@@ -29,7 +31,12 @@ public class AuthenticationController {
     this.messageTransmitter = messageTransmitter;
   }
 
-  public void handleAuthentication(Session session, String arguments)
+  @Override
+  public void configure(WebSocketDispatcher webSocketDispatcher) {
+    webSocketDispatcher.registerOnMessage(Action.AUTH, this::handleAuthentication);
+  }
+
+  private void handleAuthentication(Session session, String arguments)
       throws MalformedMessageException, IOException {
     Credentials credentials;
 
