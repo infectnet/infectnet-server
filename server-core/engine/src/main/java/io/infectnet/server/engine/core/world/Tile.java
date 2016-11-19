@@ -3,7 +3,7 @@ package io.infectnet.server.engine.core.world;
 import io.infectnet.server.engine.core.entity.Entity;
 
 /**
- * This class represents an atomic piece of the {@link Map}.
+ * This class represents an atomic piece of the {@link World}.
  * It holds information about the type of area defined by this {@code Tile}'s unique coordinates.
  */
 public class Tile {

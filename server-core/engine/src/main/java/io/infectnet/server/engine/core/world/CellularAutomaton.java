@@ -8,9 +8,9 @@ import java.util.Set;
 import static java.lang.Math.random;
 
 /**
- * This class represents a Cellular Automaton, which is used in the generation of the Map tiles.
+ * This class represents a Cellular Automaton, which is used in the generation of the World tiles.
  */
-class CellularAutomaton implements MapGeneratorStrategy{
+public class CellularAutomaton implements WorldGeneratorStrategy {
   /**
    * Sets how dense the initial grid is with living cells.
    */

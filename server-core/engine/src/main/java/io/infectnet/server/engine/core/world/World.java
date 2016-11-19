@@ -6,10 +6,15 @@ import java.util.List;
 
 /**
  * The representation of the game world, in a finite two-dimensional space,
- * bounded by pre-set limitations of its maximum coordinates. The {@code Map} regenerates
+ * bounded by pre-set limitations of its maximum coordinates. The {@code World} regenerates
  * itself when it is first instantiated.
  */
-public interface Map {
+public interface World {
+
+  /**
+   * Generates a new array of Tiles with a Cellular Automaton.
+   */
+  void generate(int height, int width);
 
   /**
    * Returns a list containing all Entities that are visible for the {@link Entity} given.

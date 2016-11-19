@@ -5,18 +5,18 @@ import io.infectnet.server.engine.core.entity.Entity;
 import java.util.HashMap;
 import java.util.List;
 
-public class MapImpl implements Map {
+public class WorldImpl implements World {
   /**
    * The strategy used to generate the map.
    */
-  private final MapGeneratorStrategy strategy;
+  private final WorldGeneratorStrategy strategy;
   /**
-   * The two-dimensional array to hold all tiles in the {@link Map}
+   * The two-dimensional array to hold all tiles in the {@link World}
    */
-  private final Tile[][] tiles;
+  private Tile[][] tiles;
 
   /**
-   * The HashMap containing all Entities which are on the Map,
+   * The HashMap containing all Entities which are on the World,
    * with the Entity as the key, and a position as value.
    */
   private final HashMap<Entity,Tile> entityPositionMap;
@@ -24,27 +24,21 @@ public class MapImpl implements Map {
   /**
    * The height of the map, the number pf positions available on the y-axis.
    */
-  private final int height;
+  private int height;
 
   /**
    * The width of the map, the number pf positions available on the x-axis.
    */
-  private final int width;
+  private int width;
 
   /**
-   * Creates a new Map in a size defined by the parameters. All its tiles are generated at random.
-   * @param height limitation of the number of tiles on the y-axis
-   * @param width limitation of the number of tiles on x-axis
+   * Creates a new World in a size defined by the parameters. All its tiles are generated at random.
+   * @param strategy the strategy to generate the map
    */
-  public MapImpl(MapGeneratorStrategy strategy, int height, int width) {
+  public WorldImpl(WorldGeneratorStrategy strategy) {
     this.strategy = strategy;
-    this.height = height;
-    this.width = width;
 
-    tiles = new Tile[height][width];
     entityPositionMap = new HashMap<>();
-
-    generateNewMap();
   }
 
   @Override
@@ -55,7 +49,12 @@ public class MapImpl implements Map {
   /**
    * Generates a new array of Tiles with a Cellular Automaton.
    */
-  private void generateNewMap() {
+  @Override
+  public void generate(int height, int width) {
+    this.height = height;
+    this.width = width;
+    tiles = new Tile[height][width];
+
     boolean[][] cells = strategy.generateMap(height, width);
 
     for(int i = 0; i < height; ++i){
@@ -72,7 +71,7 @@ public class MapImpl implements Map {
   }
 
   /**
-   * Checks if the given coordinates are on the edge of the Map.
+   * Checks if the given coordinates are on the edge of the World.
    * @param i the y coordinate
    * @param j the x coordinate
    * @return true if it is on the border, false otherwise
