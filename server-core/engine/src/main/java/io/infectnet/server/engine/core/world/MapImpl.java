@@ -56,14 +56,14 @@ public class MapImpl implements Map {
 
     boolean[][] cells = cellularAutomaton.generateMap();
 
-    for(int i = 0; i < tiles.length; ++i){
-      for(int j = 0; j < tiles[i].length; ++j){
+    for(int i = 0; i < height; ++i){
+      for(int j = 0; j < width; ++j){
         if(isBorder(i,j)){
           tiles[i][j] = new Tile(TileType.ROCK);
         } else if(cells[i][j]){
-          tiles[i][j] = new Tile(TileType.ROCK);
-        } else {
           tiles[i][j] = new Tile(TileType.CAVE);
+        } else {
+          tiles[i][j] = new Tile(TileType.ROCK);
         }
       }
     }
@@ -76,8 +76,8 @@ public class MapImpl implements Map {
    * @return true if it is on the border, false otherwise
    */
   private boolean isBorder(int i, int j) {
-    return i == 0 || i == tiles.length-1
-            || j == 0 || j == tiles[i].length;
+    return i == 0 || i == tiles.length - 1
+            || j == 0 || j == tiles[i].length - 1;
   }
 
   public Tile[][] getTiles() {
