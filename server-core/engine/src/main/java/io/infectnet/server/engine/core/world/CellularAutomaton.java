@@ -12,11 +12,6 @@ import static java.lang.Math.random;
  */
 class CellularAutomaton implements MapGeneratorStrategy{
   /**
-   * The first type of cell, that the map consist of.
-    */
-  private static final boolean CAVE = true;
-
-  /**
    * Sets how dense the initial grid is with living cells.
    */
   private static final float chanceToStartAlive = 0.4f;
@@ -37,14 +32,19 @@ class CellularAutomaton implements MapGeneratorStrategy{
   private static final int numberOfSteps = 3;
 
   /**
+   * The minimum limit of the coherent cave system
+   */
+  public static final float RATIO_LIMIT = 0.6f;
+
+  /**
    * The height of the map.
    */
-  private final int height;
+  private int height;
 
   /**
    * The width of the map.
    */
-  private final int width;
+  private int width;
 
   /**
    * The generated map.
@@ -56,22 +56,12 @@ class CellularAutomaton implements MapGeneratorStrategy{
    */
   private boolean[][] finalMap;
 
-  /**
-   * Creates a Cellular Automaton with the limiting numbers.
-   * @param height the height of the map
-   * @param width the width of the map
-   */
-  CellularAutomaton(int height, int width) {
+
+  @Override
+  public boolean[][] generateMap(int height, int width){
     this.height = height;
     this.width = width;
-  }
 
-  /**
-   * Generates a much simplified form of a {@link Map}, using booleans instead of {@link TileType}s.
-   * @return a boolean array containing the data about all tiles that were generated.
-   */
-  @Override
-  public boolean[][] generateMap(){
     map = new boolean[height][width];
 
     initializeMap();
@@ -105,15 +95,15 @@ class CellularAutomaton implements MapGeneratorStrategy{
   private void doSimulationStep(){
     boolean[][] newMap = new boolean[height][width];
 
-    for(int y = 0; y < map.length; ++y){
-      for(int x = 0; x < map[0].length; ++x){
-        int aliveNeighbours = countAliveNeighbours(y, x);
+    for(int h = 0; h < height; ++h){
+      for(int w = 0; w < width; ++w){
+        int rockNeighbours = countRockNeighbours(h, w);
 
-        if(map[y][x]){
-          newMap[y][x] = aliveNeighbours >= deathLimit;
+        if(map[h][w]){
+          newMap[h][w] = rockNeighbours >= deathLimit;
         }
         else{
-          newMap[y][x] = aliveNeighbours > birthLimit;
+          newMap[h][w] = rockNeighbours > birthLimit;
         }
       }
     }
@@ -126,7 +116,7 @@ class CellularAutomaton implements MapGeneratorStrategy{
    * @param y the second coordinate
    * @return the number of the alive cells found surrounding the (x,y) cell
    */
-  private int countAliveNeighbours(int x, int y){
+  private int countRockNeighbours(int x, int y){
     int count = 0;
 
     for(int i = -1; i < 2; ++i){
@@ -137,7 +127,7 @@ class CellularAutomaton implements MapGeneratorStrategy{
         if(!isMiddleCell(i, j)){
           if(isInvalidCoordinate(neighbourX, neighbourY)){
             count = count + 1;
-          } else if(!map[neighbourX][neighbourY]){
+          } else if(map[neighbourX][neighbourY] == ROCK){
             count = count + 1;
           }
         }
@@ -175,7 +165,7 @@ class CellularAutomaton implements MapGeneratorStrategy{
     float ratio = 0f;
     Position startingPosition = new Position(0,0);
 
-    while(ratio < 0.6f){
+    while(ratio < RATIO_LIMIT){
       finalMap = new boolean[height][width];
 
       startingPosition = findNextCavePosition(startingPosition);
@@ -196,7 +186,7 @@ class CellularAutomaton implements MapGeneratorStrategy{
    * @param position the starting position
    */
   private void floodFillWholeCave(Position position){
-    if(!isValidPosition(position)){
+    if(isInvalidCoordinate(position.getH(), position.getW())){
       return;
     }
 
@@ -222,26 +212,22 @@ class CellularAutomaton implements MapGeneratorStrategy{
       Position eastPos = pos.stepEast();
 
       if(canStep(set, southPos)){
-        set.add(southPos);
         queue.add(southPos);
       }
       if(canStep(set, westPos)){
-        set.add(westPos);
         queue.add(westPos);
       }
       if(canStep(set, northPos)){
-        set.add(northPos);
         queue.add(northPos);
       }
       if(canStep(set, eastPos)){
-        set.add(eastPos);
         queue.add(eastPos);
       }
     }
   }
 
-  private boolean canStep(Set<Position> set, Position southPos) {
-    return isValidPosition(southPos) && isNotVisitedCave(southPos) && set.add(southPos);
+  private boolean canStep(Set<Position> set, Position pos) {
+    return !isInvalidCoordinate(pos.getH(), pos.getW()) && isNotVisitedCave(pos) && set.add(pos);
   }
 
   /**
@@ -251,15 +237,6 @@ class CellularAutomaton implements MapGeneratorStrategy{
    */
   private boolean isNotVisitedCave(Position pos) {
     return map[pos.getH()][pos.getW()] && !finalMap[pos.getH()][pos.getW()];
-  }
-
-  /**
-   * Checks if the Position is on the map, so not beyond its borders
-   * @param position the position to check
-   * @return true if it is valid, false otherwise
-   */
-  private boolean isValidPosition(Position position) {
-    return position.getH() < height && position.getW() < width && position.getH() >= 0 && position.getW() >= 0;
   }
 
   /**
@@ -302,8 +279,8 @@ class CellularAutomaton implements MapGeneratorStrategy{
    * An inner class to hold two coordinates together.
    */
   private class Position{
-    private int h;
-    private int w;
+    private final int h;
+    private final int w;
 
     Position(int h, int w){
       this.h = h;

@@ -7,15 +7,19 @@ import java.util.List;
 
 public class MapImpl implements Map {
   /**
+   * The strategy used to generate the map.
+   */
+  private final MapGeneratorStrategy strategy;
+  /**
    * The two-dimensional array to hold all tiles in the {@link Map}
    */
-  private Tile[][] tiles;
+  private final Tile[][] tiles;
 
   /**
    * The HashMap containing all Entities which are on the Map,
    * with the Entity as the key, and a position as value.
    */
-  private HashMap<Entity,Tile> entityPositionMap;
+  private final HashMap<Entity,Tile> entityPositionMap;
 
   /**
    * The height of the map, the number pf positions available on the y-axis.
@@ -32,7 +36,8 @@ public class MapImpl implements Map {
    * @param height limitation of the number of tiles on the y-axis
    * @param width limitation of the number of tiles on x-axis
    */
-  public MapImpl(int height, int width) {
+  public MapImpl(MapGeneratorStrategy strategy, int height, int width) {
+    this.strategy = strategy;
     this.height = height;
     this.width = width;
 
@@ -51,15 +56,13 @@ public class MapImpl implements Map {
    * Generates a new array of Tiles with a Cellular Automaton.
    */
   private void generateNewMap() {
-    CellularAutomaton cellularAutomaton = new CellularAutomaton(height, width);
-
-    boolean[][] cells = cellularAutomaton.generateMap();
+    boolean[][] cells = strategy.generateMap(height, width);
 
     for(int i = 0; i < height; ++i){
       for(int j = 0; j < width; ++j){
         if(isBorder(i,j)){
           tiles[i][j] = new Tile(TileType.ROCK);
-        } else if(cells[i][j]){
+        } else if(cells[i][j] == strategy.CAVE){
           tiles[i][j] = new Tile(TileType.CAVE);
         } else {
           tiles[i][j] = new Tile(TileType.ROCK);
