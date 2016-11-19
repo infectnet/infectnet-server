@@ -66,11 +66,7 @@ public class EngineConnectorImpl implements EngineConnector {
     Player player = createOrGetPlayer(user);
     Optional<String> source = engine.getSourceCodeForPlayer(player);
 
-    if (source.isPresent()) {
-      return source.get();
-    } else {
-      return StringUtils.EMPTY;
-    }
+    return source.orElse(StringUtils.EMPTY);
   }
 
   private Player createOrGetPlayer(UserDTO user) {

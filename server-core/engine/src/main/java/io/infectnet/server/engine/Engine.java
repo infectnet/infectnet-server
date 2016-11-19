@@ -106,11 +106,7 @@ public class Engine {
   public Optional<String> getSourceCodeForPlayer(Player player) {
     Optional<Code> userCode = bootstrapper.getCodeRepository().getCodeByPlayer(player);
 
-    if (userCode.isPresent()) {
-      return Optional.of(userCode.get().getSource());
-    } else {
-      return Optional.empty();
-    }
+    return userCode.map(Code::getSource);
   }
 
   /**
