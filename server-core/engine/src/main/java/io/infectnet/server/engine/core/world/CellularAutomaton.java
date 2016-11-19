@@ -1,9 +1,11 @@
 package io.infectnet.server.engine.core.world;
 
-import static java.lang.Math.random;
-
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
+
+import static java.lang.Math.random;
 
 /**
  * This class represents a Cellular Automaton, which is used in the generation of the Map tiles.
@@ -194,11 +196,14 @@ class CellularAutomaton {
     }
 
     Queue<Position> queue = new LinkedList<>();
+    Set<Position> set = new HashSet<>();
+
     queue.add(position);
+    set.add(position);
 
     while(!queue.isEmpty()){
-      System.out.print(queue.size()+" ");
       Position pos = queue.remove();
+      set.remove(pos);
       int h = pos.getH();
       int w = pos.getW();
 
@@ -210,16 +215,16 @@ class CellularAutomaton {
       Position westPos = pos.stepWest();
       Position northPos = pos.stepNorth();
       Position eastPos = pos.stepEast();
-      if(isValidPosition(southPos) && isNotVisitedCave(southPos)){
+      if(isValidPosition(southPos) && isNotVisitedCave(southPos) && set.add(southPos)){
         queue.add(southPos);
       }
-      if(isValidPosition(westPos) && isNotVisitedCave(westPos)){
+      if(isValidPosition(westPos) && isNotVisitedCave(westPos) && set.add(westPos)){
         queue.add(westPos);
       }
-      if(isValidPosition(northPos) && isNotVisitedCave(northPos)){
+      if(isValidPosition(northPos) && isNotVisitedCave(northPos) && set.add(northPos)){
         queue.add(northPos);
       }
-      if(isValidPosition(eastPos) && isNotVisitedCave(eastPos)){
+      if(isValidPosition(eastPos) && isNotVisitedCave(eastPos) && set.add(eastPos)){
         queue.add(eastPos);
       }
     }
