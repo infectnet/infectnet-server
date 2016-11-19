@@ -4,8 +4,6 @@ import io.infectnet.server.common.configuration.ConfigurationHolder;
 import io.infectnet.server.engine.Engine;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.service.user.UserDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -13,8 +11,6 @@ import java.util.concurrent.CompletableFuture;
  * Default implementation of {@link EngineConnector}.
  */
 public class EngineConnectorImpl implements EngineConnector {
-
-  private static final Logger logger = LoggerFactory.getLogger(EngineConnectorImpl.class);
 
   private static final String DESIRED_TICK_DURATION_PROPERTY = "desired_tick_duration";
 
