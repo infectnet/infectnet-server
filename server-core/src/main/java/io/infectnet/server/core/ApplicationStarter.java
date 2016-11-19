@@ -5,10 +5,10 @@ import static spark.Spark.webSocket;
 
 import io.infectnet.server.common.configuration.Configuration;
 import io.infectnet.server.common.configuration.ConfigurationHolder;
-import io.infectnet.server.controller.RestController;
+import io.infectnet.server.controller.rest.RestController;
 import io.infectnet.server.controller.engine.EngineConnector;
-import io.infectnet.server.controller.exception.ExceptionMapperController;
-import io.infectnet.server.controller.websocket.Dispatcher;
+import io.infectnet.server.controller.rest.exception.ExceptionMapperController;
+import io.infectnet.server.controller.websocket.WebSocketDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,20 +24,20 @@ class ApplicationStarter {
 
   private final ExceptionMapperController exceptionMapperController;
 
-  private final Dispatcher dispatcher;
+  private final WebSocketDispatcher webSocketDispatcher;
 
   private final EngineConnector engineConnector;
 
   @Inject
   ApplicationStarter(Set<RestController> restControllers,
                      ExceptionMapperController exceptionMapperController,
-                     Dispatcher dispatcher,
+                     WebSocketDispatcher webSocketDispatcher,
                      EngineConnector engineConnector) {
     this.restControllers = restControllers;
 
     this.exceptionMapperController = exceptionMapperController;
 
-    this.dispatcher = dispatcher;
+    this.webSocketDispatcher = webSocketDispatcher;
 
     this.engineConnector = engineConnector;
 
@@ -55,7 +55,7 @@ class ApplicationStarter {
     ConfigurationHolder.INSTANCE.setActiveConfiguration(configuration.get());
 
     // Must be defined before regular HTTP routes!
-    webSocket("/ws", dispatcher);
+    webSocket("/ws", webSocketDispatcher);
 
     // CORS only should be enabled after WebSocket initialization
     CorsSupporter.enableCORS();

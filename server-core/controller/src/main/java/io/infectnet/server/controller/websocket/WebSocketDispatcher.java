@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 import io.infectnet.server.controller.websocket.exception.MalformedMessageException;
 import io.infectnet.server.controller.websocket.exception.UnsupportedActionException;
 import io.infectnet.server.controller.websocket.handler.OnCloseHandler;
@@ -26,11 +26,15 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
+/**
+ * Responsible for dispatching WebSocket events between registered handlers.
+ */
 @WebSocket
-public class Dispatcher {
+public class WebSocketDispatcher {
 
-  private static final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
+  private static final Logger logger = LoggerFactory.getLogger(WebSocketDispatcher.class);
 
   private final List<OnConnectHandler> onConnectHandlers;
 
@@ -42,12 +46,17 @@ public class Dispatcher {
 
   private final MessageTransmitter messageTransmitter;
 
-  public Dispatcher(JsonParser jsonParser, MessageTransmitter messageTransmitter) {
+  public WebSocketDispatcher(Set<WebSocketController> webSocketControllers, JsonParser jsonParser,
+                             MessageTransmitter messageTransmitter) {
     this.onConnectHandlers = new ArrayList<>();
     this.onCloseHandlers = new ArrayList<>();
     this.onMessageHandlerMap = new EnumMap<>(Action.class);
     this.jsonParser = jsonParser;
     this.messageTransmitter = messageTransmitter;
+
+    webSocketControllers.forEach(c -> {
+      c.configure(this);
+    });
   }
 
   @OnWebSocketConnect
@@ -98,14 +107,27 @@ public class Dispatcher {
     }
   }
 
+  /**
+   * Registers an {@link OnConnectHandler} for WebSocket connection starts.
+   * @param handler the handler
+   */
   public void registerOnConnect(OnConnectHandler handler) {
     onConnectHandlers.add(Objects.requireNonNull(handler));
   }
 
+  /**
+   * Registers an {@link OnCloseHandler} for WebSocket connection close.
+   * @param handler the handler
+   */
   public void registerOnClose(OnCloseHandler handler) {
     onCloseHandlers.add(Objects.requireNonNull(handler));
   }
 
+  /**
+   * Registers an {@link OnMessageHandler} for the specified {@link Action}.
+   * @param action the action the handler will listen to
+   * @param handler the handler
+   */
   public void registerOnMessage(Action action, OnMessageHandler handler) {
     onMessageHandlerMap.put(Objects.requireNonNull(action), Objects.requireNonNull(handler));
   }

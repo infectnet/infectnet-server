@@ -1,6 +1,6 @@
 package io.infectnet.server.controller.websocket.messaging;
 
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
@@ -23,9 +23,9 @@ public class MessageTransmitterImpl implements MessageTransmitter {
   @Override
   public void transmitException(Session session, ErrorConvertibleException exception)
       throws IOException {
-    SocketMessage<io.infectnet.server.controller.error.Error> message =
+    SocketMessage<io.infectnet.server.controller.utils.error.Error> message =
         new SocketMessage<>(Action.ERROR, exception.toError(),
-            io.infectnet.server.controller.error.Error.class);
+            io.infectnet.server.controller.utils.error.Error.class);
 
     transmitString(session, message);
   }

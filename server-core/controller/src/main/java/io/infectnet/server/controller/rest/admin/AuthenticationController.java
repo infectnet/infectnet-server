@@ -1,11 +1,11 @@
-package io.infectnet.server.controller.admin;
+package io.infectnet.server.controller.rest.admin;
 
 import static spark.Spark.before;
 import static spark.Spark.post;
 
 import com.google.gson.Gson;
 
-import io.infectnet.server.controller.RestController;
+import io.infectnet.server.controller.rest.RestController;
 import io.infectnet.server.service.admin.AuthenticationService;
 
 import java.util.Collections;

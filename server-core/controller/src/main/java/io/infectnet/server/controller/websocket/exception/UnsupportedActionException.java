@@ -1,7 +1,7 @@
 package io.infectnet.server.controller.websocket.exception;
 
-import io.infectnet.server.controller.error.Error;
-import io.infectnet.server.controller.error.ErrorConvertibleException;
+import io.infectnet.server.controller.utils.error.Error;
+import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
 import io.infectnet.server.controller.websocket.messaging.Action;
 
 public class UnsupportedActionException extends ErrorConvertibleException {

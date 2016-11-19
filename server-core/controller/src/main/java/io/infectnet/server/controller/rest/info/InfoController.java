@@ -1,9 +1,9 @@
-package io.infectnet.server.controller.info;
+package io.infectnet.server.controller.rest.info;
 
 import com.google.gson.Gson;
 
 import io.infectnet.server.common.VersionHolder;
-import io.infectnet.server.controller.RestController;
+import io.infectnet.server.controller.rest.RestController;
 
 import spark.Request;
 import spark.Response;

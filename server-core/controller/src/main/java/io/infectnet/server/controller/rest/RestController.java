@@ -1,4 +1,4 @@
-package io.infectnet.server.controller;
+package io.infectnet.server.controller.rest;
 
 /**
  * Interface used for creating REST endpoints.

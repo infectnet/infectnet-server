@@ -1,10 +1,10 @@
-package io.infectnet.server.controller.user;
+package io.infectnet.server.controller.rest.user;
 
 import static spark.Spark.get;
 
 import com.google.gson.Gson;
 
-import io.infectnet.server.controller.RestController;
+import io.infectnet.server.controller.rest.RestController;
 import io.infectnet.server.service.user.UserService;
 
 import spark.Request;

@@ -2,6 +2,7 @@ package io.infectnet.server.engine.core.script.generation;
 
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
@@ -37,6 +38,8 @@ public class ScriptGeneratorImpl implements ScriptGenerator {
   @Override
   public Script generateFromCode(String sourceCode) throws ScriptGenerationFailedException {
     try {
+      logger.debug("Compiling new source: {} ...", StringUtils.left(sourceCode, 15));
+
       return groovyShell.parse(Objects.requireNonNull(sourceCode));
     } catch (CompilationFailedException e) {
       logger.debug("Syntax error found during Script generation: {}", e.getMessage());
