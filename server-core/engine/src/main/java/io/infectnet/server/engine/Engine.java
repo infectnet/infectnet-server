@@ -117,8 +117,10 @@ public class Engine {
           compilationErrorsException =
           (MultipleCompilationErrorsException) e.getCause();
 
-      // The safety of this cast is guaranteed by the implementation of the addError method
-      // in the ErrorCollector class.
+      /*
+      * The safety of this cast is guaranteed by the implementation of the addError method
+      * in the ErrorCollector class.
+      */
       @SuppressWarnings("unchecked")
       List<Message> syntaxExceptions =
           compilationErrorsException.getErrorCollector().getErrors();

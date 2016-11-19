@@ -16,4 +16,16 @@ public class CompilationError {
     this.columnNumber = columnNumber;
     this.message = message;
   }
+
+  public int getLineNumber() {
+    return lineNumber;
+  }
+
+  public int getColumnNumber() {
+    return columnNumber;
+  }
+
+  public String getMessage() {
+    return message;
+  }
 }

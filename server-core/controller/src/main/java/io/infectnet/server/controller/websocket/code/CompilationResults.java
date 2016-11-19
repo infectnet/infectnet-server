@@ -15,4 +15,8 @@ public class CompilationResults {
       List<CompilationError> errors) {
     this.errors = errors;
   }
+
+  public List<CompilationError> getErrors() {
+    return errors;
+  }
 }
