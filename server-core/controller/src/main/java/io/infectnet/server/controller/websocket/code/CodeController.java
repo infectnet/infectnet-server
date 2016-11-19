@@ -1,4 +1,5 @@
-package io.infectnet.server.controller.websocket.game;
+package io.infectnet.server.controller.websocket.code;
+
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -23,9 +24,12 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
-public class GameController implements WebSocketController {
+/**
+ * WebSocket controller responsible for handling code uploading and code providing.
+ */
+public class CodeController implements WebSocketController {
 
-  private static final Logger logger = LoggerFactory.getLogger(GameController.class);
+  private static final Logger logger = LoggerFactory.getLogger(CodeController.class);
 
   private final EngineConnector engineConnector;
 
@@ -35,7 +39,7 @@ public class GameController implements WebSocketController {
 
   private final MessageTransmitter messageTransmitter;
 
-  public GameController(EngineConnector engineConnector, Gson gson,
+  public CodeController(EngineConnector engineConnector, Gson gson,
                         SessionAuthenticator sessionAuthenticator,
                         MessageTransmitter messageTransmitter) {
     this.engineConnector = engineConnector;
@@ -46,7 +50,7 @@ public class GameController implements WebSocketController {
 
   @Override
   public void configure(WebSocketDispatcher webSocketDispatcher) {
-    webSocketDispatcher.registerOnMessage(Action.NEW_CODE, this::handleNewCodeUpload);
+    webSocketDispatcher.registerOnMessage(Action.PUT_CODE, this::handleNewCodeUpload);
   }
 
   private void handleNewCodeUpload(Session session, String arguments)
@@ -77,7 +81,6 @@ public class GameController implements WebSocketController {
     } else {
       messageTransmitter.transmitException(session, new AuthenticationNeededException());
     }
-
   }
 
   private void sendSuccessfulMessage(Session session) {

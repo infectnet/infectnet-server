@@ -7,9 +7,28 @@ import io.infectnet.server.controller.websocket.WebSocketDispatcher;
  * and the {@link WebSocketDispatcher}
  */
 public enum Action {
+  /**
+   * Used when the client wants to authenticate itself.
+   */
   AUTH,
+
+  /**
+   * Used when the client wants to receive map updates.
+   */
   SUBSCRIBE,
-  NEW_CODE,
+
+  /**
+   * Used when the client uploads new code.
+   */
+  PUT_CODE,
+
+  /**
+   * Used for showing the client something went wrong.
+   */
   ERROR,
+
+  /**
+   * Used for showing the client that everything went ok.
+   */
   OK
 }

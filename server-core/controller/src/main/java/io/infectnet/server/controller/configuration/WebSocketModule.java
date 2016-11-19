@@ -9,7 +9,7 @@ import io.infectnet.server.controller.websocket.WebSocketDispatcher;
 import io.infectnet.server.controller.websocket.authentication.AuthenticationController;
 import io.infectnet.server.controller.websocket.authentication.SessionAuthenticator;
 import io.infectnet.server.controller.websocket.authentication.SessionAuthenticatorImpl;
-import io.infectnet.server.controller.websocket.game.GameController;
+import io.infectnet.server.controller.websocket.code.CodeController;
 import io.infectnet.server.controller.websocket.messaging.GsonMessageFactoryImpl;
 import io.infectnet.server.controller.websocket.messaging.MessageFactory;
 import io.infectnet.server.controller.websocket.messaging.MessageTransmitter;
@@ -47,11 +47,11 @@ public class WebSocketModule {
   @Provides
   @IntoSet
   @Singleton
-  public static WebSocketController providesGameController(EngineConnector engineConnector,
+  public static WebSocketController providesCodeController(EngineConnector engineConnector,
                                                            Gson gson,
                                                            SessionAuthenticator sessionAuthenticator,
                                                            MessageTransmitter messageTransmitter) {
-    return new GameController(engineConnector, gson, sessionAuthenticator, messageTransmitter);
+    return new CodeController(engineConnector, gson, sessionAuthenticator, messageTransmitter);
   }
 
   @Provides

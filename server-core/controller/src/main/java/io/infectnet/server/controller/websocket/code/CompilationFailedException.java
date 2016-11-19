@@ -1,4 +1,4 @@
-package io.infectnet.server.controller.websocket.game;
+package io.infectnet.server.controller.websocket.code;
 
 import io.infectnet.server.controller.utils.error.Error;
 import io.infectnet.server.controller.utils.error.ErrorConvertibleException;
