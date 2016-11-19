@@ -3,9 +3,11 @@ package io.infectnet.server.controller.engine;
 import io.infectnet.server.common.configuration.ConfigurationHolder;
 import io.infectnet.server.engine.Engine;
 import io.infectnet.server.engine.core.player.Player;
+import io.infectnet.server.engine.core.script.generation.CompilationError;
 import io.infectnet.server.service.user.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -44,15 +46,15 @@ public class EngineConnectorImpl implements EngineConnector {
   }
 
   @Override
-  public CompletableFuture<Void> compileAndUploadForUser(UserDTO user, String source) {
+  public CompletableFuture<List<CompilationError>> compileAndUploadForUser(UserDTO user,
+                                                                           String source) {
     Player player = createOrGetPlayer(user);
 
-    CompletableFuture<Void> result = new CompletableFuture<>();
+    CompletableFuture<List<CompilationError>> result = new CompletableFuture<>();
 
     CompletableFuture.runAsync(() -> {
       try {
-        engine.compileAndUploadForPlayer(player, source);
-        result.complete(null);
+        result.complete(engine.compileAndUploadForPlayer(player, source));
       } catch (Exception e) {
         result.completeExceptionally(e);
       }

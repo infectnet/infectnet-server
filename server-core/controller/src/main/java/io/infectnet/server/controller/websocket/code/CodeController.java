@@ -14,13 +14,14 @@ import io.infectnet.server.controller.websocket.exception.MalformedMessageExcept
 import io.infectnet.server.controller.websocket.messaging.Action;
 import io.infectnet.server.controller.websocket.messaging.MessageTransmitter;
 import io.infectnet.server.controller.websocket.messaging.SocketMessage;
+import io.infectnet.server.engine.core.script.generation.CompilationError;
 import io.infectnet.server.service.user.UserDTO;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -54,26 +55,21 @@ public class CodeController implements WebSocketController {
     webSocketDispatcher.registerOnMessage(Action.GET_CODE, this::provideCurrentCode);
   }
 
+  /**
+   * Handles client uploading new source code.
+   */
   private void handleNewCodeUpload(Session session, String arguments)
       throws MalformedMessageException, IOException {
 
     Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);
 
     if (user.isPresent()) {
-      SourceCode sourceCode;
+      SourceCode sourceCode = parseArgumentsToSourceCode(arguments);
 
-      try {
-        sourceCode = gson.fromJson(arguments, SourceCode.class);
-
-        Objects.requireNonNull(sourceCode.source);
-      } catch (JsonParseException | NullPointerException e) {
-        throw new MalformedMessageException(e);
-      }
-
-      engineConnector.compileAndUploadForUser(user.get(), sourceCode.source)
-          .whenComplete(((aVoid, throwable) -> {
+      engineConnector.compileAndUploadForUser(user.get(), Objects.requireNonNull(sourceCode.source))
+          .whenComplete(((compilationErrors, throwable) -> {
             if (throwable == null) {
-              sendSuccessfulMessage(session);
+              sendSuccessfulMessage(session, compilationErrors);
             } else {
               sendExceptionMessage(session, new CompilationFailedException(throwable));
             }
@@ -84,6 +80,22 @@ public class CodeController implements WebSocketController {
     }
   }
 
+  /**
+   * Parses the client input as a {@link SourceCode} object.
+   * @param arguments the client input source
+   * @throws MalformedMessageException when the input is malformed
+   */
+  private SourceCode parseArgumentsToSourceCode(String arguments) throws MalformedMessageException {
+    try {
+      return gson.fromJson(arguments, SourceCode.class);
+    } catch (JsonParseException | NullPointerException e) {
+      throw new MalformedMessageException(e);
+    }
+  }
+
+  /**
+   * Handles client requesting its current source code.
+   */
   private void provideCurrentCode(Session session, String arguments) throws IOException {
     Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);
 
@@ -99,15 +111,24 @@ public class CodeController implements WebSocketController {
     }
   }
 
-  private void sendSuccessfulMessage(Session session) {
+  /**
+   * Sends message to the client containing if the uploaded code had syntax errors.
+   */
+  private void sendSuccessfulMessage(Session session, List<CompilationError> compilationErrors) {
     try {
       messageTransmitter
-          .transmitString(session, new SocketMessage<>(Action.OK, StringUtils.EMPTY, String.class));
+          .transmitString(session,
+              new SocketMessage<>(Action.COMPILATION_RESULTS,
+                  new CompilationResults(compilationErrors),
+                  CompilationResults.class));
     } catch (IOException e) {
       logger.warn(e.toString());
     }
   }
 
+  /**
+   * Sends message to the client if problems occured during compilation process.
+   */
   private void sendExceptionMessage(Session session, ErrorConvertibleException e) {
     try {
       messageTransmitter.transmitException(session, e);

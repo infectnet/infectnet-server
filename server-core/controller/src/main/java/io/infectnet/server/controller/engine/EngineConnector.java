@@ -1,8 +1,10 @@
 package io.infectnet.server.controller.engine;
 
 import io.infectnet.server.engine.Engine;
+import io.infectnet.server.engine.core.script.generation.CompilationError;
 import io.infectnet.server.service.user.UserDTO;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -36,7 +38,7 @@ public interface EngineConnector {
    * @param user the user who uploaded the source code
    * @param source the source code
    */
-  CompletableFuture<Void> compileAndUploadForUser(UserDTO user, String source);
+  CompletableFuture<List<CompilationError>> compileAndUploadForUser(UserDTO user, String source);
 
   /**
    * Provides the currently uploaded source code of a user.

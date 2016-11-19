@@ -35,5 +35,10 @@ public enum Action {
   /**
    * Used for showing the client that everything went ok.
    */
-  OK
+  OK,
+
+  /**
+   * Used for showing the client that the uploaded source code had any compilation errors.
+   */
+  COMPILATION_RESULTS
 }
