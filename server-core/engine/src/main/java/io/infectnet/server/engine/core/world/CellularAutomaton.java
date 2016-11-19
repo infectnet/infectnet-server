@@ -107,7 +107,7 @@ class CellularAutomaton implements MapGeneratorStrategy{
 
     for(int y = 0; y < map.length; ++y){
       for(int x = 0; x < map[0].length; ++x){
-        int aliveNeighbours = countAliveNeighbours(x, y);
+        int aliveNeighbours = countAliveNeighbours(y, x);
 
         if(map[y][x]){
           newMap[y][x] = aliveNeighbours >= deathLimit;
@@ -155,7 +155,7 @@ class CellularAutomaton implements MapGeneratorStrategy{
    */
   private boolean isInvalidCoordinate(int neighbourX, int neighbourY) {
     return
-        neighbourX < 0 || neighbourY < 0 || neighbourX >= width || neighbourY >= height;
+        neighbourX < 0 || neighbourY < 0 || neighbourX >= height || neighbourY >= width;
   }
 
   /**
@@ -221,19 +221,27 @@ class CellularAutomaton implements MapGeneratorStrategy{
       Position northPos = pos.stepNorth();
       Position eastPos = pos.stepEast();
 
-      if(isValidPosition(southPos) && isNotVisitedCave(southPos) && set.add(southPos)){
+      if(canStep(set, southPos)){
+        set.add(southPos);
         queue.add(southPos);
       }
-      if(isValidPosition(westPos) && isNotVisitedCave(westPos) && set.add(westPos)){
+      if(canStep(set, westPos)){
+        set.add(westPos);
         queue.add(westPos);
       }
-      if(isValidPosition(northPos) && isNotVisitedCave(northPos) && set.add(northPos)){
+      if(canStep(set, northPos)){
+        set.add(northPos);
         queue.add(northPos);
       }
-      if(isValidPosition(eastPos) && isNotVisitedCave(eastPos) && set.add(eastPos)){
+      if(canStep(set, eastPos)){
+        set.add(eastPos);
         queue.add(eastPos);
       }
     }
+  }
+
+  private boolean canStep(Set<Position> set, Position southPos) {
+    return isValidPosition(southPos) && isNotVisitedCave(southPos) && set.add(southPos);
   }
 
   /**
