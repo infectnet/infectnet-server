@@ -64,17 +64,9 @@ public class CodeController implements WebSocketController {
     Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);
 
     if (user.isPresent()) {
-      SourceCode sourceCode;
+      SourceCode sourceCode = parseArgumentsToSourceCode(arguments);
 
-      try {
-        sourceCode = gson.fromJson(arguments, SourceCode.class);
-
-        Objects.requireNonNull(sourceCode.source);
-      } catch (JsonParseException | NullPointerException e) {
-        throw new MalformedMessageException(e);
-      }
-
-      engineConnector.compileAndUploadForUser(user.get(), sourceCode.source)
+      engineConnector.compileAndUploadForUser(user.get(), Objects.requireNonNull(sourceCode.source))
           .whenComplete(((compilationErrors, throwable) -> {
             if (throwable == null) {
               sendSuccessfulMessage(session, compilationErrors);
@@ -85,6 +77,19 @@ public class CodeController implements WebSocketController {
 
     } else {
       messageTransmitter.transmitException(session, new AuthenticationNeededException());
+    }
+  }
+
+  /**
+   * Parses the client input as a {@link SourceCode} object.
+   * @param arguments the client input source
+   * @throws MalformedMessageException when the input is malformed
+   */
+  private SourceCode parseArgumentsToSourceCode(String arguments) throws MalformedMessageException {
+    try {
+      return gson.fromJson(arguments, SourceCode.class);
+    } catch (JsonParseException | NullPointerException e) {
+      throw new MalformedMessageException(e);
     }
   }
 
