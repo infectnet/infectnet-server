@@ -44,7 +44,6 @@ public class MapImpl implements Map {
 
   @Override
   public List<Entity> listOfEntitiesVisible(Entity entity) {
-    //TODO
     return null;
   }
 
@@ -86,10 +85,5 @@ public class MapImpl implements Map {
 
   public HashMap<Entity, Tile> getEntityPositionMap() {
     return entityPositionMap;
-  }
-
-  public void addEntityOnTile(Entity entity){
-    //TODO add PositionComponent to Entity
-    //TODO entityPositionMap.put(entity, entity.getPositionComponent().getTile())
   }
 }

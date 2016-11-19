@@ -10,7 +10,11 @@ import static java.lang.Math.random;
 /**
  * This class represents a Cellular Automaton, which is used in the generation of the Map tiles.
  */
-class CellularAutomaton {
+class CellularAutomaton implements MapGeneratorStrategy{
+  /**
+   * The first type of cell, that the map consist of.
+    */
+  private static final boolean CAVE = true;
 
   /**
    * Sets how dense the initial grid is with living cells.
@@ -66,7 +70,8 @@ class CellularAutomaton {
    * Generates a much simplified form of a {@link Map}, using booleans instead of {@link TileType}s.
    * @return a boolean array containing the data about all tiles that were generated.
    */
-  boolean[][] generateMap(){
+  @Override
+  public boolean[][] generateMap(){
     map = new boolean[height][width];
 
     initializeMap();
@@ -87,7 +92,7 @@ class CellularAutomaton {
     for(int x = 0; x < width; ++x){
       for(int y = 0; y < height; ++y){
         if(random() < chanceToStartAlive){
-          map[y][x] = true;
+          map[y][x] = CAVE;
         }
       }
     }
@@ -208,13 +213,14 @@ class CellularAutomaton {
       int w = pos.getW();
 
       if(isNotVisitedCave(pos)){
-        finalMap[h][w] = true;
+        finalMap[h][w] = CAVE;
       }
 
       Position southPos = pos.stepSouth();
       Position westPos = pos.stepWest();
       Position northPos = pos.stepNorth();
       Position eastPos = pos.stepEast();
+
       if(isValidPosition(southPos) && isNotVisitedCave(southPos) && set.add(southPos)){
         queue.add(southPos);
       }
@@ -334,6 +340,25 @@ class CellularAutomaton {
 
     int getW() {
       return w;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      Position position = (Position) o;
+
+      if (h != position.h) return false;
+      return w == position.w;
+
+    }
+
+    @Override
+    public int hashCode() {
+      int result = h;
+      result = 31 * result + w;
+      return result;
     }
   }
 }
