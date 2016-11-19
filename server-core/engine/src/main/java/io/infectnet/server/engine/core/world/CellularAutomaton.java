@@ -38,6 +38,16 @@ class CellularAutomaton {
   private final int width;
 
   /**
+   * The generated map.
+   */
+  private boolean[][] map;
+
+  /**
+   * The final product of the Automaton, with one cave system.
+   */
+  private boolean[][] finalMap;
+
+  /**
    * Creates a Cellular Automaton with the limiting numbers.
    * @param height the height of the map
    * @param width the width of the map
@@ -51,7 +61,7 @@ class CellularAutomaton {
    * Generates a much simplified form of a {@link Map}, using booleans instead of {@link TileType}s.
    * @return a boolean array containing the data about all tiles that were generated.
    */
-  public boolean[][] generateMap(){
+  boolean[][] generateMap(){
     boolean[][] map = new boolean[height][width];
 
     map = initialiseMap(map);
@@ -59,9 +69,10 @@ class CellularAutomaton {
     for(int i = 0; i < numberOfSteps; ++i){
       map = doSimulationStep(map);
     }
-    //TODO search for islands separated from the main cave system, and fill them in with rocks.
-    //TODO Implement a flood-fill algorithm
 
+    map = eliminateIslands(map);
+
+    //TODO check if the cave system is big enough
     return map;
   }
 
@@ -152,5 +163,23 @@ class CellularAutomaton {
    */
   private boolean isMiddleCell(int i, int j) {
     return i == 0 && j == 0;
+  }
+
+  /**
+   * Creates a new map without the isolated caves, which were on the previous map.
+   * @param oldMap the array with the generated values
+   * @return a new array containing only one cave system
+   */
+  private boolean[][] eliminateIslands(boolean[][] oldMap) {
+    boolean[][] newMap = new boolean[height][width];
+    //TODO define  a starting point!!!
+    newMap = floodFillWholeCave(oldMap, newMap);
+
+    return newMap;
+  }
+
+  private boolean[][] floodFillWholeCave(boolean[][] oldMap, boolean[][] newMap){
+    //TODO
+    return newMap;
   }
 }
