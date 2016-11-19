@@ -16,6 +16,14 @@ public interface EngineConnector {
   void start();
 
   /**
+   * Stop type for choosing the method for stopping the engine.
+   */
+  enum StopType {
+    BLOCKING,
+    ASYNC
+  }
+
+  /**
    * Stops the engine asynchronously or blocking while it is not stopped.
    * Will always return true if stop is asynchronous.
    * @param stopType describes how to stop: blocking or async
@@ -31,11 +39,10 @@ public interface EngineConnector {
   CompletableFuture<Void> compileAndUploadForUser(UserDTO user, String source);
 
   /**
-   * Stop type for choosing the method for stopping the engine.
+   * Provides the currently uploaded source code of a user.
+   * @param user the user
+   * @return the source code
    */
-  enum StopType {
-    BLOCKING,
-    ASYNC
-  }
+  String getSourceCodeForUser(UserDTO user);
 
 }

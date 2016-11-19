@@ -99,6 +99,21 @@ public class Engine {
   }
 
   /**
+   * Gets the specified player's current source code.
+   * @param player the owner player
+   * @return the source code
+   */
+  public Optional<String> getSourceCodeForPlayer(Player player) {
+    Optional<Code> userCode = bootstrapper.getCodeRepository().getCodeByPlayer(player);
+
+    if (userCode.isPresent()) {
+      return Optional.of(userCode.get().getSource());
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  /**
    * Returns a {@link Player} with the specified player name and if necessary creates it.
    * @param playerName the player's name
    * @return the player

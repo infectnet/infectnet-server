@@ -4,7 +4,9 @@ import io.infectnet.server.common.configuration.ConfigurationHolder;
 import io.infectnet.server.engine.Engine;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.service.user.UserDTO;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -57,6 +59,18 @@ public class EngineConnectorImpl implements EngineConnector {
     });
 
     return result;
+  }
+
+  @Override
+  public String getSourceCodeForUser(UserDTO user) {
+    Player player = createOrGetPlayer(user);
+    Optional<String> source = engine.getSourceCodeForPlayer(player);
+
+    if (source.isPresent()) {
+      return source.get();
+    } else {
+      return StringUtils.EMPTY;
+    }
   }
 
   private Player createOrGetPlayer(UserDTO user) {
