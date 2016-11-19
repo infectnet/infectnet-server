@@ -1,5 +1,8 @@
 package io.infectnet.server.engine.core.configuration;
 
+import dagger.Module;
+import dagger.Provides;
+import dagger.multibindings.ElementsIntoSet;
 import io.infectnet.server.engine.core.GameLoop;
 import io.infectnet.server.engine.core.entity.wrapper.Action;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper;
@@ -9,16 +12,13 @@ import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import dagger.Module;
-import dagger.Provides;
-import dagger.multibindings.ElementsIntoSet;
 
-@Module(includes = {ScriptModule.class, EntityModule.class, PlayerModule.class})
+@Module(includes = {ScriptModule.class, EntityModule.class, PlayerModule.class, WorldModule.class})
 public class CoreModule {
   @Provides
   @Singleton

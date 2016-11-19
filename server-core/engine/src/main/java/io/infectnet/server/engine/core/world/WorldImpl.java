@@ -7,7 +7,7 @@ import java.util.List;
 
 public class WorldImpl implements World {
   /**
-   * The strategy used to generate the map.
+   * The strategy used to generate the world.
    */
   private final WorldGeneratorStrategy strategy;
   /**
@@ -22,18 +22,8 @@ public class WorldImpl implements World {
   private final HashMap<Entity,Tile> entityPositionMap;
 
   /**
-   * The height of the map, the number pf positions available on the y-axis.
-   */
-  private int height;
-
-  /**
-   * The width of the map, the number pf positions available on the x-axis.
-   */
-  private int width;
-
-  /**
    * Creates a new World in a size defined by the parameters. All its tiles are generated at random.
-   * @param strategy the strategy to generate the map
+   * @param strategy the strategy to generate the world
    */
   public WorldImpl(WorldGeneratorStrategy strategy) {
     this.strategy = strategy;
@@ -47,12 +37,12 @@ public class WorldImpl implements World {
   }
 
   /**
-   * Generates a new array of Tiles with a Cellular Automaton.
+   * Generates a new array of Tiles with the given strategy.
+   * @param height the height of the world
+   * @param width the width of the world
    */
   @Override
   public void generate(int height, int width) {
-    this.height = height;
-    this.width = width;
     tiles = new Tile[height][width];
 
     boolean[][] cells = strategy.generateMap(height, width);
