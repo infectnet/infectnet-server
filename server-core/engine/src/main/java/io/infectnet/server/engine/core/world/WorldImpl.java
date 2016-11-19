@@ -45,7 +45,7 @@ public class WorldImpl implements World {
   public void generate(int height, int width) {
     tiles = new Tile[height][width];
 
-    boolean[][] cells = strategy.generateMap(height, width);
+    boolean[][] cells = strategy.generateWorld(height, width);
 
     for(int i = 0; i < height; ++i){
       for(int j = 0; j < width; ++j){
