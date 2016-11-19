@@ -51,6 +51,7 @@ public class CodeController implements WebSocketController {
   @Override
   public void configure(WebSocketDispatcher webSocketDispatcher) {
     webSocketDispatcher.registerOnMessage(Action.PUT_CODE, this::handleNewCodeUpload);
+    webSocketDispatcher.registerOnMessage(Action.GET_CODE, this::provideCurrentCode);
   }
 
   private void handleNewCodeUpload(Session session, String arguments)
@@ -77,6 +78,21 @@ public class CodeController implements WebSocketController {
               sendExceptionMessage(session, new CompilationFailedException(throwable));
             }
           }));
+
+    } else {
+      messageTransmitter.transmitException(session, new AuthenticationNeededException());
+    }
+  }
+
+  private void provideCurrentCode(Session session, String arguments) throws IOException {
+    Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);
+
+    if (user.isPresent()) {
+      String source = engineConnector.getSourceCodeForUser(user.get());
+
+      messageTransmitter
+          .transmitString(session,
+              new SocketMessage<>(Action.OK, new SourceCode(source), SourceCode.class));
 
     } else {
       messageTransmitter.transmitException(session, new AuthenticationNeededException());

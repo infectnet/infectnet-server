@@ -23,6 +23,11 @@ public enum Action {
   PUT_CODE,
 
   /**
+   * Used when the client request its current code.
+   */
+  GET_CODE,
+
+  /**
    * Used for showing the client something went wrong.
    */
   ERROR,
