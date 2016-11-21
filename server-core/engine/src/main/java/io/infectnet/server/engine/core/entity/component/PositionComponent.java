@@ -10,7 +10,7 @@ public class PositionComponent {
     private Position position;
 
     public PositionComponent(){
-
+        this.position = null;
     }
 
     public PositionComponent(Position position){
