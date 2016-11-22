@@ -18,6 +18,11 @@ public enum Action {
   SUBSCRIBE,
 
   /**
+   * Used when the client no longer wants to receive map updates.
+   */
+  UNSUBSCRIBE,
+
+  /**
    * Used when the client uploads new code.
    */
   PUT_CODE,
