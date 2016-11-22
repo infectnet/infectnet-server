@@ -215,7 +215,12 @@ public class GameLoop {
      */
     for (Code code : codeRepository.getAllCodes()) {
       if (code.isRunnable()) {
-        scriptExecutor.execute(code.getScript().get(), code.getOwner());
+        try {
+          scriptExecutor.execute(code.getScript().get(), code.getOwner());
+        } catch (Exception e) {
+          logger.warn("Exception during player ({}) code execution: {}", code.getOwner(),
+              e.getMessage());
+        }
       }
     }
 
