@@ -83,10 +83,14 @@ public class PlayerServiceImpl implements PlayerService {
   @Override
   public void setPlayerAsObserved(Player player) {
     observedPlayers.add(player);
+
+    logger.info("{} is now observed!", player);
   }
 
   @Override
   public void removePlayerFromObserved(Player player) {
     observedPlayers.remove(player);
+
+    logger.info("{} is no longer observed!");
   }
 }

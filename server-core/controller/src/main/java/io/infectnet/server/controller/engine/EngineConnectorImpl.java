@@ -71,6 +71,16 @@ public class EngineConnectorImpl implements EngineConnector {
     return source.orElse(StringUtils.EMPTY);
   }
 
+  @Override
+  public void setUserAsObserved(UserDTO user) {
+    engine.setPlayerAsObserved(createOrGetPlayer(user));
+  }
+
+  @Override
+  public void removePlayerFromObserved(UserDTO user) {
+    engine.removePlayerFromObserved(createOrGetPlayer(user));
+  }
+
   private Player createOrGetPlayer(UserDTO user) {
     return engine.createOrGetPlayer(user.getUserName());
   }

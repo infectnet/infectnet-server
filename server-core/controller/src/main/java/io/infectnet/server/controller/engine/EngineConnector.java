@@ -47,4 +47,16 @@ public interface EngineConnector {
    */
   String getSourceCodeForUser(UserDTO user);
 
+
+  /**
+   * Sets the user as observed.
+   * @param user the {@code UserDTO} to be set as observed
+   */
+  void setUserAsObserved(UserDTO user);
+
+  /**
+   * Removes the user from the list of observed {@code UserDTO}s.
+   * @param user the {@code UserDTO} to be removed
+   */
+  void removePlayerFromObserved(UserDTO user);
 }
