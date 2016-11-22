@@ -213,11 +213,14 @@ public class GameLoop {
      * Execute the DSL code written by the players. The action queue will be filled with Action
      * instances created by the executed Scripts.
      */
-    for (Code code : codeRepository.getAllCodes()) {
-      if (code.isRunnable()) {
+    codeRepository.getAllCodes().stream().filter(Code::isRunnable).forEach(code -> {
+      try {
         scriptExecutor.execute(code.getScript().get(), code.getOwner());
+      } catch (Exception e) {
+        logger.warn("Exception during player ({}) code execution: {}", code.getOwner(),
+            e.getMessage());
       }
-    }
+    });
 
     /*
      * #2 Process Actions
