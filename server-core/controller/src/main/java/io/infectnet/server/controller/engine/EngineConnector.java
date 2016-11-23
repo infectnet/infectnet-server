@@ -58,5 +58,5 @@ public interface EngineConnector {
    * Removes the user from the list of observed {@code UserDTO}s.
    * @param user the {@code UserDTO} to be removed
    */
-  void removePlayerFromObserved(UserDTO user);
+  void removeUserFromObserved(UserDTO user);
 }

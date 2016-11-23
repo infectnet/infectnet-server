@@ -77,7 +77,7 @@ public class EngineConnectorImpl implements EngineConnector {
   }
 
   @Override
-  public void removePlayerFromObserved(UserDTO user) {
+  public void removeUserFromObserved(UserDTO user) {
     engine.removePlayerFromObserved(createOrGetPlayer(user));
   }
 

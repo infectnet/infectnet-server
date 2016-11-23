@@ -11,6 +11,8 @@ import io.infectnet.server.controller.websocket.messaging.SocketMessage;
 import io.infectnet.server.service.user.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -19,6 +21,8 @@ import java.util.Optional;
  * WebSocket controller responsible for handling user subscription.
  */
 public class SubscriptionController implements WebSocketController {
+
+  private static final Logger logger = LoggerFactory.getLogger(SubscriptionController.class);
 
   private final EngineConnector engineConnector;
 
@@ -38,6 +42,8 @@ public class SubscriptionController implements WebSocketController {
   public void configure(WebSocketDispatcher webSocketDispatcher) {
     webSocketDispatcher.registerOnMessage(Action.SUBSCRIBE, this::handleUserSubscription);
     webSocketDispatcher.registerOnMessage(Action.UNSUBSCRIBE, this::handleUserUnsubscription);
+
+    webSocketDispatcher.registerOnClose(this::autoUnsubscribeOnDisconnect);
   }
 
   private void handleUserSubscription(Session session, String arguments) throws IOException {
@@ -66,6 +72,16 @@ public class SubscriptionController implements WebSocketController {
 
     } else {
       messageTransmitter.transmitException(session, new AuthenticationNeededException());
+    }
+  }
+
+  private void autoUnsubscribeOnDisconnect(Session session, int statusCode, String reason) {
+    Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);
+
+    if (user.isPresent()) {
+      engineConnector.removePlayerFromObserved(user.get());
+
+      logger.info("Force unsubscribed user: {}", user.get());
     }
   }
 }
