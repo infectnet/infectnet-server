@@ -177,4 +177,23 @@ public class Engine {
 
     return player.get();
   }
+
+  /**
+   * Sets the {@code Player} as observed. For the meaning of being observed, please refer to
+   * {@link PlayerService#isPlayerObserved(Player)}.
+   * @param player the {@code Player} to be set as observed
+   */
+  public void setPlayerAsObserved(Player player) {
+    bootstrapper.getPlayerService().setPlayerAsObserved(player);
+  }
+
+  /**
+   * Removes the {@code Player} from the list of observed {@code Player}s. For the meaning of being
+   * observed, please refer to {@link PlayerService#isPlayerObserved(Player)}.
+   * @param player the {@code Player} to be removed
+   */
+  public void removePlayerFromObserved(Player player) {
+    bootstrapper.getPlayerService().removePlayerFromObserved(player);
+  }
+
 }

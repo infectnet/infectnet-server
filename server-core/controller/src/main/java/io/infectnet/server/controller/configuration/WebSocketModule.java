@@ -14,6 +14,7 @@ import io.infectnet.server.controller.websocket.messaging.GsonMessageFactoryImpl
 import io.infectnet.server.controller.websocket.messaging.MessageFactory;
 import io.infectnet.server.controller.websocket.messaging.MessageTransmitter;
 import io.infectnet.server.controller.websocket.messaging.MessageTransmitterImpl;
+import io.infectnet.server.controller.websocket.subscribe.SubscriptionController;
 import io.infectnet.server.service.user.UserService;
 
 import java.util.Set;
@@ -52,6 +53,15 @@ public class WebSocketModule {
                                                            SessionAuthenticator sessionAuthenticator,
                                                            MessageTransmitter messageTransmitter) {
     return new CodeController(engineConnector, gson, sessionAuthenticator, messageTransmitter);
+  }
+
+  @Provides
+  @IntoSet
+  @Singleton
+  public static WebSocketController providesSubscriptionController(EngineConnector engineConnector,
+                                                                   SessionAuthenticator sessionAuthenticator,
+                                                                   MessageTransmitter messageTransmitter) {
+    return new SubscriptionController(engineConnector, sessionAuthenticator, messageTransmitter);
   }
 
   @Provides
