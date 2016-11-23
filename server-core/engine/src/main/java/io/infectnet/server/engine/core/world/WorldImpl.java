@@ -2,6 +2,7 @@ package io.infectnet.server.engine.core.world;
 
 import io.infectnet.server.engine.core.entity.Entity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +15,16 @@ public class WorldImpl implements World {
    * The two-dimensional array to hold all tiles in the {@link World}
    */
   private Tile[][] tiles;
+
+  /**
+   * The height of the world.
+   */
+  private int height;
+
+  /**
+   * The width of the world.
+   */
+  private int width;
 
   /**
    * The HashMap containing all Entities which are on the World,
@@ -32,20 +43,81 @@ public class WorldImpl implements World {
   }
 
   @Override
-  public List<Entity> listOfEntitiesVisible(Entity entity) {
-    return null;
+  public List<Entity> seenBy(Entity entity) {
+    List<Entity> list = new ArrayList<>();
+    int viewRadius = entity.getViewComponent().getViewRadius();
+    Position position = entity.getPositionComponent().getPosition();
+
+    int northLimitHeight = Math.max(0, position.getH()-viewRadius);
+    int southLimitHeight = Math.min(height - 1, position.getH()+viewRadius);
+    int westLimitWidth = Math.max(0, position.getW()-viewRadius);
+    int eastLimitWidth = Math.min(width - 1, position.getW()+viewRadius);
+
+    for(int i = northLimitHeight; i <= southLimitHeight; ++i){
+      for(int j = westLimitWidth; j <= eastLimitWidth; ++j){
+        Entity en = tiles[i][j].getEntity();
+        if(en != null  && position.getH() != i && position.getW() != j){
+          list.add(en);
+        }
+      }
+    }
+
+    return list;
   }
 
-  /**
-   * Generates a new array of Tiles with the given strategy.
-   * @param height the height of the world
-   * @param width the width of the world
-   */
+  @Override
+  public List<Entity> neighboursOf(Entity entity){
+    List<Entity> list = new ArrayList<>();
+    Position position = entity.getPositionComponent().getPosition();
+
+    int northLimitHeight = Math.max(0, position.getH()-1);
+    int southLimitHeight = Math.min(height - 1, position.getH()+1);
+    int westLimitWidth = Math.max(0, position.getW()-1);
+    int eastLimitWidth = Math.min(width - 1, position.getW()+1);
+
+    for(int i = northLimitHeight; i <= southLimitHeight; ++i){
+      for(int j = westLimitWidth; j <= eastLimitWidth; ++j){
+        Entity en = tiles[i][j].getEntity();
+        if(en != null && position.getH() != i && position.getW() != j){
+          list.add(en);
+        }
+      }
+    }
+
+    return list;
+  }
+
+  @Override
+  public   List<Tile> viewSight(Entity entity){
+    List<Tile> list = new ArrayList<>();
+    int viewRadius = entity.getViewComponent().getViewRadius();
+    Position position = entity.getPositionComponent().getPosition();
+
+    int northLimitHeight = Math.max(0, position.getH()-viewRadius);
+    int southLimitHeight = Math.min(height - 1, position.getH()+viewRadius);
+    int westLimitWidth = Math.max(0, position.getW()-viewRadius);
+    int eastLimitWidth = Math.min(width - 1, position.getW()+viewRadius);
+
+    for(int i = northLimitHeight; i <= southLimitHeight; ++i){
+      for(int j = westLimitWidth; j <= eastLimitWidth; ++j){
+        Tile tile = tiles[i][j];
+        if(position.getH() != i && position.getW() != j){
+          list.add(tile);
+        }
+      }
+    }
+
+    return list;
+  }
+
   @Override
   public void generate(int height, int width) {
     tiles = new Tile[height][width];
 
     boolean[][] cells = strategy.generateWorld(height, width);
+
+    this.height = height;
+    this.width = width;
 
     for(int i = 0; i < height; ++i){
       for(int j = 0; j < width; ++j){
