@@ -65,7 +65,7 @@ public class SubscriptionController implements WebSocketController {
     Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);
 
     if (user.isPresent()) {
-      engineConnector.removePlayerFromObserved(user.get());
+      engineConnector.removeUserFromObserved(user.get());
 
       messageTransmitter
           .transmitString(session, new SocketMessage<>(Action.OK, StringUtils.EMPTY, String.class));
@@ -79,7 +79,7 @@ public class SubscriptionController implements WebSocketController {
     Optional<UserDTO> user = sessionAuthenticator.verifyAuthentication(session);
 
     if (user.isPresent()) {
-      engineConnector.removePlayerFromObserved(user.get());
+      engineConnector.removeUserFromObserved(user.get());
 
       logger.info("Force unsubscribed user: {}", user.get());
     }
