@@ -12,14 +12,31 @@ import java.util.List;
 public interface World {
 
   /**
-   * Generates a new array of Tiles with a Cellular Automaton.
+   * Generates a new array of Tiles with the given strategy.
+   * @param height the height of the world
+   * @param width the width of the world
    */
   void generate(int height, int width);
 
   /**
    * Returns a list containing all Entities that are visible for the {@link Entity} given.
-   * @param entity the {@code Entity} in the centre, whose point of view prevails.
-   * @return a list of the found Entities.
+   * @param entity the {@code Entity} in the centre, whose point of view prevails
+   * @return a list of the found Entities, an empty list if nothing was found
    */
-  List<Entity> listOfEntitiesVisible(Entity entity);
+  List<Entity> seenBy(Entity entity);
+
+  /**
+   * Returns the list of entities with zero distance from the given entity.
+   * Scans the entity's neighbouring tiles for other entities.
+   * @param entity the {@code Entity} in the centre, whose point of view prevails
+   * @return a list of the found Entities, an empty list if nothing was found
+   */
+  List<Entity> neighboursOf(Entity entity);
+
+  /**
+   * Returns the list of all tiles seen by the passed entity.
+   * @param entity the {@code Entity} in the centre, whose point of view prevails
+   * @return a list of {@link Tile}s that can be seen from the given entity
+   */
+  List<Tile> viewSight(Entity entity);
 }
