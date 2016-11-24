@@ -30,7 +30,7 @@ public class WorldImpl implements World {
    * The HashMap containing all Entities which are on the World,
    * with the Entity as the key, and a position as value.
    */
-  private final HashMap<Entity,Tile> entityPositionMap;
+  private final HashMap<Entity, Tile> entityPositionMap;
 
   /**
    * Creates a new World in a size defined by the parameters. All its tiles are generated at random.
@@ -52,7 +52,7 @@ public class WorldImpl implements World {
   }
 
   @Override
-  public List<Entity> neighboursOf(Entity entity){
+  public List<Entity> neighboursOf(Entity entity) {
     Position position = entity.getPositionComponent().getPosition();
 
     return entitiesWithinRadius(1, position);
@@ -64,15 +64,15 @@ public class WorldImpl implements World {
    * @param position the center of the search
    * @return a list of the found Entities
    */
-  private List<Entity> entitiesWithinRadius(int radius, Position position){
+  private List<Entity> entitiesWithinRadius(int radius, Position position) {
     List<Entity> list = new ArrayList<>();
 
     ViewBox viewBox = new ViewBox(radius, position, this);
 
-    for(int i = viewBox.northLimitHeight; i <= viewBox.southLimitHeight; ++i){
-      for(int j = viewBox.westLimitWidth; j <= viewBox.eastLimitWidth; ++j){
+    for (int i = viewBox.northLimitHeight; i <= viewBox.southLimitHeight; ++i) {
+      for (int j = viewBox.westLimitWidth; j <= viewBox.eastLimitWidth; ++j) {
         Entity en = tiles[i][j].getEntity();
-        if(en != null  && position.getH() != i && position.getW() != j){
+        if (en != null && position.getH() != i && position.getW() != j) {
           list.add(en);
         }
       }
@@ -82,17 +82,17 @@ public class WorldImpl implements World {
   }
 
   @Override
-  public   List<Tile> viewSight(Entity entity){
+  public List<Tile> viewSight(Entity entity) {
     List<Tile> list = new ArrayList<>();
     int viewRadius = entity.getViewComponent().getViewRadius();
     Position position = entity.getPositionComponent().getPosition();
 
     ViewBox viewBox = new ViewBox(viewRadius, position, this);
 
-    for(int i = viewBox.northLimitHeight; i <= viewBox.southLimitHeight; ++i){
-      for(int j = viewBox.westLimitWidth; j <= viewBox.eastLimitWidth; ++j){
+    for (int i = viewBox.northLimitHeight; i <= viewBox.southLimitHeight; ++i) {
+      for (int j = viewBox.westLimitWidth; j <= viewBox.eastLimitWidth; ++j) {
         Tile tile = tiles[i][j];
-        if(position.getH() != i && position.getW() != j){
+        if (position.getH() != i && position.getW() != j) {
           list.add(tile);
         }
       }
@@ -110,11 +110,11 @@ public class WorldImpl implements World {
     this.height = height;
     this.width = width;
 
-    for(int i = 0; i < height; ++i){
-      for(int j = 0; j < width; ++j){
-        if(isBorder(i,j)){
+    for (int i = 0; i < height; ++i) {
+      for (int j = 0; j < width; ++j) {
+        if (isBorder(i, j)) {
           tiles[i][j] = new Tile(TileType.ROCK);
-        } else if(cells[i][j] == strategy.CAVE){
+        } else if (cells[i][j] == strategy.CAVE) {
           tiles[i][j] = new Tile(TileType.CAVE);
         } else {
           tiles[i][j] = new Tile(TileType.ROCK);
@@ -131,7 +131,7 @@ public class WorldImpl implements World {
    */
   private boolean isBorder(int i, int j) {
     return i == 0 || i == tiles.length - 1
-            || j == 0 || j == tiles[i].length - 1;
+        || j == 0 || j == tiles[i].length - 1;
   }
 
   public Tile[][] getTiles() {
@@ -142,18 +142,21 @@ public class WorldImpl implements World {
     return entityPositionMap;
   }
 
-  private static class ViewBox{
+  /**
+   *An inner class to represent the limitations of each Entity's view sight.
+   */
+  private static class ViewBox {
 
     private final int northLimitHeight;
     private final int southLimitHeight;
     private final int westLimitWidth;
     private final int eastLimitWidth;
 
-    ViewBox(int viewRadius, Position position, WorldImpl world){
-      northLimitHeight = Math.max(0, position.getH()-viewRadius);
-      southLimitHeight = Math.min(world.height - 1, position.getH()+viewRadius);
-      westLimitWidth = Math.max(0, position.getW()-viewRadius);
-      eastLimitWidth = Math.min(world.width - 1, position.getW()+viewRadius);
+    ViewBox(int viewRadius, Position position, WorldImpl world) {
+      northLimitHeight = Math.max(0, position.getH() - viewRadius);
+      southLimitHeight = Math.min(world.height - 1, position.getH() + viewRadius);
+      westLimitWidth = Math.max(0, position.getW() - viewRadius);
+      eastLimitWidth = Math.min(world.width - 1, position.getW() + viewRadius);
     }
   }
 }
