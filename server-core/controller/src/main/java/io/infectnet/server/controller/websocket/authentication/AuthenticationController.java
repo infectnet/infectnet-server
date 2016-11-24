@@ -60,10 +60,7 @@ public class AuthenticationController implements WebSocketController {
       throws AuthenticationFailedException, IOException {
     sessionAuthenticator.authenticate(session, credentials.username, credentials.password);
 
-    SocketMessage<String> message =
-        new SocketMessage<>(Action.OK, StringUtils.EMPTY, String.class);
-
-    messageTransmitter.transmitString(session, message);
+    messageTransmitter.transmitString(session, SocketMessage.EMPTY_OK);
   }
 
   private static class Credentials {

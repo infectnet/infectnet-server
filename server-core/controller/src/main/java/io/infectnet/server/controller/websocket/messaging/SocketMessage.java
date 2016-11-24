@@ -6,9 +6,14 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.infectnet.server.controller.websocket.messaging.Action.OK;
+
 import java.lang.reflect.Type;
 
 public class SocketMessage<T> {
+  public static final SocketMessage<String> EMPTY_OK = new SocketMessage<>(OK, EMPTY, String.class);
+
   private final Action action;
 
   private final T arguments;

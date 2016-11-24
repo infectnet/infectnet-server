@@ -52,13 +52,11 @@ public class SubscriptionController implements WebSocketController {
     if (user.isPresent()) {
       engineConnector.setUserAsObserved(user.get());
 
-      messageTransmitter
-          .transmitString(session, new SocketMessage<>(Action.OK, StringUtils.EMPTY, String.class));
+      messageTransmitter.transmitString(session, SocketMessage.EMPTY_OK);
 
     } else {
       messageTransmitter.transmitException(session, new AuthenticationNeededException());
     }
-
   }
 
   private void handleUserUnsubscription(Session session, String arguments) throws IOException {
@@ -67,8 +65,7 @@ public class SubscriptionController implements WebSocketController {
     if (user.isPresent()) {
       engineConnector.removeUserFromObserved(user.get());
 
-      messageTransmitter
-          .transmitString(session, new SocketMessage<>(Action.OK, StringUtils.EMPTY, String.class));
+      messageTransmitter.transmitString(session, SocketMessage.EMPTY_OK);
 
     } else {
       messageTransmitter.transmitException(session, new AuthenticationNeededException());
