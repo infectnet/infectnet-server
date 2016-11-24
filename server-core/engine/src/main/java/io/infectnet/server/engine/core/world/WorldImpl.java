@@ -44,41 +44,35 @@ public class WorldImpl implements World {
 
   @Override
   public List<Entity> seenBy(Entity entity) {
-    List<Entity> list = new ArrayList<>();
+
     int viewRadius = entity.getViewComponent().getViewRadius();
     Position position = entity.getPositionComponent().getPosition();
 
-    int northLimitHeight = Math.max(0, position.getH()-viewRadius);
-    int southLimitHeight = Math.min(height - 1, position.getH()+viewRadius);
-    int westLimitWidth = Math.max(0, position.getW()-viewRadius);
-    int eastLimitWidth = Math.min(width - 1, position.getW()+viewRadius);
-
-    for(int i = northLimitHeight; i <= southLimitHeight; ++i){
-      for(int j = westLimitWidth; j <= eastLimitWidth; ++j){
-        Entity en = tiles[i][j].getEntity();
-        if(en != null  && position.getH() != i && position.getW() != j){
-          list.add(en);
-        }
-      }
-    }
-
-    return list;
+    return entitiesWithinRadius(viewRadius, position);
   }
 
   @Override
   public List<Entity> neighboursOf(Entity entity){
-    List<Entity> list = new ArrayList<>();
     Position position = entity.getPositionComponent().getPosition();
 
-    int northLimitHeight = Math.max(0, position.getH()-1);
-    int southLimitHeight = Math.min(height - 1, position.getH()+1);
-    int westLimitWidth = Math.max(0, position.getW()-1);
-    int eastLimitWidth = Math.min(width - 1, position.getW()+1);
+    return entitiesWithinRadius(1, position);
+  }
 
-    for(int i = northLimitHeight; i <= southLimitHeight; ++i){
-      for(int j = westLimitWidth; j <= eastLimitWidth; ++j){
+  /**
+   * Returns a list containing all Entities that are visible for the {@link Entity} given.
+   * @param radius the distance it searches in
+   * @param position the center of the search
+   * @return a list of the found Entities
+   */
+  private List<Entity> entitiesWithinRadius(int radius, Position position){
+    List<Entity> list = new ArrayList<>();
+
+    ViewBox viewBox = new ViewBox(radius, position, this);
+
+    for(int i = viewBox.northLimitHeight; i <= viewBox.southLimitHeight; ++i){
+      for(int j = viewBox.westLimitWidth; j <= viewBox.eastLimitWidth; ++j){
         Entity en = tiles[i][j].getEntity();
-        if(en != null && position.getH() != i && position.getW() != j){
+        if(en != null  && position.getH() != i && position.getW() != j){
           list.add(en);
         }
       }
@@ -93,13 +87,10 @@ public class WorldImpl implements World {
     int viewRadius = entity.getViewComponent().getViewRadius();
     Position position = entity.getPositionComponent().getPosition();
 
-    int northLimitHeight = Math.max(0, position.getH()-viewRadius);
-    int southLimitHeight = Math.min(height - 1, position.getH()+viewRadius);
-    int westLimitWidth = Math.max(0, position.getW()-viewRadius);
-    int eastLimitWidth = Math.min(width - 1, position.getW()+viewRadius);
+    ViewBox viewBox = new ViewBox(viewRadius, position, this);
 
-    for(int i = northLimitHeight; i <= southLimitHeight; ++i){
-      for(int j = westLimitWidth; j <= eastLimitWidth; ++j){
+    for(int i = viewBox.northLimitHeight; i <= viewBox.southLimitHeight; ++i){
+      for(int j = viewBox.westLimitWidth; j <= viewBox.eastLimitWidth; ++j){
         Tile tile = tiles[i][j];
         if(position.getH() != i && position.getW() != j){
           list.add(tile);
@@ -149,5 +140,20 @@ public class WorldImpl implements World {
 
   public HashMap<Entity, Tile> getEntityPositionMap() {
     return entityPositionMap;
+  }
+
+  private static class ViewBox{
+
+    private final int northLimitHeight;
+    private final int southLimitHeight;
+    private final int westLimitWidth;
+    private final int eastLimitWidth;
+
+    ViewBox(int viewRadius, Position position, WorldImpl world){
+      northLimitHeight = Math.max(0, position.getH()-viewRadius);
+      southLimitHeight = Math.min(world.height - 1, position.getH()+viewRadius);
+      westLimitWidth = Math.max(0, position.getW()-viewRadius);
+      eastLimitWidth = Math.min(world.width - 1, position.getW()+viewRadius);
+    }
   }
 }
