@@ -102,9 +102,8 @@ public class CodeController implements WebSocketController {
     if (user.isPresent()) {
       String source = engineConnector.getSourceCodeForUser(user.get());
 
-      messageTransmitter
-          .transmitString(session,
-              new SocketMessage<>(Action.OK, new SourceCode(source), SourceCode.class));
+      messageTransmitter.transmitString(session,
+          new SocketMessage<>(Action.OK, new SourceCode(source), SourceCode.class));
 
     } else {
       messageTransmitter.transmitException(session, new AuthenticationNeededException());
