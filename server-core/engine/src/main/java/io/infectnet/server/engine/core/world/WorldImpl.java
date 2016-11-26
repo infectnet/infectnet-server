@@ -1,6 +1,7 @@
 package io.infectnet.server.engine.core.world;
 
 import io.infectnet.server.engine.core.entity.Entity;
+import io.infectnet.server.engine.core.world.strategy.WorldGeneratorStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,11 +114,11 @@ public class WorldImpl implements World {
     for (int i = 0; i < height; ++i) {
       for (int j = 0; j < width; ++j) {
         if (isBorder(i, j)) {
-          tiles[i][j] = new Tile(TileType.ROCK);
+          tiles[i][j] = new Tile(TileType.ROCK,  new Position(i, j));
         } else if (cells[i][j] == strategy.CAVE) {
-          tiles[i][j] = new Tile(TileType.CAVE);
+          tiles[i][j] = new Tile(TileType.CAVE,  new Position(i, j));
         } else {
-          tiles[i][j] = new Tile(TileType.ROCK);
+          tiles[i][j] = new Tile(TileType.ROCK,  new Position(i, j));
         }
       }
     }
@@ -142,6 +143,21 @@ public class WorldImpl implements World {
     return entityPositionMap;
   }
 
+  public Tile getTileByPosition(Position position){
+    return tiles[position.getH()][position.getW()];
+  }
+
+  public boolean isPositionValidTile(Position position){
+    return position.getH() >= 0 && position.getH() < height && position.getW() >= 0 && position.getW() < width;
+  }
+
+  public int getHeight() {
+    return height;
+  }
+
+  public int getWidth() {
+    return width;
+  }
   /**
    *An inner class to represent the limitations of each Entity's view sight.
    */

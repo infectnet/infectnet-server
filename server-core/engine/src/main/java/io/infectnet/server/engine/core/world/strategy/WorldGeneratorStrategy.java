@@ -1,4 +1,7 @@
-package io.infectnet.server.engine.core.world;
+package io.infectnet.server.engine.core.world.strategy;
+
+import io.infectnet.server.engine.core.world.TileType;
+import io.infectnet.server.engine.core.world.World;
 
 /**
  * This interface is responsible for the world generation,

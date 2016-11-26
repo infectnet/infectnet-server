@@ -12,8 +12,15 @@ public class Tile {
 
   private Entity entity;
 
-  public Tile(TileType type) {
+  private Position position;
+
+  public Tile(TileType type, Position position) {
     this.type = type;
+    this.position = position;
+  }
+
+  public boolean isBlockedOrOccupied(){
+    return type == TileType.ROCK || entity != null;
   }
 
   public TileType getType() {
