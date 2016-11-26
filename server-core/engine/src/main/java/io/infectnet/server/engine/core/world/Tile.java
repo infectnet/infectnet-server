@@ -31,6 +31,10 @@ public class Tile {
     return entity;
   }
 
+  public Position getPosition(){
+    return position;
+  }
+
   public void setEntity(Entity entity) {
     this.entity = entity;
   }
