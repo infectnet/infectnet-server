@@ -19,31 +19,15 @@ public class InventoryComponent {
     this.inventoryMap = new HashMap<>();
   }
 
-  public Optional<Integer> getInventoryElement(String inventoryElement) {
-    return Optional.ofNullable(inventoryMap.get(inventoryElement));
+  public Optional<Integer> getInventoryElement(String itemName) {
+    return Optional.ofNullable(inventoryMap.get(itemName));
   }
 
-  public int addQuantity(String inventoryElement, Integer num) {
-    int actualAddition = Math.min(freeCapacity, num);
+  public void modifyQuantity(String itemName, Integer num) {
+    inventoryMap
+        .put(itemName, inventoryMap.getOrDefault(itemName, 0) + num);
 
-    if (actualAddition > 0) {
-      inventoryMap
-          .put(inventoryElement, inventoryMap.getOrDefault(inventoryElement, 0) + actualAddition);
-
-      freeCapacity -= actualAddition;
-    }
-
-    return actualAddition;
-  }
-
-  public int removeQuantity(String inventoryElement, Integer num) {
-    int actualRemoval = Math.max(num, inventoryMap.getOrDefault(inventoryElement, 0));
-
-    if (actualRemoval > 0) {
-      //TODO removal
-    }
-
-    return actualRemoval;
+    freeCapacity -= num;
   }
 
   public int getCapacity() {

@@ -1,7 +1,7 @@
 package io.infectnet.server.engine.content.configuration;
 
 import io.infectnet.server.engine.content.system.infect.InfectSystem;
-import io.infectnet.server.engine.core.entity.wrapper.Action;
+import io.infectnet.server.engine.content.system.inventory.InventoryManagementSystem;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
 import io.infectnet.server.engine.core.util.ListenableQueue;
@@ -20,5 +20,12 @@ public class SystemModule {
   public static ProcessorSystem providesInfectSystem(
       @Named("Request Queue") ListenableQueue<Request> requestQueue, World world) {
     return new InfectSystem(requestQueue, world);
+  }
+
+  @Provides
+  @IntoSet
+  public static ProcessorSystem providesInventoryManagementSystem(
+      @Named("Request Queue") ListenableQueue<Request> requestQueue) {
+    return new InventoryManagementSystem(requestQueue);
   }
 }

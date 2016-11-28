@@ -12,7 +12,7 @@ public abstract class ActionOnlyProcessor implements ProcessorSystem {
   public abstract void registerActionListeners(ListenableQueue<Action> actionQueue);
 
   @Override
-  public void registerRequestListeners(ListenableQueue<Request> requestQueue) {
+  public final void registerRequestListeners(ListenableQueue<Request> requestQueue) {
     /*
      * Do nothing.
      */
