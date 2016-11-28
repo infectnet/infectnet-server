@@ -11,7 +11,7 @@ import io.infectnet.server.engine.core.entity.component.TypeComponent;
 
 public class WormTypeComponent extends TypeComponent{
 
-  private static final String TYPE_NAME = "Worm";
+  public static final String TYPE_NAME = "Worm";
 
   private static final int INITIAL_HEALTH = 15;
 

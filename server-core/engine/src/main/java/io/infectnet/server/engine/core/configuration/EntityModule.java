@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.ElementsIntoSet;
 import dagger.multibindings.Multibinds;
 
 @Module
@@ -42,7 +43,7 @@ public abstract class EntityModule {
   }
 
   @Provides
-  @Singleton
+  @ElementsIntoSet
   public static Set<TypeComponent> providesDefaultEmptyTypeComponentSet() {
     return Collections.emptySet();
   }
