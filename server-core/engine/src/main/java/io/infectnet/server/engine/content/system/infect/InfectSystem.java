@@ -30,8 +30,11 @@ public class InfectSystem extends ActionOnlyProcessor {
     InfectAction infectAction = (InfectAction) action;
 
     if (world.neighboursOf(infectAction.getSource()).contains(infectAction.getResource())) {
-      requestQueue.add(new InventoryModificationRequest(infectAction.getResource(), action, ITEM_NAME,
+      requestQueue.add(new InventoryModificationRequest(infectAction.getSource(), action, ITEM_NAME,
           MODIFICATION_NUMBER));
+
+      requestQueue.add(new InventoryModificationRequest(infectAction.getResource(),
+          action, ITEM_NAME, -1 * MODIFICATION_NUMBER));
     }
 
   }
