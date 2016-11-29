@@ -39,4 +39,18 @@ public interface World {
    * @return a list of {@link Tile}s that can be seen from the given entity
    */
   List<Tile> viewSight(Entity entity);
+
+  /**
+   * Returns a Tile defined by the given Position.
+   * @param position the position given
+   * @return the tile
+   */
+  Tile getTileByPosition(Position position);
+
+  /**
+   * Sets the entity on the Tile defined by the given Position
+   * @param entity the entity to be set
+   * @param position the position given
+   */
+  void setEntityOnPosition(Entity entity, Position position);
 }

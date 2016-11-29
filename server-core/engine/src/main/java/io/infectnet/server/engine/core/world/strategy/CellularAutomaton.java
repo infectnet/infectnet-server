@@ -1,4 +1,6 @@
-package io.infectnet.server.engine.core.world;
+package io.infectnet.server.engine.core.world.strategy;
+
+import io.infectnet.server.engine.core.world.Position;
 
 import java.util.HashSet;
 import java.util.LinkedList;
