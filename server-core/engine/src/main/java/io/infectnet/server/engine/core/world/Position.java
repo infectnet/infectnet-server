@@ -56,6 +56,38 @@ public class Position{
         return new Position(h, w+1);
     }
 
+    /**
+     * Creates this Position's neighbour, stepping one step east and one step north.
+     * @return the northeastern neighbour
+     */
+    public Position stepNorthEast(){
+        return new Position(h-1, w+1);
+    }
+
+    /**
+     * Creates this Position's neighbour, stepping one step west and one step north.
+     * @return the northwestern neighbour
+     */
+    public Position stepNorthWest(){
+        return new Position(h-1, w-1);
+    }
+
+    /**
+     * Creates this Position's neighbour, stepping one step east and one step south.
+     * @return the southeastern neighbour
+     */
+    public Position stepSouthEast(){
+        return new Position(h+1, w+1);
+    }
+
+    /**
+     * Creates this Position's neighbour, stepping one step west and one step south.
+     * @return the southwestern neighbour
+     */
+    public Position stepSouthWest(){
+        return new Position(h+1, w-1);
+    }
+
     public int getH() {
         return h;
     }
