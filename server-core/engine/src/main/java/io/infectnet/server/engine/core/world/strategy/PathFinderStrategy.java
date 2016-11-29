@@ -2,19 +2,22 @@ package io.infectnet.server.engine.core.world.strategy;
 
 import io.infectnet.server.engine.core.world.Position;
 import io.infectnet.server.engine.core.world.Tile;
+import io.infectnet.server.engine.core.world.World;
 
 import java.util.LinkedList;
 
 /**
- * Interface for Path finding in the world.
+ * Interface for Path finding in the world between two Positions.
  */
 public interface PathFinderStrategy {
 
     /**
-     * Searches for a path made of neighbouring {@link Tile}s connecting start Position and the target Position.
-     * @param start
-     * @param target
-     * @return
+     * Finds a path from given start Position to the target Position,
+     * made of adjacent Tiles linked together in a list
+     * @param world the map where we want to search for the path
+     * @param start the starting Position
+     * @param target the destination Position
+     * @return a linked list containing the found path
      */
-    LinkedList<Tile> findPath(Position start, Position target);
+    LinkedList<Tile> findPath(World world, Position start, Position target);
 }
