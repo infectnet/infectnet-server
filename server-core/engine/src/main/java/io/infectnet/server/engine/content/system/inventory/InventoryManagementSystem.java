@@ -8,13 +8,6 @@ import io.infectnet.server.engine.core.util.ListenableQueue;
 
 public class InventoryManagementSystem extends RequestOnlyProcessor {
 
-  private final ListenableQueue<Request> requestQueue;
-
-  public InventoryManagementSystem(
-      ListenableQueue<Request> requestQueue) {
-    this.requestQueue = requestQueue;
-  }
-
   @Override
   public void registerRequestListeners(ListenableQueue<Request> requestQueue) {
     requestQueue.addListener(InventoryModificationRequest.class, this::consumeInventoryRequest);

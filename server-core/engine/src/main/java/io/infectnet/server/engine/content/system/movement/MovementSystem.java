@@ -1,6 +1,7 @@
 package io.infectnet.server.engine.content.system.movement;
 
 
+import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.wrapper.Action;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
@@ -42,7 +43,12 @@ public class MovementSystem implements ProcessorSystem {
   private void consumeMovementRequest(Request request) {
     MovementRequest movementRequest = (MovementRequest) request;
 
-    movementRequest.getTarget().get().getPositionComponent()
-        .setPosition(movementRequest.getPosition());
+    Entity movementTarget = movementRequest.getTarget().get();
+
+    world.setEntityOnPosition(null, movementTarget.getPositionComponent().getPosition());
+
+    world.setEntityOnPosition(movementTarget, movementRequest.getPosition());
+
+    movementTarget.getPositionComponent().setPosition(movementRequest.getPosition());
   }
 }

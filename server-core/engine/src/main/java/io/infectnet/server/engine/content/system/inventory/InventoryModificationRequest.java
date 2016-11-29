@@ -6,9 +6,9 @@ import io.infectnet.server.engine.core.script.Request;
 
 public class InventoryModificationRequest extends Request {
 
-  private String itemName;
+  private final String itemName;
 
-  private int modificationNumber;
+  private final int modificationNumber;
 
   public InventoryModificationRequest(Entity target,
                                       Action origin,
