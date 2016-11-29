@@ -143,8 +143,22 @@ public class WorldImpl implements World {
     return entityPositionMap;
   }
 
+  @Override
   public Tile getTileByPosition(Position position){
-    return tiles[position.getH()][position.getW()];
+    if(isPositionValidTile(position)){
+      return tiles[position.getH()][position.getW()];
+    }else{
+      throw new IllegalArgumentException("Invalid Position!");
+    }
+  }
+
+  @Override
+  public void setEntityOnPosition(Entity entity, Position position){
+    if(isPositionValidTile(position)){
+      getTileByPosition(position).setEntity(entity);
+    }else{
+      throw new IllegalArgumentException("Invalid Position!");
+    }
   }
 
   public boolean isPositionValidTile(Position position){
