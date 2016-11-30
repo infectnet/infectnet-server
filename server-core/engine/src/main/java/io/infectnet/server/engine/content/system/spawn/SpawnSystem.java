@@ -56,7 +56,7 @@ public class SpawnSystem implements ProcessorSystem {
   private void consumeSpawnRequest(Request request) {
     SpawnRequest spawnRequest = (SpawnRequest) request;
 
-    
+
   }
 
 }
