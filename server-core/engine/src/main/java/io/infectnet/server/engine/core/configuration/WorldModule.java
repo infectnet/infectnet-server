@@ -3,9 +3,9 @@ package io.infectnet.server.engine.core.configuration;
 import dagger.Module;
 import dagger.Provides;
 import io.infectnet.server.engine.core.world.World;
-import io.infectnet.server.engine.core.world.strategy.WorldGeneratorStrategy;
+import io.infectnet.server.engine.core.world.strategy.generation.WorldGeneratorStrategy;
 import io.infectnet.server.engine.core.world.WorldImpl;
-import io.infectnet.server.engine.core.world.strategy.CellularAutomaton;
+import io.infectnet.server.engine.core.world.strategy.generation.CellularAutomaton;
 
 import javax.inject.Singleton;
 

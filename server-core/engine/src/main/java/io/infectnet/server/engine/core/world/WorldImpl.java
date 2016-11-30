@@ -1,7 +1,7 @@
 package io.infectnet.server.engine.core.world;
 
 import io.infectnet.server.engine.core.entity.Entity;
-import io.infectnet.server.engine.core.world.strategy.WorldGeneratorStrategy;
+import io.infectnet.server.engine.core.world.strategy.generation.WorldGeneratorStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

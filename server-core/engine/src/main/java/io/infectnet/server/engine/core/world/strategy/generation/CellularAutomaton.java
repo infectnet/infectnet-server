@@ -1,4 +1,4 @@
-package io.infectnet.server.engine.core.world.strategy;
+package io.infectnet.server.engine.core.world.strategy.generation;
 
 import io.infectnet.server.engine.core.world.Position;
 
