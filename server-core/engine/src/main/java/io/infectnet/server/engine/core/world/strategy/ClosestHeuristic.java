@@ -3,6 +3,10 @@ package io.infectnet.server.engine.core.world.strategy;
 import io.infectnet.server.engine.core.world.Position;
 import io.infectnet.server.engine.core.world.World;
 
+/**
+ * A simple heuristic function for the path finding algorithm.
+ * Calculating the estimated distance between two positions.
+ */
 public class ClosestHeuristic implements Heuristic {
 
     @Override

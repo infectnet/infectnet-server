@@ -18,7 +18,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
     /**
      * A heuristic to use with value calculating.
      */
-    private Heuristic heuristic;
+    private final Heuristic heuristic;
 
     /**
      * The world, in which we want to find the path.
@@ -45,6 +45,14 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
      */
     private List<Node> closedNodes;
 
+    /**
+     * Creates a startegy with the given heuristic to use in the A* algorithm.
+     * @param heuristic the specific heuristic function to use
+     */
+    public AStarPathFinderStrategy(Heuristic heuristic){
+        this.heuristic = heuristic;
+    }
+
     @Override
     public LinkedList<Tile> findPath(World world, Position start, Position target) {
 
@@ -52,7 +60,6 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
 
         this.world = world;
         this.target = target;
-        heuristic = new ClosestHeuristic();
         openNodes = new ArrayList<>();
         closedNodes = new ArrayList<>();
 
