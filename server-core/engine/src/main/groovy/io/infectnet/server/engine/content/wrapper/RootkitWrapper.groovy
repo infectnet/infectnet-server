@@ -9,7 +9,7 @@ import java.util.function.BiConsumer
 
 class RootkitWrapper extends EntityWrapper {
 
-  RootkitWrapper(Entity wrappedEntity, BiConsumer<WrapperState, Action> actionConsumer) {
+  RootkitWrapper(Entity wrappedEntity, BiConsumer<io.infectnet.server.engine.core.entity.wrapper.EntityWrapper.WrapperState, Action> actionConsumer) {
     super(wrappedEntity, actionConsumer)
   }
 
