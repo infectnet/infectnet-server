@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.type.NestTypeComponent;
 import io.infectnet.server.engine.content.type.TrojanTypeComponent;
 import io.infectnet.server.engine.content.type.WormTypeComponent;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
@@ -21,5 +22,11 @@ public class TypeModule {
   @IntoSet
   public static TypeComponent providesTrojanTypeComponent() {
     return new TrojanTypeComponent();
+  }
+
+  @Provides
+  @IntoSet
+  public static TypeComponent providesNestTypeComponent() {
+    return new NestTypeComponent();
   }
 }

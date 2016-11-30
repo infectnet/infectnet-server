@@ -7,11 +7,17 @@ import java.util.Optional;
 
 public class InventoryComponent {
 
+  private static final int DEFAULT_CAPACITY = 0;
+
   private final int capacity;
 
   private final Map<String, Integer> inventoryMap;
 
   private int freeCapacity;
+
+  public InventoryComponent() {
+    this(DEFAULT_CAPACITY);
+  }
 
   public InventoryComponent(int capacity) {
     this.capacity = capacity;
