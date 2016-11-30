@@ -43,11 +43,13 @@ public class MovementSystem implements ProcessorSystem {
   private void consumeMovementRequest(Request request) {
     MovementRequest movementRequest = (MovementRequest) request;
 
+    // This Optional.get() is safe to do, because MovementRequests always have targets.
+    // This is enforced by the constructor.
     Entity movementTarget = movementRequest.getTarget().get();
 
     world.setEntityOnPosition(null, movementTarget.getPositionComponent().getPosition());
 
-    world.setEntityOnPosition(movementTarget, movementRequest.getPosition());
+    world.setEntityOnPosition(movementTarget, movementRequest.getPosition().stepSouth());
 
     movementTarget.getPositionComponent().setPosition(movementRequest.getPosition());
   }
