@@ -26,24 +26,14 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
     private World world;
 
     /**
-     * The start Position converted into a Node.
-     */
-    private Node startNode;
-
-    /**
      * The destination Position.
      */
-    private Position target;
+    private Position targetPos;
 
     /**
      * The list of Nodes that we do not yet consider fully searched.
      */
     private List<Node> openNodes;
-
-    /**
-     * The list of nodes that have been searched through.
-     */
-    private List<Node> closedNodes;
 
     /**
      * Creates a startegy with the given heuristic to use in the A* algorithm.
@@ -59,21 +49,24 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
         /* Initialization */
 
         this.world = world;
-        this.target = target;
+        targetPos = target;
         openNodes = new ArrayList<>();
-        closedNodes = new ArrayList<>();
+
+        /* The list of nodes that have been searched through. */
+
+        List<Node> closedNodes = new ArrayList<>();
 
         /* Finding the right target, if the given is a occupied by an Entity,
         which is almost always e.g. resource, other player's entity. */
 
-        target = resetTarget();
+        targetPos = resetTarget();
 
         /* Putting the starting node with its parameters in the list of open Nodes,
          to expand it later on. */
 
-        startNode = new Node(start);
+        Node startNode = new Node(start);
         startNode.setCost(0);
-        startNode.setHeuristic(heuristic.heuristic(world, start, target));
+        startNode.setHeuristic(heuristic.heuristic(world, start, targetPos));
         startNode.setSumCost(startNode.getHeuristic());
 
         openNodes.add(startNode);
@@ -93,7 +86,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
 
             /* If we got to the desired target, the algorithm stops. */
 
-            if(current.getPosition().equals(target)){
+            if(current.getPosition().equals(targetPos)){
                 break;
             }
 
@@ -128,7 +121,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
                         && world.getTileByPosition(neighbour.getPosition()).getEntity() == null) {
 
                     neighbour.setCost(nextCost);
-                    neighbour.setHeuristic(heuristic.heuristic(world, neighbour.getPosition(), target));
+                    neighbour.setHeuristic(heuristic.heuristic(world, neighbour.getPosition(), targetPos));
                     neighbour.setSumCost(neighbour.getCost() + neighbour.getHeuristic());
                     neighbour.setParent(current);
                     openNodes.add(neighbour);
@@ -168,10 +161,11 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
      */
     private LinkedList<Tile> getPathFromNodes(World world, Position start, Node current) {
         LinkedList<Tile> path = new LinkedList<>();
+        Node node = current;
 
-        while (current.parent != null) {
-            path.add(world.getTileByPosition(current.getPosition()));
-            current = current.parent;
+        while (node.parent != null) {
+            path.add(world.getTileByPosition(node.getPosition()));
+            node = node.parent;
         }
         path.add(world.getTileByPosition(start));
         return path;
@@ -198,8 +192,8 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
      * @return the new position nearby the original target
      */
     private Position resetTarget() {
-        Position newTarget =  target;
-        Node targetNode = new Node(target);
+        Position newTarget =  targetPos;
+        Node targetNode = new Node(targetPos);
 
         for(Node node : targetNode.getNeighbours()){
             if(world.isPositionValidTile(node.getPosition())
