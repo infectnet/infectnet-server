@@ -48,6 +48,13 @@ public interface World {
   Tile getTileByPosition(Position position);
 
   /**
+   * Checks if the Position given defines a coordinate pair in the field of the World.
+   * @param position the given coordinates to check
+   * @return true if it is between the borders and false otherwise
+   */
+  boolean isPositionValidTile(Position position);
+
+  /**
    * Sets the entity on the Tile defined by the given Position
    * @param entity the entity to be set
    * @param position the position given

@@ -161,6 +161,7 @@ public class WorldImpl implements World {
     }
   }
 
+  @Override
   public boolean isPositionValidTile(Position position){
     return position.getH() >= 0 && position.getH() < height && position.getW() >= 0 && position.getW() < width;
   }

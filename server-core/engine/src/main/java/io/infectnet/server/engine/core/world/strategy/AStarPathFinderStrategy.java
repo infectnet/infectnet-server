@@ -187,14 +187,19 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
     }
 
     /**
-     * Repositions the given target Position to one, that is not occupied or not a {@code ROCK}.
+     * Always repositions the given target Position to one, that is not occupied or not a {@code ROCK}.
      * @return the new position nearby the original target
      */
     private Position resetTarget() {
-        //TODO
         Position newTarget =  target;
-        while(world.getTileByPosition(newTarget).getType() != CAVE){
-            newTarget = newTarget.stepNorthWest();
+        Node targetNode = new Node(target);
+
+        for(Node node : targetNode.getNeighbours()){
+            if(world.isPositionValidTile(node.getPosition())
+                    && !world.getTileByPosition(node.getPosition()).isBlockedOrOccupied()){
+                newTarget = node.getPosition();
+                break;
+            }
         }
         return newTarget;
     }
