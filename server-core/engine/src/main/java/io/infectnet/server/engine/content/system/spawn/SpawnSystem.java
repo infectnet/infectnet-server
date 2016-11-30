@@ -1,6 +1,7 @@
 package io.infectnet.server.engine.content.system.spawn;
 
 
+import io.infectnet.server.engine.core.entity.Category;
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
@@ -46,7 +47,9 @@ public class SpawnSystem implements ProcessorSystem {
     SpawnAction spawnAction = (SpawnAction) action;
 
     Optional<TypeComponent> entityTypeComponent =
-        typeRepository.getTypeByName(spawnAction.getEntityType());
+        typeRepository.getTypeByName(spawnAction.getEntityType())
+            .filter(typeComponent -> typeComponent.getCategory() == Category.FIGHTER
+                || typeComponent.getCategory() == Category.WORKER);
 
     entityTypeComponent.ifPresent((typeComponent) -> {
       requestQueue.add(new SpawnRequest(spawnAction.getSource(), spawnAction, typeComponent));
