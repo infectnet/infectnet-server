@@ -5,7 +5,9 @@ import io.infectnet.server.engine.content.system.infect.InfectSystem;
 import io.infectnet.server.engine.content.system.inventory.InventoryManagementSystem;
 import io.infectnet.server.engine.content.system.kill.KillSystem;
 import io.infectnet.server.engine.content.system.movement.MovementSystem;
+import io.infectnet.server.engine.content.system.spawn.SpawnSystem;
 import io.infectnet.server.engine.core.entity.EntityManager;
+import io.infectnet.server.engine.core.entity.type.TypeRepository;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
 import io.infectnet.server.engine.core.util.ListenableQueue;
@@ -50,5 +52,15 @@ public class SystemModule {
   @IntoSet
   public static ProcessorSystem providesKillSystem(EntityManager entityManager, World world) {
     return new KillSystem(entityManager, world);
+  }
+
+  @Provides
+  @IntoSet
+  public static ProcessorSystem providesSpawnSystem(
+      @Named("Request Queue") ListenableQueue<Request> requestQueue,
+      TypeRepository typeRepository,
+      EntityManager entityManager,
+      World world) {
+    return new SpawnSystem(requestQueue, typeRepository, entityManager, world);
   }
 }
