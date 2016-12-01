@@ -8,12 +8,12 @@ import io.infectnet.server.engine.core.world.World;
  */
 public interface Heuristic {
 
-    /**
-     * Returns a value calculated with the given arguments.
-     * @param world the current map of the game
-     * @param currentPosition one of the given position
-     * @param targetPosition one of the given positions
-     * @return a value calculated
-     */
-    int heuristic(World world, Position currentPosition, Position targetPosition);
+  /**
+   * Returns a value calculated with the given arguments.
+   * @param world the current map of the game
+   * @param currentPosition one of the given position
+   * @param targetPosition one of the given positions
+   * @return a value calculated
+   */
+  int heuristic(World world, Position currentPosition, Position targetPosition);
 }

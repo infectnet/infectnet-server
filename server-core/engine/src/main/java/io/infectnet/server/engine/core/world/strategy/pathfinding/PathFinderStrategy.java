@@ -11,13 +11,13 @@ import java.util.LinkedList;
  */
 public interface PathFinderStrategy {
 
-    /**
-     * Finds a path from given start Position to the target Position,
-     * made of adjacent Tiles linked together in a list
-     * @param world the map where we want to search for the path
-     * @param start the starting Position
-     * @param target the destination Position
-     * @return a linked list containing the found path
-     */
-    LinkedList<Tile> findPath(World world, Position start, Position target);
+  /**
+   * Finds a path from given start Position to the target Position,
+   * made of adjacent Tiles linked together in a list
+   * @param world the map where we want to search for the path
+   * @param start the starting Position
+   * @param target the destination Position
+   * @return a linked list containing the found path
+   */
+  LinkedList<Tile> findPath(World world, Position start, Position target);
 }
