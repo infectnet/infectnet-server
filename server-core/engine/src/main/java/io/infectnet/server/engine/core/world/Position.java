@@ -19,7 +19,7 @@ public class Position{
      * @param h the first component
      * @param w the second component
      */
-    Position(int h, int w){
+    public Position(int h, int w){
         this.h = h;
         this.w = w;
     }
@@ -28,7 +28,7 @@ public class Position{
      * Creates this Position's neighbour, stepping one step south.
      * @return the southern neighbour
      */
-    Position stepSouth(){
+    public Position stepSouth(){
         return new Position(h+1, w);
     }
 
@@ -36,7 +36,7 @@ public class Position{
      * Creates this Position's neighbour, stepping one step west.
      * @return the western neighbour
      */
-    Position stepWest(){
+    public Position stepWest(){
         return new Position(h, w-1);
     }
 
@@ -44,7 +44,7 @@ public class Position{
      * Creates this Position's neighbour, stepping one step north.
      * @return the northern neighbour
      */
-    Position stepNorth(){
+    public Position stepNorth(){
         return new Position(h-1, w);
     }
 
@@ -52,15 +52,47 @@ public class Position{
      * Creates this Position's neighbour, stepping one step east.
      * @return the eastern neighbour
      */
-    Position stepEast(){
+    public Position stepEast(){
         return new Position(h, w+1);
     }
 
-    int getH() {
+    /**
+     * Creates this Position's neighbour, stepping one step east and one step north.
+     * @return the northeastern neighbour
+     */
+    public Position stepNorthEast(){
+        return new Position(h-1, w+1);
+    }
+
+    /**
+     * Creates this Position's neighbour, stepping one step west and one step north.
+     * @return the northwestern neighbour
+     */
+    public Position stepNorthWest(){
+        return new Position(h-1, w-1);
+    }
+
+    /**
+     * Creates this Position's neighbour, stepping one step east and one step south.
+     * @return the southeastern neighbour
+     */
+    public Position stepSouthEast(){
+        return new Position(h+1, w+1);
+    }
+
+    /**
+     * Creates this Position's neighbour, stepping one step west and one step south.
+     * @return the southwestern neighbour
+     */
+    public Position stepSouthWest(){
+        return new Position(h+1, w-1);
+    }
+
+    public int getH() {
         return h;
     }
 
-    int getW() {
+    public int getW() {
         return w;
     }
 

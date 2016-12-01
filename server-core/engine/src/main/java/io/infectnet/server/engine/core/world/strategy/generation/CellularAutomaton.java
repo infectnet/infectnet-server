@@ -1,11 +1,13 @@
-package io.infectnet.server.engine.core.world;
+package io.infectnet.server.engine.core.world.strategy.generation;
+
+import static java.lang.Math.random;
+
+import io.infectnet.server.engine.core.world.Position;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
-
-import static java.lang.Math.random;
 
 /**
  * This class represents a Cellular Automaton, which is used in the generation of the World tiles.
@@ -58,7 +60,7 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
 
 
   @Override
-  public boolean[][] generateWorld(int height, int width){
+  public boolean[][] generateWorld(int height, int width) {
     this.height = height;
     this.width = width;
 
@@ -66,7 +68,7 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
 
     initializeWorld();
 
-    for(int i = 0; i < numberOfSteps; ++i){
+    for (int i = 0; i < numberOfSteps; ++i) {
       doSimulationStep();
     }
 
@@ -78,10 +80,10 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
   /**
    * Initializes the array with true and false values placed at random.
    */
-  private void initializeWorld(){
-    for(int x = 0; x < width; ++x){
-      for(int y = 0; y < height; ++y){
-        if(random() < chanceToStartAlive){
+  private void initializeWorld() {
+    for (int x = 0; x < width; ++x) {
+      for (int y = 0; y < height; ++y) {
+        if (random() < chanceToStartAlive) {
           world[y][x] = CAVE;
         }
       }
@@ -92,17 +94,16 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
    * Performs a simulation step, in which it creates a new world using the values of the original,
    * now old world and the pre-set values of deathLimit and birthLimit.
    */
-  private void doSimulationStep(){
+  private void doSimulationStep() {
     boolean[][] newWorld = new boolean[height][width];
 
-    for(int h = 0; h < height; ++h){
-      for(int w = 0; w < width; ++w){
+    for (int h = 0; h < height; ++h) {
+      for (int w = 0; w < width; ++w) {
         int rockNeighbours = countRockNeighbours(h, w);
 
-        if(world[h][w]){
+        if (world[h][w]) {
           newWorld[h][w] = rockNeighbours >= deathLimit;
-        }
-        else{
+        } else {
           newWorld[h][w] = rockNeighbours > birthLimit;
         }
       }
@@ -116,18 +117,18 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
    * @param y the second coordinate
    * @return the number of the alive cells found surrounding the (x,y) cell
    */
-  private int countRockNeighbours(int x, int y){
+  private int countRockNeighbours(int x, int y) {
     int count = 0;
 
-    for(int i = -1; i < 2; ++i){
-      for(int j = -1; j < 2; ++j){
-        int neighbourX = x+i;
-        int neighbourY = y+j;
+    for (int i = -1; i < 2; ++i) {
+      for (int j = -1; j < 2; ++j) {
+        int neighbourX = x + i;
+        int neighbourY = y + j;
 
-        if(!isMiddleCell(i, j)){
-          if(isInvalidCoordinate(neighbourX, neighbourY)){
+        if (!isMiddleCell(i, j)) {
+          if (isInvalidCoordinate(neighbourX, neighbourY)) {
             count = count + 1;
-          } else if(world[neighbourX][neighbourY] == ROCK){
+          } else if (world[neighbourX][neighbourY] == ROCK) {
             count = count + 1;
           }
         }
@@ -163,13 +164,13 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
    */
   private boolean[][] eliminateIslands() {
     float ratio = 0f;
-    Position startingPosition = new Position(0,0);
+    Position startingPosition = new Position(0, 0);
 
-    while(ratio < RATIO_LIMIT){
+    while (ratio < RATIO_LIMIT) {
       finalWorld = new boolean[height][width];
 
       startingPosition = findNextCavePosition(startingPosition);
-      if(startingPosition == null){
+      if (startingPosition == null) {
         break;
       }
 
@@ -185,8 +186,8 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
    * from the starting position, storing the found positions in a new array called finalWorld.
    * @param position the starting position
    */
-  private void floodFillWholeCave(Position position){
-    if(isInvalidCoordinate(position.getH(), position.getW())){
+  private void floodFillWholeCave(Position position) {
+    if (isInvalidCoordinate(position.getH(), position.getW())) {
       return;
     }
 
@@ -196,13 +197,13 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
     queue.add(position);
     set.add(position);
 
-    while(!queue.isEmpty()){
+    while (!queue.isEmpty()) {
       Position pos = queue.remove();
       set.remove(pos);
       int h = pos.getH();
       int w = pos.getW();
 
-      if(isNotVisitedCave(pos)){
+      if (isNotVisitedCave(pos)) {
         finalWorld[h][w] = CAVE;
       }
 
@@ -211,16 +212,16 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
       Position northPos = pos.stepNorth();
       Position eastPos = pos.stepEast();
 
-      if(canStep(set, southPos)){
+      if (canStep(set, southPos)) {
         queue.add(southPos);
       }
-      if(canStep(set, westPos)){
+      if (canStep(set, westPos)) {
         queue.add(westPos);
       }
-      if(canStep(set, northPos)){
+      if (canStep(set, northPos)) {
         queue.add(northPos);
       }
-      if(canStep(set, eastPos)){
+      if (canStep(set, eastPos)) {
         queue.add(eastPos);
       }
     }
@@ -233,7 +234,8 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
   /**
    * Checks if the Position given points to a cave in the world but to a rock on the new world.
    * @param pos the position to check
-   * @return true if the value of the Position was not yet evaluated with the flood-fill algorithm, false otherwise.
+   * @return true if the value of the Position was not yet evaluated with the flood-fill algorithm,
+   * false otherwise.
    */
   private boolean isNotVisitedCave(Position pos) {
     return world[pos.getH()][pos.getW()] && !finalWorld[pos.getH()][pos.getW()];
@@ -245,11 +247,11 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
    * @param oldPosition the previously found position
    * @return the new Position, which is a not yet visited cave
    */
-  private Position findNextCavePosition(Position oldPosition){
-    for(int i = oldPosition.getH(); i < height; ++i){
-      for(int j = 0; j < width; ++j){
-        if(world[i][j] && !finalWorld[i][j]){
-          return new Position(i,j);
+  private Position findNextCavePosition(Position oldPosition) {
+    for (int i = oldPosition.getH(); i < height; ++i) {
+      for (int j = 0; j < width; ++j) {
+        if (world[i][j] && !finalWorld[i][j]) {
+          return new Position(i, j);
         }
       }
     }
@@ -257,16 +259,17 @@ public class CellularAutomaton implements WorldGeneratorStrategy {
   }
 
   /**
-   * Counts the visited cave cells, stored in the finalWorld array and calculates its ratio, compared to the whole array.
+   * Counts the visited cave cells, stored in the finalWorld array and calculates its ratio,
+   * compared to the whole array.
    * @return float the ratio of the cave system to all cells of the world.
    */
   private float countCaveCellRatio() {
     float counter = 0;
-    float numberOfAllCells = height*width;
+    float numberOfAllCells = height * width;
 
-    for(int i = 0; i < height; ++i) {
+    for (int i = 0; i < height; ++i) {
       for (int j = 0; j < width; ++j) {
-        if(finalWorld[i][j]){
+        if (finalWorld[i][j]) {
           counter++;
         }
       }

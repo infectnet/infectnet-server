@@ -39,4 +39,25 @@ public interface World {
    * @return a list of {@link Tile}s that can be seen from the given entity
    */
   List<Tile> viewSight(Entity entity);
+
+  /**
+   * Returns a Tile defined by the given Position.
+   * @param position the position given
+   * @return the tile
+   */
+  Tile getTileByPosition(Position position);
+
+  /**
+   * Checks if the Position given defines a coordinate pair in the field of the World.
+   * @param position the given coordinates to check
+   * @return true if it is between the borders and false otherwise
+   */
+  boolean isPositionValidTile(Position position);
+
+  /**
+   * Sets the entity on the Tile defined by the given Position
+   * @param entity the entity to be set
+   * @param position the position given
+   */
+  void setEntityOnPosition(Entity entity, Position position);
 }
