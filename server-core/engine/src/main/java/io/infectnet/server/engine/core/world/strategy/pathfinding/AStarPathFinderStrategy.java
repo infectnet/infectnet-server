@@ -40,9 +40,8 @@ public class AStarPathFinderStrategy implements PathFinderStrategy {
     this.heuristic = heuristic;
   }
 
-  // Should return List instead of LinkedList
   @Override
-  public LinkedList<Tile> findPath(World world, Position start, Position target) {
+  public List<Tile> findPath(World world, Position start, Position target) {
 
         /*  The list of Nodes that we do not yet consider fully searched. */
     PriorityQueue<Node> openQueue = new PriorityQueue<>(new NodeComparator());
@@ -189,10 +188,10 @@ public class AStarPathFinderStrategy implements PathFinderStrategy {
    * @param world the world where we search
    * @param start the starting Position
    * @param current the end Position of the current Path, may not be the original target
-   * @return a linked list of the path containing the target at the front and the start at the back
+   * @return a list of the path containing the target at the front and the start at the back
    */
-  private LinkedList<Tile> getPathFromNodes(World world, Position start, Node current) {
-    LinkedList<Tile> path = new LinkedList<>();
+  private List<Tile> getPathFromNodes(World world, Position start, Node current) {
+    List<Tile> path = new LinkedList<>();
     Node node = current;
 
     while (node.getParent() != null) {
