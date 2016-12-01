@@ -1,5 +1,7 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.system.boot.BootSystem;
+import io.infectnet.server.engine.content.system.creation.EntityCreatorSystem;
 import io.infectnet.server.engine.content.system.hijack.HijackSystem;
 import io.infectnet.server.engine.content.system.infect.InfectSystem;
 import io.infectnet.server.engine.content.system.inventory.InventoryManagementSystem;
@@ -58,9 +60,22 @@ public class SystemModule {
   @IntoSet
   public static ProcessorSystem providesSpawnSystem(
       @Named("Request Queue") ListenableQueue<Request> requestQueue,
-      TypeRepository typeRepository,
-      EntityManager entityManager,
-      World world) {
-    return new SpawnSystem(requestQueue, typeRepository, entityManager, world);
+      TypeRepository typeRepository) {
+    return new SpawnSystem(requestQueue, typeRepository);
+  }
+
+  @Provides
+  @IntoSet
+  public static ProcessorSystem providesBootSystem(
+      @Named("Request Queue") ListenableQueue<Request> requestQueue,
+      TypeRepository typeRepository) {
+    return new BootSystem(requestQueue, typeRepository);
+  }
+
+  @Provides
+  @IntoSet
+  public static ProcessorSystem providesEntityCreatorSystem(EntityManager entityManager,
+                                                            World world) {
+    return new EntityCreatorSystem(entityManager, world);
   }
 }
