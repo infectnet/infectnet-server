@@ -1,20 +1,20 @@
 package io.infectnet.server.engine.content.system.boot;
 
+import io.infectnet.server.engine.content.system.creation.EntityCreationRequest;
+import io.infectnet.server.engine.content.system.movement.MovementRequest;
 import io.infectnet.server.engine.core.entity.Category;
-import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
 import io.infectnet.server.engine.core.entity.wrapper.Action;
 import io.infectnet.server.engine.core.script.Request;
-import io.infectnet.server.engine.core.system.ProcessorSystem;
+import io.infectnet.server.engine.core.system.ActionOnlyProcessor;
 import io.infectnet.server.engine.core.util.ListenableQueue;
-import io.infectnet.server.engine.core.world.Position;
 import io.infectnet.server.engine.core.world.World;
 
 import java.util.Optional;
 
-public class BootSystem implements ProcessorSystem {
+public class BootSystem extends ActionOnlyProcessor {
 
   private final ListenableQueue<Request> requestQueue;
 
@@ -37,69 +37,23 @@ public class BootSystem implements ProcessorSystem {
     actionQueue.addListener(BootAction.class, this::consumeBootAction);
   }
 
-  @Override
-  public void registerRequestListeners(ListenableQueue<Request> requestQueue) {
-    requestQueue.addListener(BootRequest.class, this::consumeBootRequest);
-  }
-
   private void consumeBootAction(Action action) {
     BootAction bootAction = (BootAction) action;
 
-    if (isEnoughSpaceAvailable(bootAction.getSource().getPositionComponent().getPosition())) {
-      Optional<TypeComponent> buildingType =
-          typeRepository.getTypeByName(bootAction.getBuildingType())
-              .filter(type -> type.getCategory() == Category.BUILDING);
+    Optional<TypeComponent> buildingType =
+        typeRepository.getTypeByName(bootAction.getBuildingType())
+            .filter(type -> type.getCategory() == Category.BUILDING);
 
-      buildingType.ifPresent(typeComponent -> {
-        requestQueue.add(new BootRequest(bootAction.getSource(), action, typeComponent));
-      });
+    buildingType.ifPresent(typeComponent -> {
+      requestQueue.add(new MovementRequest(bootAction.getSource(), bootAction,
+          bootAction.getSource().getPositionComponent().getPosition().stepSouth()));
 
-      //TODO: incorrect type name was given?
-    }
+      requestQueue.add(new EntityCreationRequest(bootAction.getSource(), action, typeComponent));
 
-    //TODO: not enough space?
+    });
 
-  }
+    //TODO: incorrect type name was given?
 
-  private void consumeBootRequest(Request request) {
-    BootRequest bootRequest = (BootRequest) request;
-
-    // This Optional.get() is safe to do, because BootRequests always have targets.
-    // This is enforced by the constructor.
-    Entity booterEntity = bootRequest.getTarget().get();
-
-    Position bootPosition = booterEntity.getPositionComponent().getPosition();
-    Entity bootedEntity = bootRequest.getBuildingType().createEntityOfType();
-
-    bootedEntity.getOwnerComponent().setOwner(booterEntity.getOwnerComponent().getOwner());
-    bootedEntity.getPositionComponent().setPosition(bootPosition);
-
-    world.setEntityOnPosition(booterEntity,
-        booterEntity.getPositionComponent().getPosition().stepSouth());
-
-    entityManager.addEntity(bootedEntity);
-    world.setEntityOnPosition(bootedEntity, bootPosition);
-  }
-
-  private boolean isEnoughSpaceAvailable(Position position) {
-    Position[] neighbours = {
-        position.stepNorth(),
-        position.stepNorth().stepEast(),
-        position.stepEast(),
-        position.stepEast().stepSouth(),
-        position.stepSouth(),
-        position.stepSouth().stepWest(),
-        position.stepWest(),
-        position.stepWest().stepNorth()
-    };
-
-    for (Position n : neighbours) {
-      if (world.getTileByPosition(n).isBlockedOrOccupied()) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
 }
