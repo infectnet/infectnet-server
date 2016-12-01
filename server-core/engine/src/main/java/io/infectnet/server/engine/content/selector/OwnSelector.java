@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OwnSelector extends Selector{
+public class OwnSelector extends Selector {
 
   private final EntityManager entityManager;
 
@@ -29,27 +29,27 @@ public class OwnSelector extends Selector{
     this.wrapperRepository = wrapperRepository;
   }
 
-  public List<EntityWrapper> getWorkers(){
+  public List<EntityWrapper> getWorkers() {
     return getWrappersOfCategory(WORKER);
   }
 
-  public List<EntityWrapper> getWorker(){
+  public List<EntityWrapper> getWorker() {
     return getWrappersOfCategory(WORKER);
   }
 
-  public List<EntityWrapper> getFighters(){
+  public List<EntityWrapper> getFighters() {
     return getWrappersOfCategory(FIGHTER);
   }
 
-  public List<EntityWrapper> getFighter(){
+  public List<EntityWrapper> getFighter() {
     return getWrappersOfCategory(FIGHTER);
   }
 
-  public List<EntityWrapper> getBuildings(){
+  public List<EntityWrapper> getBuildings() {
     return getWrappersOfCategory(BUILDING);
   }
 
-  public List<EntityWrapper> getBuilding(){
+  public List<EntityWrapper> getBuilding() {
     return getWrappersOfCategory(BUILDING);
   }
 
@@ -61,7 +61,7 @@ public class OwnSelector extends Selector{
 
     List<EntityWrapper> wrappers = new LinkedList<>();
 
-    for(Entity entity : entities){
+    for (Entity entity : entities) {
       wrappers.add(wrapperRepository.wrapEntity(entity));
     }
 
