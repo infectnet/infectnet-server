@@ -14,11 +14,6 @@ import static io.infectnet.server.engine.core.world.TileType.CAVE;
 public class AStarPathFinderStrategy implements PathFinderStrategy{
 
     /**
-     * A heuristic to use with value calculating.
-     */
-    private final Heuristic heuristic;
-
-    /**
      * The costs of stepping to a Tile with a defined TileType.
      */
     private static final int COST_OF_CAVE = 1;
@@ -28,6 +23,11 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
     private static final int DEFAULT_COST = 0;
 
     /**
+     * A heuristic to use with value calculating.
+     */
+    private final Heuristic heuristic;
+
+    /**
      * Creates a startegy with the given heuristic to use in the A* algorithm.
      * @param heuristic the specific heuristic function to use
      */
@@ -35,10 +35,12 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
         this.heuristic = heuristic;
     }
 
+    // Should return List instead of LinkedList
     @Override
     public LinkedList<Tile> findPath(World world, Position start, Position target) {
 
         /*  The list of Nodes that we do not yet consider fully searched. */
+        PriorityQueue<Node> openQueue = new PriorityQueue<>(new NodeComparator());
 
         Set<Node> openNodes = new HashSet<>();
 
@@ -59,6 +61,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
         startNode.setHeuristic(heuristic.heuristic(world, start, targetPos));
         startNode.setSumCost(startNode.getHeuristic());
 
+        openQueue.add(startNode);
         openNodes.add(startNode);
 
         /* The current Node represents the current end of the found path so far. */
@@ -72,7 +75,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
 
             /* The current node should be chosen from the openNodes list. */
 
-            current = findNodeToExpand(openNodes);
+            current = openQueue.poll();
 
             /* If we got to the desired target, the algorithm stops. */
 
@@ -88,7 +91,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
 
             /* Expanding the current node */
 
-            expandNode(world, openNodes, closedNodes, targetPos, current);
+            expandNode(world, openQueue, openNodes, closedNodes, targetPos, current);
         }
         /* Even if no path found to the target Position,
          the path that has already been constructed in the direction of the target will be returned. */
@@ -105,7 +108,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
      * @param targetPos the Position of the target we want to reach
      * @param current the currently visited node
      */
-    private void expandNode(World world, Set<Node> openNodes, Set<Node> closedNodes, Position targetPos, Node current) {
+    private void expandNode(World world, PriorityQueue<Node> openQueue, Set<Node> openNodes, Set<Node> closedNodes, Position targetPos, Node current) {
         for (Node neighbour : current.getNeighbours()) {
             if (neighbour == null) {
                 continue;
@@ -117,6 +120,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
             int nextCost = current.getCost() + calculateCostOfTile(world, neighbour);
 
             if (nextCost < neighbour.getCost()) {
+                openQueue.remove(neighbour);
                 openNodes.remove(neighbour);
                 closedNodes.remove(neighbour);
             }
@@ -129,6 +133,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
                 neighbour.setHeuristic(heuristic.heuristic(world, neighbour.getPosition(), targetPos));
                 neighbour.setSumCost(neighbour.getCost() + neighbour.getHeuristic());
                 neighbour.setParent(current);
+                openQueue.add(neighbour);
                 openNodes.add(neighbour);
             }
         }
@@ -146,9 +151,9 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
      */
     private boolean isSuitableNode(World world, Set<Node> openNodes, Set<Node> closedNodes, Node neighbour) {
         return !openNodes.contains(neighbour)
-                && !closedNodes.contains(neighbour)
-                && world.getTileByPosition(neighbour.getPosition()).getType() == CAVE
-                && world.getTileByPosition(neighbour.getPosition()).getEntity() == null;
+            && !closedNodes.contains(neighbour)
+            && world.getTileByPosition(neighbour.getPosition()).getType() == CAVE
+            && world.getTileByPosition(neighbour.getPosition()).getEntity() == null;
     }
 
     /**
@@ -169,7 +174,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
 
     /**
      * Constructs the Path, which can be returned as the result of the A* algorithm.
-     * Usis recursive path building, going from the last Position in the Path, bindig
+     * Uses recursive path building, going from the last Position in the Path, bindig
      * its parent Node to it, and so on. Until it reaches the starting Position.
      * @param world the world where we search
      * @param start the starting Position
@@ -189,24 +194,8 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
     }
 
     /**
-     * Finds the next Node to expand, which have to have the lowest cost.
-     * @param openNodes the Set of nodes to visit later
-     * @return the chosen Node
-     */
-    private Node findNodeToExpand(Set<Node> openNodes) {
-        Node current = null;
-
-        for (Node node : openNodes) {
-            if (current == null || node.getSumCost() < current.getSumCost()) {
-                current = node;
-            }
-        }
-
-        return current;
-    }
-
-    /**
-     * Always repositions the given target Position to one, that is not occupied or not a {@code ROCK}.
+     * Always repositions the given target Position to one,
+     * that is not occupied or not a {@code ROCK}.
      * @return the new position nearby the original target
      */
     private Position resetTarget(World world, Position target) {
@@ -215,7 +204,7 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
 
         for(Node node : targetNode.getNeighbours()){
             if(world.isPositionValidTile(node.getPosition())
-                    && !world.getTileByPosition(node.getPosition()).isBlockedOrOccupied()){
+                && !world.getTileByPosition(node.getPosition()).isBlockedOrOccupied()){
                 newTarget = node.getPosition();
                 break;
             }
@@ -223,8 +212,15 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
         return newTarget;
     }
 
+    private static class NodeComparator implements Comparator<Node> {
+        @Override
+        public int compare(Node o1, Node o2) {
+            return Integer.compare(o1.getSumCost(), o2.getSumCost());
+        }
+    }
+
     /**
-     * Inner class to represent the special cell required by the A* algorithm
+     * Inner class to represent the special cell required by the A* algorithm.
      */
     private static class Node {
         private Node parent;
@@ -302,14 +298,12 @@ public class AStarPathFinderStrategy implements PathFinderStrategy{
             Node node = (Node) o;
 
             return getPosition() != null ? getPosition().equals(node.getPosition())
-                    : node.getPosition() == null;
-
+                : node.getPosition() == null;
         }
 
         @Override
         public int hashCode() {
-            int result = (getPosition() != null ? getPosition().hashCode() : 0);
-            return result;
+            return (getPosition() != null ? getPosition().hashCode() : 0);
         }
     }
 }
