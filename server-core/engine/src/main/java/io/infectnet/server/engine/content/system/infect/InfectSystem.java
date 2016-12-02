@@ -2,6 +2,8 @@ package io.infectnet.server.engine.content.system.infect;
 
 
 import io.infectnet.server.engine.content.system.inventory.InventoryModificationRequest;
+import io.infectnet.server.engine.content.system.kill.KillRequest;
+import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.wrapper.Action;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.ActionOnlyProcessor;
@@ -29,12 +31,21 @@ public class InfectSystem extends ActionOnlyProcessor {
   private void consumeInfectAction(Action action) {
     InfectAction infectAction = (InfectAction) action;
 
-    if (world.neighboursOf(infectAction.getSource()).contains(infectAction.getResource())) {
-      requestQueue.add(new InventoryModificationRequest(infectAction.getSource(), action, ITEM_NAME,
-          MODIFICATION_NUMBER));
+    Entity infectorEntity = infectAction.getSource();
+    Entity resourceEntity = infectAction.getResource();
 
-      requestQueue.add(new InventoryModificationRequest(infectAction.getResource(),
-          action, ITEM_NAME, -1 * MODIFICATION_NUMBER));
+    if (world.neighboursOf(infectorEntity).contains(resourceEntity)) {
+      requestQueue.add(
+          new InventoryModificationRequest(infectorEntity, action, ITEM_NAME, MODIFICATION_NUMBER));
+
+      if (resourceEntity.getInventoryComponent().getInventoryElement(ITEM_NAME).get()
+          - MODIFICATION_NUMBER <= 0) {
+        requestQueue.add(new KillRequest(resourceEntity, infectAction));
+
+      } else {
+        requestQueue.add(new InventoryModificationRequest(resourceEntity, action,
+            ITEM_NAME, -1 * MODIFICATION_NUMBER));
+      }
     }
 
   }

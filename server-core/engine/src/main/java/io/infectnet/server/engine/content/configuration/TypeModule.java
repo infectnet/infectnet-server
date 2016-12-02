@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
 import io.infectnet.server.engine.content.type.NestTypeComponent;
 import io.infectnet.server.engine.content.type.RootkitTypeComponent;
 import io.infectnet.server.engine.content.type.TrojanTypeComponent;
@@ -35,5 +36,11 @@ public class TypeModule {
   @IntoSet
   public static TypeComponent providesRootkitTypeComponent() {
     return new RootkitTypeComponent();
+  }
+
+  @Provides
+  @IntoSet
+  public static TypeComponent providesBitResourceTypeComponent() {
+    return new BitResourceTypeComponent();
   }
 }
