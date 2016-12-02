@@ -3,6 +3,7 @@ package io.infectnet.server.engine.core.world;
 import io.infectnet.server.engine.core.entity.Entity;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * The representation of the game world, in a finite two-dimensional space,
@@ -19,11 +20,11 @@ public interface World {
   void generate(int height, int width);
 
   /**
-   * Returns a list containing all Entities that are visible for the {@link Entity} given.
+   * Returns a set containing all Entities that are visible for the {@link Entity} given.
    * @param entity the {@code Entity} in the centre, whose point of view prevails
-   * @return a list of the found Entities, an empty list if nothing was found
+   * @return a set of the found Entities, an empty set if nothing was found
    */
-  List<Entity> seenBy(Entity entity);
+  Set<Entity> seenBy(Entity entity);
 
   /**
    * Returns the list of entities with zero distance from the given entity.
@@ -31,7 +32,7 @@ public interface World {
    * @param entity the {@code Entity} in the centre, whose point of view prevails
    * @return a list of the found Entities, an empty list if nothing was found
    */
-  List<Entity> neighboursOf(Entity entity);
+  Set<Entity> neighboursOf(Entity entity);
 
   /**
    * Returns the list of all tiles seen by the passed entity.

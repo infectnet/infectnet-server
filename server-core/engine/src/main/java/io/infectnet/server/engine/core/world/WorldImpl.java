@@ -5,7 +5,9 @@ import io.infectnet.server.engine.core.world.strategy.generation.WorldGeneratorS
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class WorldImpl implements World {
   /**
@@ -44,7 +46,7 @@ public class WorldImpl implements World {
   }
 
   @Override
-  public List<Entity> seenBy(Entity entity) {
+  public Set<Entity> seenBy(Entity entity) {
 
     int viewRadius = entity.getViewComponent().getViewRadius();
     Position position = entity.getPositionComponent().getPosition();
@@ -53,20 +55,20 @@ public class WorldImpl implements World {
   }
 
   @Override
-  public List<Entity> neighboursOf(Entity entity) {
+  public Set<Entity> neighboursOf(Entity entity) {
     Position position = entity.getPositionComponent().getPosition();
 
     return entitiesWithinRadius(1, position);
   }
 
   /**
-   * Returns a list containing all Entities that are visible for the {@link Entity} given.
+   * Returns a set containing all Entities that are visible for the {@link Entity} given.
    * @param radius the distance it searches in
    * @param position the center of the search
-   * @return a list of the found Entities
+   * @return a set of the found Entities
    */
-  private List<Entity> entitiesWithinRadius(int radius, Position position) {
-    List<Entity> list = new ArrayList<>();
+  private Set<Entity> entitiesWithinRadius(int radius, Position position) {
+    Set<Entity> set = new HashSet<>();
 
     ViewBox viewBox = new ViewBox(radius, position, this);
 
@@ -74,12 +76,12 @@ public class WorldImpl implements World {
       for (int j = viewBox.westLimitWidth; j <= viewBox.eastLimitWidth; ++j) {
         Entity en = tiles[i][j].getEntity();
         if (en != null && position.getH() != i && position.getW() != j) {
-          list.add(en);
+          set.add(en);
         }
       }
     }
 
-    return list;
+    return set;
   }
 
   @Override
