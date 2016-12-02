@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class EnvironmentSelector extends Selector {
   private static final String ENVIRONMENT_USERNAME = "Environment";
-  
+
   private final EntityManager entityManager;
 
   private final EntityWrapperRepository wrapperRepository;
