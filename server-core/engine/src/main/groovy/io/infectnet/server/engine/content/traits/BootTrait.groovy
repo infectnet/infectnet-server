@@ -5,7 +5,7 @@ import io.infectnet.server.engine.content.system.boot.BootAction
 trait BootTrait {
 
   void boot(String buildingType) {
-    this.actionConsumer.accept(this.state, new BootAction(this.wrappedEntity, buildingType));
+    this.actionConsumer.accept(this.state, new BootAction(this.wrappedEntity, Objects.requireNonNull(buildingType)));
   }
 
 }
