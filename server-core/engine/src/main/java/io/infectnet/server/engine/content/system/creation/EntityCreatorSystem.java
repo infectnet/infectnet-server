@@ -3,6 +3,7 @@ package io.infectnet.server.engine.content.system.creation;
 import io.infectnet.server.engine.core.entity.Category;
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.EntityManager;
+import io.infectnet.server.engine.core.entity.component.TypeComponent;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.RequestOnlyProcessor;
 import io.infectnet.server.engine.core.util.ListenableQueue;
@@ -35,6 +36,33 @@ public class EntityCreatorSystem extends RequestOnlyProcessor {
     // This is enforced by the constructor.
     Entity creatorEntity = entityCreationRequest.getTarget().get();
 
+    Position createPosition = getCreatePosition(creatorEntity);
+
+    if (createPosition != null) {
+
+      //TODO: spawn cost
+
+      Entity createdEntity =
+          createEntity(creatorEntity, entityCreationRequest.getEntityType(), createPosition);
+
+      entityManager.addEntity(createdEntity);
+      world.setEntityOnPosition(createdEntity, createPosition);
+    }
+  }
+
+  private Entity createEntity(Entity creatorEntity,
+                              TypeComponent entityType,
+                              Position createPosition) {
+
+    Entity createdEntity = entityType.createEntityOfType();
+
+    createdEntity.getOwnerComponent().setOwner(creatorEntity.getOwnerComponent().getOwner());
+    createdEntity.getPositionComponent().setPosition(createPosition);
+
+    return createdEntity;
+  }
+
+  private Position getCreatePosition(Entity creatorEntity) {
     Position createPosition = null;
 
     if (creatorEntity.getTypeComponent().getCategory() == Category.BUILDING) {
@@ -50,18 +78,7 @@ public class EntityCreatorSystem extends RequestOnlyProcessor {
       createPosition = creatorEntity.getPositionComponent().getPosition();
     }
 
-    if (createPosition != null) {
-
-      //TODO: spawn cost
-
-      Entity createdEntity = entityCreationRequest.getEntityType().createEntityOfType();
-
-      createdEntity.getOwnerComponent().setOwner(creatorEntity.getOwnerComponent().getOwner());
-      createdEntity.getPositionComponent().setPosition(createPosition);
-
-      entityManager.addEntity(createdEntity);
-      world.setEntityOnPosition(createdEntity, createPosition);
-    }
+    return createPosition;
   }
 
   private Optional<Position> getFreePositionAround(Position position) {
