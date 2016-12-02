@@ -9,7 +9,7 @@ import io.infectnet.server.engine.core.util.ListenableQueue;
  */
 public abstract class RequestOnlyProcessor implements ProcessorSystem {
   @Override
-  public void registerActionListeners(ListenableQueue<Action> actionQueue) {
+  public final void registerActionListeners(ListenableQueue<Action> actionQueue) {
     /*
      * Do nothing.
      */

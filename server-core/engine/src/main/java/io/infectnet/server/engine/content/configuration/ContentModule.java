@@ -7,7 +7,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(includes = {SelectorModule.class, DslModule.class, SystemModule.class})
+@Module(includes = {SelectorModule.class, DslModule.class, SystemModule.class, TypeModule.class,
+    WrapperModule.class})
 public class ContentModule {
   @Provides
   @Singleton

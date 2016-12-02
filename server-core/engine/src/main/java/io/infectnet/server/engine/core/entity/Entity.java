@@ -1,6 +1,11 @@
 package io.infectnet.server.engine.core.entity;
 
-import io.infectnet.server.engine.core.entity.component.*;
+import io.infectnet.server.engine.core.entity.component.HealthComponent;
+import io.infectnet.server.engine.core.entity.component.InventoryComponent;
+import io.infectnet.server.engine.core.entity.component.OwnerComponent;
+import io.infectnet.server.engine.core.entity.component.PositionComponent;
+import io.infectnet.server.engine.core.entity.component.TypeComponent;
+import io.infectnet.server.engine.core.entity.component.ViewComponent;
 
 /**
  * This class represents a generic entity in the game world. It does not contain behaviour, nor
@@ -16,6 +21,8 @@ public class Entity {
   private OwnerComponent ownerComponent;
 
   private PositionComponent positionComponent;
+
+  private InventoryComponent inventoryComponent;
 
   private Entity() {
     /**
@@ -43,6 +50,10 @@ public class Entity {
     return positionComponent;
   }
 
+  public InventoryComponent getInventoryComponent() {
+    return inventoryComponent;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -60,6 +71,8 @@ public class Entity {
     private OwnerComponent ownerComponent;
 
     private PositionComponent positionComponent;
+
+    private InventoryComponent inventoryComponent;
 
     public Builder healthComponent(HealthComponent component) {
       this.healthComponent = component;
@@ -91,6 +104,12 @@ public class Entity {
       return this;
     }
 
+    public Builder inventoryComponent(InventoryComponent component) {
+      this.inventoryComponent = component;
+
+      return this;
+    }
+
     public Entity build() {
       Entity entity = new Entity();
 
@@ -103,6 +122,8 @@ public class Entity {
       entity.ownerComponent = this.ownerComponent;
 
       entity.positionComponent = this.positionComponent;
+
+      entity.inventoryComponent = this.inventoryComponent;
 
       return entity;
     }
