@@ -13,7 +13,6 @@ public class BitResourceTypeComponent extends TypeComponent {
 
   public static final String TYPE_NAME = "Bit";
 
-  private static final int INITIAL_HEALTH = 50;
   private static final int INVENTORY_CAPACITY = 300;
 
   public BitResourceTypeComponent() {
