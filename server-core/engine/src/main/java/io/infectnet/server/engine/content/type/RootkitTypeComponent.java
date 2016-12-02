@@ -3,7 +3,7 @@ package io.infectnet.server.engine.content.type;
 import io.infectnet.server.engine.core.entity.Category;
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.component.HealthComponent;
-import io.infectnet.server.engine.core.entity.component.InventoryComponent;
+import io.infectnet.server.engine.core.entity.component.NullInventoryComponent;
 import io.infectnet.server.engine.core.entity.component.OwnerComponent;
 import io.infectnet.server.engine.core.entity.component.PositionComponent;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
@@ -29,7 +29,7 @@ public class RootkitTypeComponent extends TypeComponent {
         .healthComponent(new HealthComponent(INITIAL_HEALTH))
         .positionComponent(new PositionComponent())
         .viewComponent(new ViewComponent(VIEW_RADIUS))
-        .inventoryComponent(new InventoryComponent())
+        .inventoryComponent(NullInventoryComponent.getInstance())
         .build();
   }
 }
