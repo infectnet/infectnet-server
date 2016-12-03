@@ -27,6 +27,6 @@ public interface PlayerStorageService {
    * @param player the owner of the storage
    * @return an {@code Optional} of the storage
    */
-  Optional<PlayerStorageImpl> getStorageForPlayer(Player player);
+  Optional<PlayerStorage> getStorageForPlayer(Player player);
 
 }

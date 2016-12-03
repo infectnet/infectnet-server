@@ -10,7 +10,7 @@ public class PlayerStorageServiceImpl implements PlayerStorageService {
 
   private static final int MAX_STORAGE_SIZE = 10;
 
-  private final Map<Player, PlayerStorageImpl> playerStorageMap;
+  private final Map<Player, PlayerStorage> playerStorageMap;
 
   public PlayerStorageServiceImpl() {
     playerStorageMap = new ConcurrentHashMap<>();
@@ -27,7 +27,7 @@ public class PlayerStorageServiceImpl implements PlayerStorageService {
   }
 
   @Override
-  public Optional<PlayerStorageImpl> getStorageForPlayer(Player player) {
+  public Optional<PlayerStorage> getStorageForPlayer(Player player) {
     return Optional.ofNullable(playerStorageMap.get(player));
   }
 
