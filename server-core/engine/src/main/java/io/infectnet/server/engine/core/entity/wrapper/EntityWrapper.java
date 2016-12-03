@@ -41,6 +41,14 @@ public abstract class EntityWrapper {
     this.state = this.new WrapperState();
   }
 
+  /**
+   * Returns the wrapped {@link Entity}'s type name.
+   * @return the type name
+   */
+  public String getType() {
+    return wrappedEntity.getTypeComponent().getName();
+  }
+
   public class WrapperState {
     private boolean interactedWith;
 
