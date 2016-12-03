@@ -1,6 +1,8 @@
 package io.infectnet.server.engine.core.script.selector;
 
+import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
 import io.infectnet.server.engine.core.player.Player;
+import io.infectnet.server.engine.core.script.execution.BindingContext;
 
 /**
  * Factory base that can produce {@code Selector} instances. Factories must have an associated name
@@ -9,7 +11,7 @@ import io.infectnet.server.engine.core.player.Player;
  * {@code own}.
  * @param <T> the produced {@code Selector}
  */
-public abstract class SelectorFactory<T extends Selector> {
+public abstract class SelectorFactory<T extends Selector> implements DslBindingCustomizer {
   protected final String name;
 
   /**
@@ -30,4 +32,9 @@ public abstract class SelectorFactory<T extends Selector> {
    * @return a {@code Selector} ready to be used in the DSL
    */
   public abstract T forPlayer(Player player);
+
+  @Override
+  public void customize(BindingContext bindingContext) {
+    bindingContext.getBinding().setVariable(getName(), forPlayer(bindingContext.getPlayer()));
+  }
 }
