@@ -1,6 +1,5 @@
 package io.infectnet.server.engine.core.script.selector;
 
-import groovy.lang.Binding;
 import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.script.execution.BindingContext;

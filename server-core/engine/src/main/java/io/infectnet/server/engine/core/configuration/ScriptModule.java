@@ -12,8 +12,6 @@ import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutorImpl;
 import io.infectnet.server.engine.core.script.generation.ScriptGenerator;
 import io.infectnet.server.engine.core.script.generation.ScriptGeneratorImpl;
-import io.infectnet.server.engine.core.script.selector.Selector;
-import io.infectnet.server.engine.core.script.selector.SelectorFactory;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 
 import java.util.Collections;
