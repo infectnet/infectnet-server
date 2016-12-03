@@ -3,6 +3,8 @@ package io.infectnet.server.engine.core.configuration;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.player.PlayerService;
 import io.infectnet.server.engine.core.player.PlayerServiceImpl;
+import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
+import io.infectnet.server.engine.core.player.storage.PlayerStorageServiceImpl;
 
 import java.util.function.Function;
 import javax.inject.Singleton;
@@ -15,5 +17,11 @@ public class PlayerModule {
   @Singleton
   public static PlayerService providesPlayerService(Function<Player, Player> playerInitializer) {
     return new PlayerServiceImpl(playerInitializer);
+  }
+
+  @Provides
+  @Singleton
+  public static PlayerStorageService providesPlayerStorageService() {
+    return new PlayerStorageServiceImpl();
   }
 }
