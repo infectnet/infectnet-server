@@ -219,7 +219,7 @@ public class GameLoop {
           scriptExecutor.execute(code.getScript().get(), code.getOwner());
         } catch (Exception e) {
           logger.warn("Exception during player ({}) code execution: {}", code.getOwner(),
-              e.getMessage());
+              e);
         }
       }
     }

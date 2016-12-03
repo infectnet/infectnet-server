@@ -30,7 +30,7 @@ public class ScriptExecutorImpl implements ScriptExecutor {
     script.run();
 
     /*
-     * Reset the bindingContext.
+     * Reset the binding.
      */
     script.setBinding(null);
   }
