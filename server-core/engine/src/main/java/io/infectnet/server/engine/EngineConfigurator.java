@@ -11,10 +11,10 @@ import io.infectnet.server.engine.core.system.ProcessorSystem;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 import io.infectnet.server.engine.core.world.World;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 class EngineConfigurator {
   @Inject
@@ -44,6 +44,9 @@ class EngineConfigurator {
   /* package */ World world;
 
   @Inject
+  /* package */ Set<Runnable> postSetUpSet;
+
+  @Inject
   public EngineConfigurator() {
     /*
      * Only needed to let Dagger instantiate the class.
@@ -64,6 +67,11 @@ class EngineConfigurator {
           .ifPresent(type -> entityWrapperRepository.registerFactoryForType(type, factory));
     });
 
-    world.generate(1000,1000);
+    world.generate(1000, 1000);
+
+    for (Runnable runnable : postSetUpSet) {
+      runnable.run();
+    }
+
   }
 }
