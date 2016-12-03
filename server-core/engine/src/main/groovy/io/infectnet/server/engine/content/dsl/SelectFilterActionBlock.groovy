@@ -1,17 +1,18 @@
 package io.infectnet.server.engine.content.dsl
 
 import groovy.transform.CompileStatic
+import io.infectnet.server.engine.core.script.execution.BindingContext
 
 @CompileStatic
 class SelectFilterActionBlock implements DslBindingCustomizer {
   public static <T> Map all(Collection<? extends T> elements) {
     return [
-        that: { Closure<Boolean> filter ->
+        that   : { Closure<Boolean> filter ->
           [execute: { Closure<Void> action ->
             doForAll(filter, action, elements);
           }]
         },
-        execute  : { Closure<Void> action ->
+        execute: { Closure<Void> action ->
           doForAll(SelectFilterActionBlock.&trueFilter, action, elements);
         }
     ];
@@ -23,7 +24,7 @@ class SelectFilterActionBlock implements DslBindingCustomizer {
 
   public static <T> Map only(Collection<? extends T> elements) {
     return [
-        that: { Closure<Boolean> filter ->
+        that   : { Closure<Boolean> filter ->
           [execute: { Closure<Void> action ->
             doForOne(filter, action, elements);
           }]
@@ -35,12 +36,12 @@ class SelectFilterActionBlock implements DslBindingCustomizer {
   }
 
   @Override
-  void customize(Binding binding) {
-    binding.setVariable("all", SelectFilterActionBlock.&all);
+  void customize(BindingContext bindingContext) {
+    bindingContext.getBinding().setVariable("all", SelectFilterActionBlock.&all);
 
-    binding.setVariable("any", SelectFilterActionBlock.&any);
+    bindingContext.getBinding().setVariable("any", SelectFilterActionBlock.&any);
 
-    binding.setVariable("only", SelectFilterActionBlock.&only);
+    bindingContext.getBinding().setVariable("only", SelectFilterActionBlock.&only);
   }
 
   /**

@@ -1,6 +1,7 @@
 package io.infectnet.server.engine.content.dsl
 
 import groovy.transform.CompileStatic
+import io.infectnet.server.engine.core.script.execution.BindingContext
 
 @CompileStatic
 class CollectBlock implements DslBindingCustomizer {
@@ -25,7 +26,7 @@ class CollectBlock implements DslBindingCustomizer {
   }
 
   @Override
-  public void customize(Binding binding) {
-    binding.setVariable("collect", CollectBlock.&collect);
+  public void customize(BindingContext bindingContext) {
+    bindingContext.getBinding().setVariable("collect", CollectBlock.&collect);
   }
 }

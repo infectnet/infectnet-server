@@ -3,9 +3,11 @@ package io.infectnet.server.engine.core.configuration;
 import groovy.lang.Binding;
 import io.infectnet.server.engine.content.configuration.DslModule;
 import io.infectnet.server.engine.content.configuration.SelectorModule;
+import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
+import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.code.CodeRepositoryImpl;
-import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
+import io.infectnet.server.engine.core.script.execution.BindingContext;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutorImpl;
 import io.infectnet.server.engine.core.script.generation.ScriptGenerator;
@@ -16,13 +18,13 @@ import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.ElementsIntoSet;
 
-@Module(includes = { DslModule.class, SelectorModule.class })
+@Module(includes = {DslModule.class, SelectorModule.class})
 public class ScriptModule {
   @Provides
   @Singleton
@@ -33,9 +35,8 @@ public class ScriptModule {
   @Provides
   @Singleton
   public static ScriptExecutor providesScriptExecutor(
-      Set<SelectorFactory<? extends Selector>> selectorFactories,
-      Supplier<Binding> bindingSupplier) {
-    return new ScriptExecutorImpl(selectorFactories, bindingSupplier);
+      Function<Player, BindingContext> playerBindingContextFunction) {
+    return new ScriptExecutorImpl(playerBindingContextFunction);
   }
 
   @Provides
@@ -57,20 +58,15 @@ public class ScriptModule {
   }
 
   @Provides
-  @ElementsIntoSet
-  public static Set<SelectorFactory<? extends Selector>> providesDefaultEmptySelectorFactorySet() {
-    return Collections.emptySet();
-  }
-
-  @Provides
   @Singleton
-  public static Supplier<Binding> providesBindingSupplier(Set<DslBindingCustomizer> customizerSet) {
-    return () -> {
-      Binding binding = new Binding();
+  public static Function<Player, BindingContext> providesBindingSupplier(
+      Set<DslBindingCustomizer> customizerSet) {
+    return (player) -> {
+      BindingContext bindingContext = new BindingContext(player, new Binding());
 
-      customizerSet.forEach(c -> c.customize(binding));
+      customizerSet.forEach(c -> c.customize(bindingContext));
 
-      return binding;
+      return bindingContext;
     };
   }
 }

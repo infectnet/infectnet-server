@@ -1,29 +1,20 @@
 package io.infectnet.server.engine.core.script.execution;
 
-import groovy.lang.Binding;
 import groovy.lang.Script;
 import io.infectnet.server.engine.core.player.Player;
-import io.infectnet.server.engine.core.script.selector.Selector;
-import io.infectnet.server.engine.core.script.selector.SelectorFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class ScriptExecutorImpl implements ScriptExecutor {
-  private final Set<SelectorFactory<? extends Selector>> selectorFactories;
+  private final Map<String, BindingContext> bindingMap;
 
-  private final Map<String, Binding> bindingMap;
+  private final Function<Player, BindingContext> playerBindingContextFunction;
 
-  private final Supplier<Binding> bindingSupplier;
-
-  public ScriptExecutorImpl(Set<SelectorFactory<? extends Selector>> selectorFactories,
-                            Supplier<Binding> bindingSupplier) {
-    this.selectorFactories = selectorFactories;
-
-    this.bindingSupplier = bindingSupplier;
+  public ScriptExecutorImpl(Function<Player, BindingContext> playerBindingContextFunction) {
+    this.playerBindingContextFunction = playerBindingContextFunction;
 
     this.bindingMap = new HashMap<>();
   }
@@ -32,33 +23,29 @@ public class ScriptExecutorImpl implements ScriptExecutor {
   public void execute(Script script, Player owner) {
     Objects.requireNonNull(script);
 
-    Binding binding = createOrGetBinding(Objects.requireNonNull(owner));
+    BindingContext bindingContext = createOrGetBinding(Objects.requireNonNull(owner));
 
-    script.setBinding(binding);
+    script.setBinding(bindingContext.getBinding());
 
     script.run();
 
     /*
-     * Reset the binding.
+     * Reset the bindingContext.
      */
     script.setBinding(null);
   }
 
-  private Binding createOrGetBinding(Player player) {
-    Binding binding = bindingMap.get(player.getUsername());
+  private BindingContext createOrGetBinding(Player player) {
+    BindingContext bindingContext = bindingMap.get(player.getUsername());
 
-    return binding != null ? binding : createBinding(player);
+    return bindingContext != null ? bindingContext : createBinding(player);
   }
 
-  private Binding createBinding(Player player) {
-    Binding binding = bindingSupplier.get();
+  private BindingContext createBinding(Player player) {
+    BindingContext bindingContext = playerBindingContextFunction.apply(player);
 
-    for (SelectorFactory<? extends Selector> factory : selectorFactories) {
-      binding.setVariable(factory.getName(), factory.forPlayer(player));
-    }
+    bindingMap.put(player.getUsername(), bindingContext);
 
-    bindingMap.put(player.getUsername(), binding);
-
-    return binding;
+    return bindingContext;
   }
 }
