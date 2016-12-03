@@ -2,62 +2,69 @@ package io.infectnet.server.engine.core.player.storage;
 
 import io.infectnet.server.engine.core.player.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Storage class used for saving data for a {@link Player}.
+ * Interface for storing player and system managed data.
  */
-public class PlayerStorage {
-
-  private final int maxSize;
-
-  private final Player owner;
-
-  private final Map<String, Object> storageMap;
+public interface PlayerStorage {
 
   /**
-   * Constructs a new storage.
-   * @param maxSize the max number of saved records
-   * @param owner the owner of the storage
+   * Returns an unmodifiable view of the storage managed by the player.
+   * @return the player storage map
    */
-  public PlayerStorage(int maxSize, Player owner) {
-    this.maxSize = maxSize;
-    this.owner = owner;
-
-    storageMap = new HashMap<>();
-  }
+  Map<String, Object> getRecordMap();
 
   /**
-   * Queries the storage for the requested record.
-   * @param resourceName the name of the requested record
+   * Queries the player storage for the requested record.
+   * @param recordName the name of the requested record
    * @return an {@code Optional} of the record
    */
-  public Optional<Object> getRecord(String resourceName) {
-    return Optional.ofNullable(storageMap.get(resourceName));
-  }
+  Optional<Object> getRecord(String recordName);
 
   /**
-   * Assigns a value to a given key in the storage.
+   * Assigns a value to a given key in the player storage.
    * @param recordName the key
    * @param value the value to store
    */
-  public void setRecord(String recordName, Object value) {
-    if (storageMap.containsKey(recordName) || storageMap.size() + 1 <= maxSize) {
-      storageMap.put(recordName, value);
-    }
-  }
+  void setRecord(String recordName, Object value);
 
   /**
-   * Removes a record from the storage.
+   * Removes a record from the player storage.
    * @param recordName the name of the record
    */
-  public void removeRecord(String recordName) {
-    storageMap.remove(recordName);
-  }
+  void removeRecord(String recordName);
 
-  public Player getOwner() {
-    return owner;
-  }
+  /**
+   * Returns an unmodifiable view of the storage managed by the system.
+   * @return the system storage map
+   */
+  Map<String, Object> getResourceMap();
+
+  /**
+   * Queries the system storage for the requested resource.
+   * @param resourceName the name of the requested resource
+   * @return an {@code Optional} of the resource
+   */
+  Optional<Object> getResource(String resourceName);
+
+  /**
+   * Assigns a value to a given key in the system storage.
+   * @param resourceName the key
+   * @param value the value to store
+   */
+  void setResource(String resourceName, Object value);
+
+  /**
+   * Removes a record from the system storage.
+   * @param resourceName the name of the resource
+   */
+  void removeResource(String resourceName);
+
+  /**
+   * Gets the owner of the storage.
+   * @return the owner player
+   */
+  Player getOwner();
 }
