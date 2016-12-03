@@ -1,6 +1,6 @@
 package io.infectnet.server.engine.content.configuration;
 
-import io.infectnet.server.engine.content.dsl.CollectBlock;
+import io.infectnet.server.engine.content.dsl.GatherBlock;
 import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
 import io.infectnet.server.engine.content.dsl.SelectFilterActionBlock;
 
@@ -14,8 +14,8 @@ public class DslModule {
   @Provides
   @Singleton
   @IntoSet
-  public static DslBindingCustomizer providesCollectBlock() {
-    return new CollectBlock();
+  public static DslBindingCustomizer providesGatherBlock() {
+    return new GatherBlock();
   }
 
   @Provides

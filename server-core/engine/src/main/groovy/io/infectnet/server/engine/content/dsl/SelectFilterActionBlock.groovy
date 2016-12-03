@@ -18,10 +18,6 @@ class SelectFilterActionBlock implements DslBindingCustomizer {
     ];
   }
 
-  public static <T> Map any(Collection<? extends T> elements) {
-    return all(elements);
-  }
-
   public static <T> Map only(Collection<? extends T> elements) {
     return [
         that   : { Closure<Boolean> filter ->
@@ -38,8 +34,6 @@ class SelectFilterActionBlock implements DslBindingCustomizer {
   @Override
   void customize(BindingContext bindingContext) {
     bindingContext.getBinding().setVariable("all", SelectFilterActionBlock.&all);
-
-    bindingContext.getBinding().setVariable("any", SelectFilterActionBlock.&any);
 
     bindingContext.getBinding().setVariable("only", SelectFilterActionBlock.&only);
   }

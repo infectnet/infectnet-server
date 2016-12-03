@@ -4,8 +4,10 @@ import groovy.transform.CompileStatic
 import io.infectnet.server.engine.core.script.execution.BindingContext
 
 @CompileStatic
-class CollectBlock implements DslBindingCustomizer {
-  public static <T> Map collect(Collection<? extends T> elements) {
+class GatherBlock implements DslBindingCustomizer {
+  private static final String BINDING_VARIABLE_NAME = "gather";
+
+  public static <T> Map gather(Collection<? extends T> elements) {
     return [
         that: { Closure<Boolean> filter ->
           List<? super T> result = new LinkedList<>();
@@ -27,6 +29,6 @@ class CollectBlock implements DslBindingCustomizer {
 
   @Override
   public void customize(BindingContext bindingContext) {
-    bindingContext.getBinding().setVariable("collect", CollectBlock.&collect);
+    bindingContext.getBinding().setVariable(BINDING_VARIABLE_NAME, GatherBlock.&gather);
   }
 }
