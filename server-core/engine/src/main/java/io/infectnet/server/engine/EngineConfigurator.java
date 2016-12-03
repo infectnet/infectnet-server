@@ -69,9 +69,7 @@ class EngineConfigurator {
 
     world.generate(1000, 1000);
 
-    for (Runnable runnable : postSetUpSet) {
-      runnable.run();
-    }
+    postSetUpSet.forEach(Runnable::run);
 
   }
 }
