@@ -15,8 +15,9 @@ import dagger.Provides;
 public class PlayerModule {
   @Provides
   @Singleton
-  public static PlayerService providesPlayerService(Function<Player, Player> playerInitializer) {
-    return new PlayerServiceImpl(playerInitializer);
+  public static PlayerService providesPlayerService(Function<Player, Player> playerInitializer,
+                                                    PlayerStorageService playerStorageService) {
+    return new PlayerServiceImpl(playerInitializer, playerStorageService);
   }
 
   @Provides

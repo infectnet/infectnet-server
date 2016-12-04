@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.core.player;
 
+import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,19 +23,25 @@ public class PlayerServiceImpl implements PlayerService {
 
   private final Function<Player, Player> playerInitializer;
 
+  private final PlayerStorageService playerStorageService;
+
   /**
    * Constructs a new instance with the specified initializer function. This function will be used
    * to set the various fields of a newly created {@link Player} instance to appropriate starter
    * values.
    * @param playerInitializer the function that will be used to initialize new {@code Player}
    * instances
+   * @param playerStorageService the service managing player-level storage
    */
-  public PlayerServiceImpl(Function<Player, Player> playerInitializer) {
+  public PlayerServiceImpl(Function<Player, Player> playerInitializer,
+                           PlayerStorageService playerStorageService) {
     this.playerMap = new ConcurrentHashMap<>();
 
     this.observedPlayers = new CopyOnWriteArraySet<>();
 
     this.playerInitializer = playerInitializer;
+
+    this.playerStorageService = playerStorageService;
   }
 
   @Override
@@ -50,13 +57,17 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     try {
-      Player initializedPlayer = playerInitializer.apply(new Player(username));
+      Player newPlayer = new Player(username);
 
-      playerMap.put(username, initializedPlayer);
+      playerStorageService.addStorageForPlayer(newPlayer);
 
-      logger.info("New player created: {}", String.valueOf(initializedPlayer));
+      newPlayer = playerInitializer.apply(newPlayer);
 
-      return Optional.of(initializedPlayer);
+      playerMap.put(username, newPlayer);
+
+      logger.info("New player created: {}", String.valueOf(newPlayer));
+
+      return Optional.of(newPlayer);
     } catch (Exception e) {
 
       logger.warn("Player creation failed! Cause: {}", e.getMessage());

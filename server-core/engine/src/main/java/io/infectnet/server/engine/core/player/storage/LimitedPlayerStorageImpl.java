@@ -16,7 +16,7 @@ public class LimitedPlayerStorageImpl implements PlayerStorage {
 
   private final Player owner;
 
-  private final Map<String, Object> resourceMap;
+  private final Map<String, Object> attributeMap;
 
   private final Map<String, Object> recordMap;
 
@@ -30,7 +30,7 @@ public class LimitedPlayerStorageImpl implements PlayerStorage {
     this.owner = owner;
 
     recordMap = new HashMap<>();
-    resourceMap = new HashMap<>();
+    attributeMap = new HashMap<>();
   }
 
   @Override
@@ -56,23 +56,23 @@ public class LimitedPlayerStorageImpl implements PlayerStorage {
   }
 
   @Override
-  public Map<String, Object> getResourceMap() {
-    return Collections.unmodifiableMap(resourceMap);
+  public Map<String, Object> getAttributeMap() {
+    return Collections.unmodifiableMap(attributeMap);
   }
 
   @Override
-  public Optional<Object> getResource(String resourceName) {
-    return Optional.ofNullable(resourceMap.get(resourceName));
+  public Optional<Object> getAttribute(String attributeName) {
+    return Optional.ofNullable(attributeMap.get(attributeName));
   }
 
   @Override
-  public void setResource(String resourceName, Object value) {
-    resourceMap.put(resourceName, value);
+  public void setAttribute(String attributeName, Object value) {
+    attributeMap.put(attributeName, value);
   }
 
   @Override
-  public void removeResource(String resourceName) {
-    resourceMap.remove(resourceName);
+  public void removeAttribute(String attributeName) {
+    attributeMap.remove(attributeName);
   }
 
   @Override

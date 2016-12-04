@@ -40,27 +40,27 @@ public interface PlayerStorage {
    * Returns an unmodifiable view of the storage managed by the system.
    * @return the system storage map
    */
-  Map<String, Object> getResourceMap();
+  Map<String, Object> getAttributeMap();
 
   /**
-   * Queries the system storage for the requested resource.
-   * @param resourceName the name of the requested resource
-   * @return an {@code Optional} of the resource
+   * Queries the system storage for the requested attribute.
+   * @param attributeName the name of the requested attribute
+   * @return an {@code Optional} of the attribute
    */
-  Optional<Object> getResource(String resourceName);
+  Optional<Object> getAttribute(String attributeName);
 
   /**
    * Assigns a value to a given key in the system storage.
-   * @param resourceName the key
+   * @param attributeName the key
    * @param value the value to store
    */
-  void setResource(String resourceName, Object value);
+  void setAttribute(String attributeName, Object value);
 
   /**
-   * Removes a record from the system storage.
-   * @param resourceName the name of the resource
+   * Removes an attribute from the system storage.
+   * @param attributeName the name of the attribute
    */
-  void removeResource(String resourceName);
+  void removeAttribute(String attributeName);
 
   /**
    * Gets the owner of the storage.
