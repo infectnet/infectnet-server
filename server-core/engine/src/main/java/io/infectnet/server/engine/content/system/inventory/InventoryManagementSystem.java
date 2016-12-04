@@ -14,7 +14,8 @@ public class InventoryManagementSystem extends RequestOnlyProcessor {
   }
 
   private void consumeInventoryRequest(Request request) {
-    InventoryModificationRequest inventoryModificationRequest = (InventoryModificationRequest) request;
+    InventoryModificationRequest inventoryModificationRequest =
+        (InventoryModificationRequest) request;
 
     // This Optional.get() is safe to do, because InventoryRequests always have targets.
     // This is enforced by the constructor.
@@ -34,7 +35,7 @@ public class InventoryManagementSystem extends RequestOnlyProcessor {
 
     } else {
       actualModification = -1 * Math.min(
-          modificationTarget.getInventoryComponent().getInventoryElement(itemName).orElse(0),
+          modificationTarget.getInventoryComponent().getInventoryElement(itemName),
           Math.abs(modificationNumber)
       );
 

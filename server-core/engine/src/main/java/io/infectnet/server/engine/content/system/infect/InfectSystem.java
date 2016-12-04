@@ -38,7 +38,7 @@ public class InfectSystem extends ActionOnlyProcessor {
       requestQueue.add(
           new InventoryModificationRequest(infectorEntity, action, ITEM_NAME, MODIFICATION_NUMBER));
 
-      if (resourceEntity.getInventoryComponent().getInventoryElement(ITEM_NAME).get()
+      if (resourceEntity.getInventoryComponent().getInventoryElement(ITEM_NAME)
           - MODIFICATION_NUMBER <= 0) {
         requestQueue.add(new KillRequest(resourceEntity, infectAction));
 

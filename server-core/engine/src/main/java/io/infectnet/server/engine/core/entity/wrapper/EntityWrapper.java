@@ -60,6 +60,14 @@ public abstract class EntityWrapper {
   }
 
   /**
+   * Returns the wrapped {@link Entity}'s owner name.
+   * @return the owner's name
+   */
+  public String getOwnerName() {
+    return wrappedEntity.getOwnerComponent().getOwner().getUsername();
+  }
+
+  /**
    * Returns the wrapped {@link Entity}'s current position.
    * @return the current position
    */
@@ -73,22 +81,6 @@ public abstract class EntityWrapper {
    */
   public int getHealth() {
     return wrappedEntity.getHealthComponent().getHealth();
-  }
-
-  /**
-   * Returns the wrapped {@link Entity}'s maximum inventory capacity.
-   * @return the max inventory capacity
-   */
-  public int getMaxInvetoryCapacity() {
-    return wrappedEntity.getInventoryComponent().getCapacity();
-  }
-
-  /**
-   * Returns the wrapped {@link Entity}'s free inventory capacity.
-   * @return the free inventory capacity
-   */
-  public int getFreeInventoryCapacity() {
-    return wrappedEntity.getInventoryComponent().getFreeCapacity();
   }
 
   /**
