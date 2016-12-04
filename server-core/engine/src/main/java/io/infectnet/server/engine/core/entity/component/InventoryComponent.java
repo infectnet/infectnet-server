@@ -29,7 +29,7 @@ public class InventoryComponent {
     return Collections.unmodifiableMap(inventoryMap);
   }
 
-  public Integer getInventoryElement(String itemName) {
+  public int getInventoryElement(String itemName) {
     Integer itemNumber = inventoryMap.get(itemName);
 
     if (itemNumber != null) {

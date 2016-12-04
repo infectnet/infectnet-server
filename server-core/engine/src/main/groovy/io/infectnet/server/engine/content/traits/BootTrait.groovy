@@ -5,7 +5,7 @@ import groovy.transform.SelfType
 import io.infectnet.server.engine.content.system.boot.BootAction
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper
 
-@SelfType(EntityWrapper.class)
+@SelfType(EntityWrapper)
 trait BootTrait {
 
   void boot(String buildingType) {
