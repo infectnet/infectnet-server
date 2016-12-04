@@ -41,6 +41,10 @@ public class PlayerStorageDslCustomizer implements DslBindingCustomizer {
     public boolean isCase(String key) {
       return playerStorage.getAttribute(key).isPresent();
     }
+
+    public Object propertyMissing(String name) {
+      return getAt(name);
+    }
   }
 
   private static class MemoryStorageWrapper {
@@ -64,6 +68,14 @@ public class PlayerStorageDslCustomizer implements DslBindingCustomizer {
 
     public boolean isCase(String key) {
       return playerStorage.getRecord(key).isPresent();
+    }
+
+    public void propertyMissing(String name, Object value) {
+      putAt(name, value);
+    }
+
+    public Object propertyMissing(String name) {
+      return getAt(name);
     }
   }
 
