@@ -57,15 +57,17 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     try {
-      Player initializedPlayer = playerInitializer.apply(new Player(username));
+      Player newPlayer = new Player(username);
 
-      playerMap.put(username, initializedPlayer);
+      playerStorageService.addStorageForPlayer(newPlayer);
 
-      playerStorageService.addStorageForPlayer(initializedPlayer);
+      newPlayer = playerInitializer.apply(newPlayer);
 
-      logger.info("New player created: {}", String.valueOf(initializedPlayer));
+      playerMap.put(username, newPlayer);
 
-      return Optional.of(initializedPlayer);
+      logger.info("New player created: {}", String.valueOf(newPlayer));
+
+      return Optional.of(newPlayer);
     } catch (Exception e) {
 
       logger.warn("Player creation failed! Cause: {}", e.getMessage());
