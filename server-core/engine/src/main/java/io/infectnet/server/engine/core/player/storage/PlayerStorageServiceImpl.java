@@ -18,7 +18,7 @@ public class PlayerStorageServiceImpl implements PlayerStorageService {
 
   @Override
   public void addStorageForPlayer(Player player) {
-    playerStorageMap.put(player, new PlayerStorageImpl(MAX_STORAGE_SIZE, player));
+    playerStorageMap.put(player, new LimitedPlayerStorageImpl(MAX_STORAGE_SIZE, player));
   }
 
   @Override

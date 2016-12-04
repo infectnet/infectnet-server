@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class PlayerStorageImpl implements PlayerStorage {
+/**
+ * Implementation of {@code PlayerStorage} limiting the number of records saved by the player.
+ */
+public class LimitedPlayerStorageImpl implements PlayerStorage {
 
   private final int maxSize;
 
@@ -18,11 +21,11 @@ public class PlayerStorageImpl implements PlayerStorage {
   private final Map<String, Object> recordMap;
 
   /**
-   * Constructs a new storage for the given player.
+   * Constructs a new storage for the given player with the given max size.
    * @param maxSize the max number of saved records
    * @param owner the owner of the storage
    */
-  public PlayerStorageImpl(int maxSize, Player owner) {
+  public LimitedPlayerStorageImpl(int maxSize, Player owner) {
     this.maxSize = maxSize;
     this.owner = owner;
 
@@ -75,5 +78,13 @@ public class PlayerStorageImpl implements PlayerStorage {
   @Override
   public Player getOwner() {
     return owner;
+  }
+
+  /**
+   * Returns the max number of saved records.
+   * @return the max save records
+   */
+  public int getMaxSize() {
+    return maxSize;
   }
 }
