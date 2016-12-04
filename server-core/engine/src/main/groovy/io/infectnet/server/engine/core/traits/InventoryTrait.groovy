@@ -1,5 +1,9 @@
 package io.infectnet.server.engine.core.traits
 
+import groovy.transform.SelfType
+import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper
+
+@SelfType(EntityWrapper.class)
 trait InventoryTrait {
 
   /**
