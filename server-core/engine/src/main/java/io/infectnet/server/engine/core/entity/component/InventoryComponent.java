@@ -1,9 +1,9 @@
 package io.infectnet.server.engine.core.entity.component;
 
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class InventoryComponent {
 
@@ -25,8 +25,18 @@ public class InventoryComponent {
     this.inventoryMap = new HashMap<>();
   }
 
-  public Optional<Integer> getInventoryElement(String itemName) {
-    return Optional.ofNullable(inventoryMap.get(itemName));
+  public Map<String, Integer> getInventory() {
+    return Collections.unmodifiableMap(inventoryMap);
+  }
+
+  public int getInventoryElement(String itemName) {
+    Integer itemNumber = inventoryMap.get(itemName);
+
+    if (itemNumber != null) {
+      return itemNumber;
+    }
+
+    return 0;
   }
 
   public void modifyQuantity(String itemName, Integer num) {
