@@ -1,8 +1,10 @@
 package io.infectnet.server.engine.content.configuration;
 
-import io.infectnet.server.engine.content.dsl.GatherBlock;
 import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
+import io.infectnet.server.engine.content.dsl.GatherBlock;
+import io.infectnet.server.engine.content.dsl.PlayerStorageDslCustomizer;
 import io.infectnet.server.engine.content.dsl.SelectFilterActionBlock;
+import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
 
 import javax.inject.Singleton;
 import dagger.Module;
@@ -23,5 +25,13 @@ public class DslModule {
   @IntoSet
   public static DslBindingCustomizer providesSelectFilterActionBlock() {
     return new SelectFilterActionBlock();
+  }
+
+  @Provides
+  @Singleton
+  @IntoSet
+  public static DslBindingCustomizer providesPlayerStorageDslCustomizer(
+      PlayerStorageService playerStorageService) {
+    return new PlayerStorageDslCustomizer(playerStorageService);
   }
 }
