@@ -7,6 +7,7 @@ import io.infectnet.server.engine.core.world.strategy.generation.WorldGeneratorS
 import io.infectnet.server.engine.core.world.strategy.pathfinding.AStarPathFinderStrategy;
 import io.infectnet.server.engine.core.world.strategy.pathfinding.Heuristic;
 import io.infectnet.server.engine.core.world.strategy.pathfinding.PathFinderStrategy;
+import io.infectnet.server.engine.core.world.strategy.pathfinding.WeightedHeuristic;
 
 import javax.inject.Singleton;
 import dagger.Module;
@@ -16,8 +17,9 @@ import dagger.Provides;
 public class WorldModule {
   @Provides
   @Singleton
-  public static World providesWorld(WorldGeneratorStrategy strategy) {
-    return new WorldImpl(strategy);
+  public static World providesWorld(WorldGeneratorStrategy worldGeneratorStrategy,
+                                    PathFinderStrategy pathFinderStrategy) {
+    return new WorldImpl(worldGeneratorStrategy, pathFinderStrategy);
   }
 
   @Provides
@@ -30,5 +32,11 @@ public class WorldModule {
   @Singleton
   public static PathFinderStrategy providesPathFinderStrategy(Heuristic heuristic) {
     return new AStarPathFinderStrategy(heuristic);
+  }
+
+  @Provides
+  @Singleton
+  public static Heuristic providesHeuristic() {
+    return new WeightedHeuristic();
   }
 }
