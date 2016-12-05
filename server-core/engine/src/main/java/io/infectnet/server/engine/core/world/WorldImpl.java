@@ -2,6 +2,7 @@ package io.infectnet.server.engine.core.world;
 
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.world.strategy.generation.WorldGeneratorStrategy;
+import io.infectnet.server.engine.core.world.strategy.pathfinding.PathFinderStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,11 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class WorldImpl implements World {
-  /**
-   * The strategy used to generate the world.
-   */
-  private final WorldGeneratorStrategy strategy;
+public class WorldImpl extends World {
   /**
    * The two-dimensional array to hold all tiles in the {@link World}
    */
@@ -37,10 +34,12 @@ public class WorldImpl implements World {
 
   /**
    * Creates a new World in a size defined by the parameters. All its tiles are generated at random.
-   * @param strategy the strategy to generate the world
+   * @param worldGeneratorStrategy the strategy to generate the world
+   * @param pathFinderStrategy the strategy to find paths in the world
    */
-  public WorldImpl(WorldGeneratorStrategy strategy) {
-    this.strategy = strategy;
+  public WorldImpl(WorldGeneratorStrategy worldGeneratorStrategy,
+                   PathFinderStrategy pathFinderStrategy) {
+    super(worldGeneratorStrategy, pathFinderStrategy);
 
     entityPositionMap = new HashMap<>();
   }
@@ -108,7 +107,7 @@ public class WorldImpl implements World {
   public void generate(int height, int width) {
     tiles = new Tile[height][width];
 
-    boolean[][] cells = strategy.generateWorld(height, width);
+    boolean[][] cells = worldGeneratorStrategy.generateWorld(height, width);
 
     this.height = height;
     this.width = width;
@@ -116,11 +115,11 @@ public class WorldImpl implements World {
     for (int i = 0; i < height; ++i) {
       for (int j = 0; j < width; ++j) {
         if (isBorder(i, j)) {
-          tiles[i][j] = new Tile(TileType.ROCK,  new Position(i, j));
-        } else if (cells[i][j] == strategy.CAVE) {
-          tiles[i][j] = new Tile(TileType.CAVE,  new Position(i, j));
+          tiles[i][j] = new Tile(TileType.ROCK, new Position(i, j));
+        } else if (cells[i][j] == worldGeneratorStrategy.CAVE) {
+          tiles[i][j] = new Tile(TileType.CAVE, new Position(i, j));
         } else {
-          tiles[i][j] = new Tile(TileType.ROCK,  new Position(i, j));
+          tiles[i][j] = new Tile(TileType.ROCK, new Position(i, j));
         }
       }
     }
@@ -146,37 +145,41 @@ public class WorldImpl implements World {
   }
 
   @Override
-  public Tile getTileByPosition(Position position){
-    if(isPositionValidTile(position)){
+  public Tile getTileByPosition(Position position) {
+    if (isPositionValidTile(position)) {
       return tiles[position.getH()][position.getW()];
-    }else{
+    } else {
       throw new IllegalArgumentException("Invalid Position!");
     }
   }
 
   @Override
-  public void setEntityOnPosition(Entity entity, Position position){
-    if(isPositionValidTile(position)){
+  public void setEntityOnPosition(Entity entity, Position position) {
+    if (isPositionValidTile(position)) {
       getTileByPosition(position).setEntity(entity);
-    }else{
+    } else {
       throw new IllegalArgumentException("Invalid Position!");
     }
   }
 
   @Override
-  public boolean isPositionValidTile(Position position){
-    return position.getH() >= 0 && position.getH() < height && position.getW() >= 0 && position.getW() < width;
+  public boolean isPositionValidTile(Position position) {
+    return position.getH() >= 0 && position.getH() < height && position.getW() >= 0
+        && position.getW() < width;
   }
 
+  @Override
   public int getHeight() {
     return height;
   }
 
+  @Override
   public int getWidth() {
     return width;
   }
+
   /**
-   *An inner class to represent the limitations of each Entity's view sight.
+   * An inner class to represent the limitations of each Entity's view sight.
    */
   private static class ViewBox {
 
