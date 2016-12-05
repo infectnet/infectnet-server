@@ -7,6 +7,8 @@ import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.script.code.Code;
 import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
+import io.infectnet.server.engine.core.status.StatusConsumer;
+import io.infectnet.server.engine.core.status.StatusPublisher;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +38,15 @@ public class GameLoop {
 
   private final ScriptExecutor scriptExecutor;
 
+  private final StatusPublisher statusPublisher;
+
   private ScheduledExecutorService gameLoopExecutorService;
 
   private Duration desiredTickDuration;
 
   private AtomicBoolean isLoopRunning;
+
+  private StatusConsumer statusConsumer;
 
   /**
    * Constructs a new instance that works on the specified queues and executes the code pulled from
@@ -51,9 +57,11 @@ public class GameLoop {
    * @param codeRepository the repository storing the codes submitted by the {@link
    * io.infectnet.server.engine.core.player.Player}s
    * @param scriptExecutor the executor that will run the DSL code
+   * @param statusPublisher publisher service responsible for sending out updates
    */
   public GameLoop(ListenableQueue<Action> actionQueue, ListenableQueue<Request> requestQueue,
-                  CodeRepository codeRepository, ScriptExecutor scriptExecutor) {
+                  CodeRepository codeRepository, ScriptExecutor scriptExecutor,
+                  StatusPublisher statusPublisher) {
     this.actionQueue = actionQueue;
 
     this.requestQueue = requestQueue;
@@ -62,42 +70,33 @@ public class GameLoop {
 
     this.scriptExecutor = scriptExecutor;
 
+    this.statusPublisher = statusPublisher;
+
     this.isLoopRunning = new AtomicBoolean(false);
   }
 
   /**
-   * Sets the desired duration of a game tick. This is the <b>minimal</b> length of a game tick,
-   * it's guaranteed, that no game tick will be shorter than this duration. However, upon high load
-   * or too many calculations, game ticks might get longer and longer.
-   * <p>
-   * Can only be set before starting the game loop.
-   * </p>
-   * @param desiredTickDuration the desired/minimal duration of a game tick
-   * @throws NullPointerException if the duration is {@code null}
-   * @throws IllegalArgumentException if the duration is negative
-   * @throws IllegalStateException if the game loop is currently running
+   * Sets the consumer this loop will call when a tick has finished execution.
+   * @param statusConsumer the consumer to be used
+   * @throws NullPointerException if the passed consumer is {@code null}
    */
-  private void setDesiredTickDuration(Duration desiredTickDuration) {
-    Duration duration = Objects.requireNonNull(desiredTickDuration);
-
-    if (duration.isNegative()) {
-      throw new IllegalArgumentException("The duration must not be negative!");
-    }
-
-    if (isLoopRunning.get()) {
-      throw new IllegalStateException("Cannot modify duration while the loop is running!");
-    }
-
-    this.desiredTickDuration = duration;
+  public void setStatusConsumer(StatusConsumer statusConsumer) {
+    this.statusConsumer = Objects.requireNonNull(statusConsumer);
   }
 
   /**
    * Starts the game loop in a separate thread. Subsequent invocations of this method have no
    * effect.
+   * @param desiredTickDuration the minimal duration between the ticks of the game loop
+   * @throws IllegalStateException if the status consumer has not been set
    */
   public void start(long desiredTickDuration) {
     if (isLoopRunning.get()) {
       return;
+    }
+
+    if (statusConsumer == null) {
+      throw new IllegalStateException("StateConsumer member wasn't set before start!");
     }
 
     setDesiredTickDuration(Duration.ofMillis(desiredTickDuration));
@@ -246,8 +245,8 @@ public class GameLoop {
     /*
      * #4 Send results
      *
-     * TODO
      */
+    statusPublisher.publish(statusConsumer);
 
     /*
      * #5 Reschedule Loop
@@ -279,5 +278,31 @@ public class GameLoop {
     } else {
       gameLoopExecutorService.schedule(this::loop, waitTime.toMillis(), MILLISECONDS);
     }
+  }
+
+  /**
+   * Sets the desired duration of a game tick. This is the <b>minimal</b> length of a game tick,
+   * it's guaranteed, that no game tick will be shorter than this duration. However, upon high load
+   * or too many calculations, game ticks might get longer and longer.
+   * <p>
+   * Can only be set before starting the game loop.
+   * </p>
+   * @param desiredTickDuration the desired/minimal duration of a game tick
+   * @throws NullPointerException if the duration is {@code null}
+   * @throws IllegalArgumentException if the duration is negative
+   * @throws IllegalStateException if the game loop is currently running
+   */
+  private void setDesiredTickDuration(Duration desiredTickDuration) {
+    Duration duration = Objects.requireNonNull(desiredTickDuration);
+
+    if (duration.isNegative()) {
+      throw new IllegalArgumentException("The duration must not be negative!");
+    }
+
+    if (isLoopRunning.get()) {
+      throw new IllegalStateException("Cannot modify duration while the loop is running!");
+    }
+
+    this.desiredTickDuration = duration;
   }
 }

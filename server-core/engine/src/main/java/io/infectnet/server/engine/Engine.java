@@ -11,6 +11,7 @@ import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.generation.CompilationError;
 import io.infectnet.server.engine.core.script.generation.ScriptGenerationFailedException;
 import io.infectnet.server.engine.core.script.generation.ScriptGenerator;
+import io.infectnet.server.engine.core.status.StatusConsumer;
 import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 import org.codehaus.groovy.control.messages.Message;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Singleton;
@@ -46,15 +48,23 @@ public class Engine {
 
   }
 
-  public static Engine create() {
-    return new Engine();
+  /**
+   * Constructs a new instance that publishes its status updates using the specified consumer.
+   * @param statusConsumer the consumer that accepts status updates
+   * @return a new instance
+   * @throws NullPointerException if the passed consumer is {@code null}
+   */
+  public static Engine create(StatusConsumer statusConsumer) {
+    return new Engine(Objects.requireNonNull(statusConsumer));
   }
 
   /**
    * Cannot be instantiated directly.
    */
-  private Engine() {
+  private Engine(StatusConsumer statusConsumer) {
     this.bootstrapper = DaggerEngine_Bootstrapper.create();
+
+    bootstrapper.getGameLoop().setStatusConsumer(statusConsumer);
 
     EngineConfigurator configurator = DaggerEngine_Bootstrapper.create().getEngineConfigurator();
 

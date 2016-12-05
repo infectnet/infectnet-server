@@ -14,7 +14,9 @@ import io.infectnet.server.controller.websocket.messaging.GsonMessageFactoryImpl
 import io.infectnet.server.controller.websocket.messaging.MessageFactory;
 import io.infectnet.server.controller.websocket.messaging.MessageTransmitter;
 import io.infectnet.server.controller.websocket.messaging.MessageTransmitterImpl;
+import io.infectnet.server.controller.websocket.status.WebSocketStatusTransmitter;
 import io.infectnet.server.controller.websocket.subscribe.SubscriptionController;
+import io.infectnet.server.engine.core.status.StatusConsumer;
 import io.infectnet.server.service.user.UserService;
 
 import java.util.Set;
@@ -85,5 +87,17 @@ public class WebSocketModule {
 
     return new WebSocketDispatcher(webSocketControllers, jsonParser, messageTransmitter);
   }
+
+  @Provides
+  @Singleton
+  public static StatusConsumer providesStatusConsumer(SessionAuthenticator sessionAuthenticator,
+                                                      MessageTransmitter messageTransmitter,
+                                                      UserService userService) {
+    WebSocketStatusTransmitter transmitter = new WebSocketStatusTransmitter(
+        messageTransmitter, sessionAuthenticator, userService);
+
+    return transmitter::transmit;
+  }
+
 
 }
