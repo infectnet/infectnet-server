@@ -4,6 +4,7 @@ import io.infectnet.server.common.configuration.ConfigurationHolder;
 import io.infectnet.server.engine.Engine;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.script.generation.CompilationError;
+import io.infectnet.server.engine.core.status.StatusConsumer;
 import io.infectnet.server.service.user.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,9 +21,8 @@ public class EngineConnectorImpl implements EngineConnector {
 
   private final Engine engine;
 
-
-  public EngineConnectorImpl() {
-    this.engine = Engine.create();
+  public EngineConnectorImpl(StatusConsumer statusConsumer) {
+    this.engine = Engine.create(statusConsumer);
   }
 
   @Override

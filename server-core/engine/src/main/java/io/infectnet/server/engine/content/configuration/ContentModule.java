@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.status.SynchronousStatusPublisher;
 import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.EntityManager;
@@ -8,6 +9,7 @@ import io.infectnet.server.engine.core.entity.type.TypeRepository;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.player.PlayerService;
 import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
+import io.infectnet.server.engine.core.status.StatusPublisher;
 import io.infectnet.server.engine.core.world.World;
 import io.infectnet.server.engine.core.world.customizer.NestCustomizer;
 
@@ -56,5 +58,13 @@ public class ContentModule {
     return () -> {
       playerService.createPlayer("Environment");
     };
+  }
+
+  @Provides
+  @Singleton
+  public static StatusPublisher providesStatusPublisher(PlayerService playerService,
+                                                        EntityManager entityManager,
+                                                        World world) {
+    return new SynchronousStatusPublisher(playerService, entityManager, world);
   }
 }

@@ -97,6 +97,12 @@ public class UserServiceImpl implements UserService {
     return userStorage.exists(converterService.map(Objects.requireNonNull(user), User.class));
   }
 
+  @Override
+  public Optional<UserDTO> getUserDtoByUsername(String username) {
+    return userStorage.getUserByUserName(username)
+        .map(user -> converterService.map(user, UserDTO.class));
+  }
+
   /**
    * Checks if the data given at registration is valid.
    * @param token the token from the current registration
