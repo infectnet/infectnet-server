@@ -2,6 +2,7 @@ package io.infectnet.server.engine.content.type;
 
 import io.infectnet.server.engine.core.entity.Category;
 import io.infectnet.server.engine.core.entity.Entity;
+import io.infectnet.server.engine.core.entity.component.CostComponent;
 import io.infectnet.server.engine.core.entity.component.HealthComponent;
 import io.infectnet.server.engine.core.entity.component.NullInventoryComponent;
 import io.infectnet.server.engine.core.entity.component.OwnerComponent;
@@ -16,9 +17,14 @@ public class NestTypeComponent extends TypeComponent {
 
   private static final int INITIAL_HEALTH = 150;
   private static final int VIEW_RADIUS = 10;
+  private static final int BOOT_COST = 100;
+
+  private final CostComponent costComponent;
 
   public NestTypeComponent() {
     super(Category.BUILDING, TYPE_NAME);
+
+    this.costComponent = new CostComponent(BOOT_COST);
   }
 
   @Override
@@ -30,6 +36,7 @@ public class NestTypeComponent extends TypeComponent {
         .positionComponent(new PositionComponent())
         .viewComponent(new ViewComponent(VIEW_RADIUS))
         .inventoryComponent(NullInventoryComponent.getInstance())
+        .costComponent(this.costComponent)
         .build();
   }
 }
