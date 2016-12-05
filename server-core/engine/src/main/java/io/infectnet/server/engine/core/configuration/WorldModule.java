@@ -1,10 +1,7 @@
 package io.infectnet.server.engine.core.configuration;
 
-import io.infectnet.server.engine.core.entity.type.TypeRepository;
 import io.infectnet.server.engine.core.world.World;
 import io.infectnet.server.engine.core.world.WorldImpl;
-import io.infectnet.server.engine.core.world.customizer.ResourceCustomizer;
-import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 import io.infectnet.server.engine.core.world.strategy.generation.CellularAutomaton;
 import io.infectnet.server.engine.core.world.strategy.generation.WorldGeneratorStrategy;
 import io.infectnet.server.engine.core.world.strategy.pathfinding.AStarPathFinderStrategy;
@@ -14,7 +11,6 @@ import io.infectnet.server.engine.core.world.strategy.pathfinding.PathFinderStra
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
-import dagger.multibindings.IntoSet;
 
 @Module
 public class WorldModule {
