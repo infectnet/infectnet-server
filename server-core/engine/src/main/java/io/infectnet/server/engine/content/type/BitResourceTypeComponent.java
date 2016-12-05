@@ -3,6 +3,7 @@ package io.infectnet.server.engine.content.type;
 import io.infectnet.server.engine.core.entity.Category;
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.component.InventoryComponent;
+import io.infectnet.server.engine.core.entity.component.NullCostComponent;
 import io.infectnet.server.engine.core.entity.component.NullHealthComponent;
 import io.infectnet.server.engine.core.entity.component.NullViewComponent;
 import io.infectnet.server.engine.core.entity.component.OwnerComponent;
@@ -28,6 +29,7 @@ public class BitResourceTypeComponent extends TypeComponent {
         .positionComponent(new PositionComponent())
         .viewComponent(NullViewComponent.getInstance())
         .inventoryComponent(new InventoryComponent(INVENTORY_CAPACITY))
+        .costComponent(NullCostComponent.getInstance())
         .build();
   }
 

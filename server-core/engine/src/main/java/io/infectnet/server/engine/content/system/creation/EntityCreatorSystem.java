@@ -1,15 +1,19 @@
 package io.infectnet.server.engine.content.system.creation;
 
+import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
 import io.infectnet.server.engine.core.entity.Category;
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
+import io.infectnet.server.engine.core.player.storage.PlayerStorage;
+import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.RequestOnlyProcessor;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 import io.infectnet.server.engine.core.world.Position;
 import io.infectnet.server.engine.core.world.World;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -19,9 +23,15 @@ public class EntityCreatorSystem extends RequestOnlyProcessor {
 
   private final World world;
 
-  public EntityCreatorSystem(EntityManager entityManager, World world) {
+  private final PlayerStorageService playerStorageService;
+
+  public EntityCreatorSystem(EntityManager entityManager, World world,
+                             PlayerStorageService playerStorageService) {
     this.entityManager = entityManager;
+
     this.world = world;
+
+    this.playerStorageService = playerStorageService;
   }
 
   @Override
@@ -38,15 +48,27 @@ public class EntityCreatorSystem extends RequestOnlyProcessor {
 
     Position createPosition = getCreatePosition(creatorEntity);
 
-    if (createPosition != null) {
+    Optional<PlayerStorage> playerStorageOptional =
+        playerStorageService.getStorageForPlayer(creatorEntity.getOwnerComponent().getOwner());
 
-      //TODO: spawn cost
+    if (playerStorageOptional.isPresent()) {
 
-      Entity createdEntity =
-          createEntity(creatorEntity, entityCreationRequest.getEntityType(), createPosition);
+      if (createPosition != null) {
+        Entity createdEntity =
+            createEntity(creatorEntity, entityCreationRequest.getEntityType(), createPosition);
 
-      entityManager.addEntity(createdEntity);
-      world.setEntityOnPosition(createdEntity, createPosition);
+        Optional<Object> playerResources = playerStorageOptional.get().getAttribute(
+            BitResourceTypeComponent.TYPE_NAME);
+
+        int creationCost = createdEntity.getCostComponent().getCost();
+
+        if (playerResources.isPresent() && ((Integer) playerResources.get()) - creationCost >= 0) {
+
+          entityManager.addEntity(createdEntity);
+          world.setEntityOnPosition(createdEntity, createPosition);
+
+        }
+      }
     }
   }
 

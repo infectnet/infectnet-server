@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.core.entity;
 
+import io.infectnet.server.engine.core.entity.component.CostComponent;
 import io.infectnet.server.engine.core.entity.component.HealthComponent;
 import io.infectnet.server.engine.core.entity.component.InventoryComponent;
 import io.infectnet.server.engine.core.entity.component.OwnerComponent;
@@ -23,6 +24,8 @@ public class Entity {
   private PositionComponent positionComponent;
 
   private InventoryComponent inventoryComponent;
+
+  private CostComponent costComponent;
 
   private Entity() {
     /**
@@ -54,6 +57,10 @@ public class Entity {
     return inventoryComponent;
   }
 
+  public CostComponent getCostComponent() {
+    return costComponent;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -73,6 +80,8 @@ public class Entity {
     private PositionComponent positionComponent;
 
     private InventoryComponent inventoryComponent;
+
+    private CostComponent costComponent;
 
     public Builder healthComponent(HealthComponent component) {
       this.healthComponent = component;
@@ -110,6 +119,12 @@ public class Entity {
       return this;
     }
 
+    public Builder costComponent(CostComponent component) {
+      this.costComponent = component;
+
+      return this;
+    }
+
     public Entity build() {
       Entity entity = new Entity();
 
@@ -124,6 +139,8 @@ public class Entity {
       entity.positionComponent = this.positionComponent;
 
       entity.inventoryComponent = this.inventoryComponent;
+
+      entity.costComponent = this.costComponent;
 
       return entity;
     }

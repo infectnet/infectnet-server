@@ -10,6 +10,7 @@ import io.infectnet.server.engine.content.system.movement.MovementSystem;
 import io.infectnet.server.engine.content.system.spawn.SpawnSystem;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
+import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
 import io.infectnet.server.engine.core.util.ListenableQueue;
@@ -75,7 +76,8 @@ public class SystemModule {
   @Provides
   @IntoSet
   public static ProcessorSystem providesEntityCreatorSystem(EntityManager entityManager,
-                                                            World world) {
-    return new EntityCreatorSystem(entityManager, world);
+                                                            World world,
+                                                            PlayerStorageService playerStorageService) {
+    return new EntityCreatorSystem(entityManager, world, playerStorageService);
   }
 }
