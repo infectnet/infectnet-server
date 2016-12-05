@@ -168,10 +168,12 @@ public class WorldImpl implements World {
     return position.getH() >= 0 && position.getH() < height && position.getW() >= 0 && position.getW() < width;
   }
 
+  @Override
   public int getHeight() {
     return height;
   }
 
+  @Override
   public int getWidth() {
     return width;
   }

@@ -1,5 +1,8 @@
 package io.infectnet.server.engine.core.world;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A class to hold two coordinates together, which define an exact {@link Tile} in the {@link World}.
  */
@@ -86,6 +89,26 @@ public class Position{
      */
     public Position stepSouthWest(){
         return new Position(h+1, w-1);
+    }
+
+    /**
+     * Finds all neighbour Positions of the current Position.
+     * All eight directions will be listed.
+     * @return a list containing the neighbours
+     */
+    public List<Position> getNeighbours(){
+        List<Position> neighbours = new ArrayList<>();
+
+        neighbours.add(this.stepNorth());
+        neighbours.add(this.stepNorthEast());
+        neighbours.add(this.stepEast());
+        neighbours.add(this.stepSouthEast());
+        neighbours.add(this.stepSouth());
+        neighbours.add(this.stepSouthWest());
+        neighbours.add(this.stepWest());
+        neighbours.add(this.stepNorthWest());
+
+        return neighbours;
     }
 
     public int getH() {

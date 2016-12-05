@@ -61,4 +61,8 @@ public interface World {
    * @param position the position given
    */
   void setEntityOnPosition(Entity entity, Position position);
+
+  int getHeight();
+
+  int getWidth();
 }
