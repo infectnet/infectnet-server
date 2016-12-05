@@ -76,39 +76,19 @@ public class GameLoop {
   }
 
   /**
-   * Sets the desired duration of a game tick. This is the <b>minimal</b> length of a game tick,
-   * it's guaranteed, that no game tick will be shorter than this duration. However, upon high load
-   * or too many calculations, game ticks might get longer and longer.
-   * <p>
-   * Can only be set before starting the game loop.
-   * </p>
-   * @param desiredTickDuration the desired/minimal duration of a game tick
-   * @throws NullPointerException if the duration is {@code null}
-   * @throws IllegalArgumentException if the duration is negative
-   * @throws IllegalStateException if the game loop is currently running
+   * Sets the consumer this loop will call when a tick has finished execution.
+   * @param statusConsumer the consumer to be used
+   * @throws NullPointerException if the passed consumer is {@code null}
    */
-  private void setDesiredTickDuration(Duration desiredTickDuration) {
-    Duration duration = Objects.requireNonNull(desiredTickDuration);
-
-    if (duration.isNegative()) {
-      throw new IllegalArgumentException("The duration must not be negative!");
-    }
-
-    if (isLoopRunning.get()) {
-      throw new IllegalStateException("Cannot modify duration while the loop is running!");
-    }
-
-    this.desiredTickDuration = duration;
-  }
-
-
   public void setStatusConsumer(StatusConsumer statusConsumer) {
-    this.statusConsumer = statusConsumer;
+    this.statusConsumer = Objects.requireNonNull(statusConsumer);
   }
 
   /**
    * Starts the game loop in a separate thread. Subsequent invocations of this method have no
    * effect.
+   * @param desiredTickDuration the minimal duration between the ticks of the game loop
+   * @throws IllegalStateException if the status consumer has not been set
    */
   public void start(long desiredTickDuration) {
     if (isLoopRunning.get()) {
@@ -298,5 +278,31 @@ public class GameLoop {
     } else {
       gameLoopExecutorService.schedule(this::loop, waitTime.toMillis(), MILLISECONDS);
     }
+  }
+
+  /**
+   * Sets the desired duration of a game tick. This is the <b>minimal</b> length of a game tick,
+   * it's guaranteed, that no game tick will be shorter than this duration. However, upon high load
+   * or too many calculations, game ticks might get longer and longer.
+   * <p>
+   * Can only be set before starting the game loop.
+   * </p>
+   * @param desiredTickDuration the desired/minimal duration of a game tick
+   * @throws NullPointerException if the duration is {@code null}
+   * @throws IllegalArgumentException if the duration is negative
+   * @throws IllegalStateException if the game loop is currently running
+   */
+  private void setDesiredTickDuration(Duration desiredTickDuration) {
+    Duration duration = Objects.requireNonNull(desiredTickDuration);
+
+    if (duration.isNegative()) {
+      throw new IllegalArgumentException("The duration must not be negative!");
+    }
+
+    if (isLoopRunning.get()) {
+      throw new IllegalStateException("Cannot modify duration while the loop is running!");
+    }
+
+    this.desiredTickDuration = duration;
   }
 }
