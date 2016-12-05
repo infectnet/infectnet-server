@@ -34,8 +34,10 @@ public class MovementSystem implements ProcessorSystem {
   private void consumeMovementAction(Action action) {
     MovementAction movementAction = (MovementAction) action;
 
-    // TODO: correct next position given by world
-    Position nextPosition = movementAction.getTargetEntity().getPositionComponent().getPosition();
+    Position startPosition = movementAction.getSource().getPositionComponent().getPosition();
+    Position targetPosition = movementAction.getTargetEntity().getPositionComponent().getPosition();
+
+    Position nextPosition = world.findPath(startPosition, targetPosition).get(0).getPosition();
 
     requestQueue.add(new MovementRequest(movementAction.getSource(), movementAction, nextPosition));
   }
