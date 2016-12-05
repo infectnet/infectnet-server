@@ -48,6 +48,12 @@ public class Engine {
 
   }
 
+  /**
+   * Constructs a new instance that publishes its status updates using the specified consumer.
+   * @param statusConsumer the consumer that accepts status updates
+   * @return a new instance
+   * @throws NullPointerException if the passed consumer is {@code null}
+   */
   public static Engine create(StatusConsumer statusConsumer) {
     return new Engine(Objects.requireNonNull(statusConsumer));
   }
