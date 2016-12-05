@@ -10,7 +10,7 @@ import dagger.Provides;
 import dagger.multibindings.IntoSet;
 
 @Module(includes = {SelectorModule.class, DslModule.class, SystemModule.class, TypeModule.class,
-    WrapperModule.class})
+    WorldModule.class, WrapperModule.class})
 public class ContentModule {
   @Provides
   @Singleton

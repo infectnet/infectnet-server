@@ -10,6 +10,7 @@ import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 import io.infectnet.server.engine.core.world.World;
+import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +48,9 @@ class EngineConfigurator {
   /* package */ Set<Runnable> postSetUpSet;
 
   @Inject
+  /* package */ Set<WorldCustomizer> worldCustomizerSet;
+
+  @Inject
   public EngineConfigurator() {
     /*
      * Only needed to let Dagger instantiate the class.
@@ -69,7 +73,8 @@ class EngineConfigurator {
 
     world.generate(1000, 1000);
 
-    postSetUpSet.forEach(Runnable::run);
+    worldCustomizerSet.forEach(worldCustomizer -> worldCustomizer.customize(world));
 
+    postSetUpSet.forEach(Runnable::run);
   }
 }

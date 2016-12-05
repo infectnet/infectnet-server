@@ -32,7 +32,7 @@ public class ResourceCustomizer implements WorldCustomizer {
 
   private final TypeRepository typeRepository;
 
-  private Optional<TypeComponent> component;
+  private TypeComponent component;
 
   public ResourceCustomizer(TypeRepository typeRepository) {
     this.typeRepository = typeRepository;
@@ -40,9 +40,11 @@ public class ResourceCustomizer implements WorldCustomizer {
 
   @Override
   public void customize(World world) {
-    component = typeRepository.getTypeByName(BitResourceTypeComponent.TYPE_NAME);
+    Optional<TypeComponent> componentOptional = typeRepository.getTypeByName(BitResourceTypeComponent.TYPE_NAME);
 
-    if (component.isPresent()) {
+    if (componentOptional.isPresent()) {
+      component = componentOptional.get();
+
       for (int i = 0; i < GENERATION_LIMIT; ++i) {
         generate(world);
       }
@@ -91,7 +93,7 @@ public class ResourceCustomizer implements WorldCustomizer {
    */
   private void addingResourcesToWorld(World world, List<Position> resources) {
     for (Position pos : resources) {
-      Entity resource = component.get().createEntityOfType();
+      Entity resource = component.createEntityOfType();
 
       world.getTileByPosition(pos).setEntity(resource);
     }

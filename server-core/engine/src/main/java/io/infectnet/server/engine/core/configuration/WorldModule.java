@@ -35,11 +35,4 @@ public class WorldModule {
   public static PathFinderStrategy providesPathFinderStrategy(Heuristic heuristic) {
     return new AStarPathFinderStrategy(heuristic);
   }
-
-  @Provides
-  @IntoSet
-  public static WorldCustomizer providesResourceCustomizer(TypeRepository typeRepository) {
-    return new ResourceCustomizer(typeRepository);
-  }
-
 }
