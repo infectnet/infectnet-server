@@ -12,9 +12,12 @@ import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
 import io.infectnet.server.engine.core.status.StatusPublisher;
 import io.infectnet.server.engine.core.world.World;
 import io.infectnet.server.engine.core.world.customizer.NestCustomizer;
+import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
@@ -27,7 +30,8 @@ public class ContentModule {
   @Singleton
   public static Function<Player, Player> providesIdentityPlayerInitializer(
       PlayerStorageService playerStorageService, EntityManager entityManager,
-      World world, TypeRepository typeRepository, NestCustomizer nestCustomizer) {
+      World world, TypeRepository typeRepository,
+      Set<WorldCustomizer> worldCustomizers) {
     return (player) -> {
       playerStorageService.addStorageForPlayer(player);
 
@@ -40,6 +44,14 @@ public class ContentModule {
 
       if(typeComponent.isPresent()){
         Entity nest = typeComponent.get().createEntityOfType();
+
+        NestCustomizer nestCustomizer = null;
+
+        for (WorldCustomizer customizer : worldCustomizers) {
+          if (customizer instanceof NestCustomizer) {
+            nestCustomizer = (NestCustomizer) customizer;
+          }
+        }
 
         nestCustomizer.getRandomNestPosition().ifPresent(pos -> {
           world.getTileByPosition(pos).setEntity(nest);

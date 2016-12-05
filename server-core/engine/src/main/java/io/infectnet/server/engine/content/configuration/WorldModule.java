@@ -5,6 +5,8 @@ import io.infectnet.server.engine.core.world.customizer.NestCustomizer;
 import io.infectnet.server.engine.core.world.customizer.ResourceCustomizer;
 import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
@@ -18,6 +20,8 @@ public class WorldModule {
   }
 
   @Provides
+  @Named("Nest Customizer")
+  @Singleton
   @IntoSet
   public static WorldCustomizer providesNestCustomizer() {
     return new NestCustomizer();
