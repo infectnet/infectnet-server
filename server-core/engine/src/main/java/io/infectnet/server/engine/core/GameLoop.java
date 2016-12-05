@@ -261,7 +261,6 @@ public class GameLoop {
     /*
      * #4 Send results
      *
-     * TODO
      */
     statusPublisher.publish(statusConsumer);
 
