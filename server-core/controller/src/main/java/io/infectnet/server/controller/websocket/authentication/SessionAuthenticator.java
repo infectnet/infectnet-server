@@ -7,8 +7,12 @@ import org.eclipse.jetty.websocket.api.Session;
 import java.util.Optional;
 
 public interface SessionAuthenticator {
+
   void authenticate(Session session, String username, String password)
       throws AuthenticationFailedException;
 
   Optional<UserDTO> verifyAuthentication(Session session);
+
+  Optional<Session> getSessionForUserDto(UserDTO userDTO);
+
 }

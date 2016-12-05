@@ -115,6 +115,10 @@ public class GameLoop {
       return;
     }
 
+    if (statusConsumer == null) {
+      throw new IllegalStateException("StateConsumer member wasn't set before start!");
+    }
+
     setDesiredTickDuration(Duration.ofMillis(desiredTickDuration));
 
     gameLoopExecutorService = Executors.newSingleThreadScheduledExecutor();

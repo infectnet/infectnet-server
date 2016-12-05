@@ -1,9 +1,11 @@
 package io.infectnet.server.engine.core.status;
 
-import java.util.function.Consumer;
+import io.infectnet.server.engine.core.player.Player;
+
+import java.util.function.BiConsumer;
 
 @FunctionalInterface
-public interface StatusConsumer extends Consumer<StatusMessage> {
+public interface StatusConsumer extends BiConsumer<Player, StatusMessage> {
 
 
 }

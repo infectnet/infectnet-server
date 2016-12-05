@@ -32,8 +32,6 @@ public class Engine {
 
   private final Bootstrapper bootstrapper;
 
-  private final StatusConsumer statusConsumer;
-
   @Singleton
   @Component(modules = {CoreModule.class, ContentModule.class})
   interface Bootstrapper {
@@ -60,7 +58,7 @@ public class Engine {
   private Engine(StatusConsumer statusConsumer) {
     this.bootstrapper = DaggerEngine_Bootstrapper.create();
 
-    this.statusConsumer = statusConsumer;
+    bootstrapper.getGameLoop().setStatusConsumer(statusConsumer);
 
     EngineConfigurator configurator = DaggerEngine_Bootstrapper.create().getEngineConfigurator();
 

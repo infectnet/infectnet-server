@@ -9,7 +9,6 @@ import io.infectnet.server.controller.websocket.messaging.Action;
 import io.infectnet.server.controller.websocket.messaging.MessageTransmitter;
 import io.infectnet.server.controller.websocket.messaging.SocketMessage;
 import io.infectnet.server.service.user.UserDTO;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -45,5 +45,10 @@ public enum Action {
   /**
    * Used for showing the client that the uploaded source code had any compilation errors.
    */
-  COMPILATION_RESULTS
+  COMPILATION_RESULTS,
+
+  /**
+   * Used for sending the client map updates.
+   */
+  STATUS_UPDATE,
 }

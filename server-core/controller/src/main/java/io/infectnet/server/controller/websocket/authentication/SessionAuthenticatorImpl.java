@@ -49,4 +49,9 @@ public class SessionAuthenticatorImpl implements SessionAuthenticator {
     }
     return Optional.empty();
   }
+
+  @Override
+  public Optional<Session> getSessionForUserDto(UserDTO userDTO) {
+    return Optional.ofNullable(sessionMap.get(userDTO));
+  }
 }

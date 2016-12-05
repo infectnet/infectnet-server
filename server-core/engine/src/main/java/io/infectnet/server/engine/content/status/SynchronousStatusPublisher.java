@@ -36,8 +36,8 @@ public class SynchronousStatusPublisher implements StatusPublisher {
   @Override
   public void publish(StatusConsumer statusConsumer) {
 
-    for (Player p : playerService.getAllPlayers()) {
-      statusConsumer.accept(new StatusMessage(getVisibleTilesForPlayer(p)));
+    for (Player p : playerService.getObservedPlayerList()) {
+      statusConsumer.accept(p, new StatusMessage(getVisibleTilesForPlayer(p)));
     }
 
   }
