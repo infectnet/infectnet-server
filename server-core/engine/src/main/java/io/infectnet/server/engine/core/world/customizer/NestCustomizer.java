@@ -60,10 +60,7 @@ public class NestCustomizer implements WorldCustomizer {
       }
     }
 
-    if (base == null) {
-      return Optional.empty();
-    }
-    return Optional.of(base);
+    return Optional.ofNullable(base);
   }
 
   /**
