@@ -44,5 +44,10 @@ public interface UserService {
    */
   boolean exists(UserDTO user);
 
+  /**
+   * Returns the registered user with the given username.
+   * @param username the name of the user
+   * @return an {@code Optional} of the user
+   */
   Optional<UserDTO> getUserDtoByUsername(String username);
 }

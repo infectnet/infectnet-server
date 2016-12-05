@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * WebSocket controller-like class responsible for sending out status updates through WebSocket.
+ */
 public class WebSocketStatusTransmitter {
 
   private static final Logger logger = LoggerFactory.getLogger(WebSocketStatusTransmitter.class);
@@ -30,6 +33,12 @@ public class WebSocketStatusTransmitter {
 
   private final Map<Player, UserDTO> userDTOCache;
 
+  /**
+   * Constructs a new status transmitter using WebSocket connections.
+   * @param messageTransmitter the message transmitter to use
+   * @param sessionAuthenticator the session authenticator to use
+   * @param userService the user service to use
+   */
   public WebSocketStatusTransmitter(MessageTransmitter messageTransmitter,
                                     SessionAuthenticator sessionAuthenticator,
                                     UserService userService) {
@@ -42,6 +51,11 @@ public class WebSocketStatusTransmitter {
     this.userDTOCache = new HashMap<>();
   }
 
+  /**
+   * Sends out the given status update message to the specified player.
+   * @param player the player to send to
+   * @param statusMessage the status update message
+   */
   public void transmit(Player player, StatusMessage statusMessage) {
 
     SocketMessage<StatusMessage> message =
