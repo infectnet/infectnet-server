@@ -1,7 +1,9 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.status.SynchronousStatusPublisher;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.player.PlayerService;
+import io.infectnet.server.engine.core.status.StatusPublisher;
 
 import java.util.function.Function;
 import javax.inject.Singleton;
@@ -24,5 +26,11 @@ public class ContentModule {
     return () -> {
       playerService.createPlayer("Environment");
     };
+  }
+
+  @Provides
+  @Singleton
+  public static StatusPublisher providesStatusPublisher(PlayerService playerService) {
+    return new SynchronousStatusPublisher(playerService);
   }
 }

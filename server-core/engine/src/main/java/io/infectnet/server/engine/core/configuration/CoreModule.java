@@ -6,6 +6,7 @@ import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
+import io.infectnet.server.engine.core.status.StatusPublisher;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 
@@ -39,8 +40,9 @@ public class CoreModule {
   public static GameLoop providesGameLoop(
       @Named("Action Queue") ListenableQueue<Action> actionQueue,
       @Named("Request Queue") ListenableQueue<Request> requestQueue,
-      CodeRepository codeRepository, ScriptExecutor scriptExecutor) {
-    return new GameLoop(actionQueue, requestQueue, codeRepository, scriptExecutor);
+      CodeRepository codeRepository, ScriptExecutor scriptExecutor,
+      StatusPublisher statusPublisher) {
+    return new GameLoop(actionQueue, requestQueue, codeRepository, scriptExecutor, statusPublisher);
   }
 
   @Provides

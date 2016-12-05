@@ -22,7 +22,8 @@ public class EngineConnectorImpl implements EngineConnector {
 
 
   public EngineConnectorImpl() {
-    this.engine = Engine.create();
+    this.engine = Engine.create(statusMessage -> {
+    });
   }
 
   @Override

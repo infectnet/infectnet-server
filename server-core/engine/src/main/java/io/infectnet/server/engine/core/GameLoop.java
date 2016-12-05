@@ -7,6 +7,8 @@ import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.script.code.Code;
 import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
+import io.infectnet.server.engine.core.status.StatusConsumer;
+import io.infectnet.server.engine.core.status.StatusPublisher;
 import io.infectnet.server.engine.core.util.ListenableQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +38,15 @@ public class GameLoop {
 
   private final ScriptExecutor scriptExecutor;
 
+  private final StatusPublisher statusPublisher;
+
   private ScheduledExecutorService gameLoopExecutorService;
 
   private Duration desiredTickDuration;
 
   private AtomicBoolean isLoopRunning;
+
+  private StatusConsumer statusConsumer;
 
   /**
    * Constructs a new instance that works on the specified queues and executes the code pulled from
@@ -51,9 +57,11 @@ public class GameLoop {
    * @param codeRepository the repository storing the codes submitted by the {@link
    * io.infectnet.server.engine.core.player.Player}s
    * @param scriptExecutor the executor that will run the DSL code
+   * @param statusPublisher publisher service responsible for sending out updates
    */
   public GameLoop(ListenableQueue<Action> actionQueue, ListenableQueue<Request> requestQueue,
-                  CodeRepository codeRepository, ScriptExecutor scriptExecutor) {
+                  CodeRepository codeRepository, ScriptExecutor scriptExecutor,
+                  StatusPublisher statusPublisher) {
     this.actionQueue = actionQueue;
 
     this.requestQueue = requestQueue;
@@ -61,6 +69,8 @@ public class GameLoop {
     this.codeRepository = codeRepository;
 
     this.scriptExecutor = scriptExecutor;
+
+    this.statusPublisher = statusPublisher;
 
     this.isLoopRunning = new AtomicBoolean(false);
   }
@@ -89,6 +99,11 @@ public class GameLoop {
     }
 
     this.desiredTickDuration = duration;
+  }
+
+
+  public void setStatusConsumer(StatusConsumer statusConsumer) {
+    this.statusConsumer = statusConsumer;
   }
 
   /**
@@ -248,6 +263,7 @@ public class GameLoop {
      *
      * TODO
      */
+    statusPublisher.publish(statusConsumer);
 
     /*
      * #5 Reschedule Loop
