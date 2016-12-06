@@ -4,6 +4,8 @@ import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
+import io.infectnet.server.engine.core.player.Player;
+import io.infectnet.server.engine.core.player.PlayerService;
 import io.infectnet.server.engine.core.world.Position;
 import io.infectnet.server.engine.core.world.Tile;
 import io.infectnet.server.engine.core.world.TileType;
@@ -31,23 +33,38 @@ public class ResourceCustomizer implements WorldCustomizer {
    */
   private static final int GENERATION_LIMIT = 2;
 
+  private static final String ENV_PLAYER_NAME = "Environment";
+
   private final TypeRepository typeRepository;
+
+  private final PlayerService playerService;
 
   private TypeComponent component;
 
-  public ResourceCustomizer(TypeRepository typeRepository) {
+  private Player environmentPlayer;
+
+  public ResourceCustomizer(TypeRepository typeRepository, PlayerService playerService) {
     this.typeRepository = typeRepository;
+    this.playerService = playerService;
   }
 
   @Override
   public void customize(World world) {
-    Optional<TypeComponent> componentOptional = typeRepository.getTypeByName(BitResourceTypeComponent.TYPE_NAME);
+    Optional<TypeComponent>
+        componentOptional =
+        typeRepository.getTypeByName(BitResourceTypeComponent.TYPE_NAME);
+
+    Optional<Player> environmentPlayerOptional = playerService.getPlayerByUsername(ENV_PLAYER_NAME);
 
     if (componentOptional.isPresent()) {
       component = componentOptional.get();
 
-      for (int i = 0; i < GENERATION_LIMIT; ++i) {
-        generate(world);
+      if (environmentPlayerOptional.isPresent()) {
+        environmentPlayer = environmentPlayerOptional.get();
+
+        for (int i = 0; i < GENERATION_LIMIT; ++i) {
+          generate(world);
+        }
       }
     }
   }
@@ -95,6 +112,9 @@ public class ResourceCustomizer implements WorldCustomizer {
   private void addingResourcesToWorld(World world, List<Position> resources) {
     for (Position pos : resources) {
       Entity resource = component.createEntityOfType();
+
+      resource.getPositionComponent().setPosition(pos);
+      resource.getOwnerComponent().setOwner(environmentPlayer);
 
       world.getTileByPosition(pos).setEntity(resource);
     }
