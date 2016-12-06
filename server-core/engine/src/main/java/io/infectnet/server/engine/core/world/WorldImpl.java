@@ -93,10 +93,8 @@ public class WorldImpl extends World {
 
     for (int i = viewBox.northLimitHeight; i <= viewBox.southLimitHeight; ++i) {
       for (int j = viewBox.westLimitWidth; j <= viewBox.eastLimitWidth; ++j) {
-        Tile tile = tiles[i][j];
-        if (position.getH() != i && position.getW() != j) {
-          list.add(tile);
-        }
+
+        list.add(tiles[i][j]);
       }
     }
 
