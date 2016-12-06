@@ -12,6 +12,7 @@ import io.infectnet.server.engine.core.util.ListenableQueue;
 import io.infectnet.server.engine.core.world.World;
 import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -48,7 +49,7 @@ class EngineConfigurator {
   /* package */ Set<Runnable> postSetUpSet;
 
   @Inject
-  /* package */ Set<WorldCustomizer> worldCustomizerSet;
+  /* package */ List<WorldCustomizer> orderedWorldCustomizerList;
 
   @Inject
   public EngineConfigurator() {
@@ -73,7 +74,7 @@ class EngineConfigurator {
 
     world.generate(1000, 1000);
 
-    worldCustomizerSet.forEach(worldCustomizer -> worldCustomizer.customize(world));
+    orderedWorldCustomizerList.forEach(worldCustomizer -> worldCustomizer.customize(world));
 
     postSetUpSet.forEach(Runnable::run);
   }

@@ -1,28 +1,39 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.world.customizer.NestCustomizer;
+import io.infectnet.server.engine.content.world.customizer.ResourceCustomizer;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
-import io.infectnet.server.engine.core.world.customizer.NestCustomizer;
-import io.infectnet.server.engine.core.world.customizer.ResourceCustomizer;
 import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
-import javax.inject.Named;
+import java.util.Arrays;
+import java.util.List;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
-import dagger.multibindings.IntoSet;
 
 @Module
 public class WorldModule {
   @Provides
-  @IntoSet
-  public static WorldCustomizer providesResourceCustomizer(TypeRepository typeRepository) {
+  @Singleton
+  public static ResourceCustomizer providesResourceCustomizer(TypeRepository typeRepository) {
     return new ResourceCustomizer(typeRepository);
   }
 
   @Provides
-  @IntoSet
   @Singleton
-  public static WorldCustomizer providesNestCustomizer() {
+  public static NestCustomizer providesNestCustomizer() {
     return new NestCustomizer();
+  }
+
+  @Provides
+  @Singleton
+  public static List<WorldCustomizer> providesOrderedWorldCustomizerList(
+      ResourceCustomizer resourceCustomizer,
+      NestCustomizer nestCustomizer) {
+
+    return Arrays.asList(
+        resourceCustomizer,
+        nestCustomizer
+    );
   }
 }
