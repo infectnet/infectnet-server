@@ -45,11 +45,15 @@ public class ContentModule {
       if(typeComponent.isPresent()){
         Entity nest = typeComponent.get().createEntityOfType();
 
+        nest.getOwnerComponent().setOwner(player);
+
         NestCustomizer nestCustomizer = null;
 
         for (WorldCustomizer customizer : worldCustomizers) {
           if (customizer instanceof NestCustomizer) {
             nestCustomizer = (NestCustomizer) customizer;
+
+            break;
           }
         }
 

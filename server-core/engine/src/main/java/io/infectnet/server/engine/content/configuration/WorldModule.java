@@ -20,9 +20,8 @@ public class WorldModule {
   }
 
   @Provides
-  @Named("Nest Customizer")
-  @Singleton
   @IntoSet
+  @Singleton
   public static WorldCustomizer providesNestCustomizer() {
     return new NestCustomizer();
   }
