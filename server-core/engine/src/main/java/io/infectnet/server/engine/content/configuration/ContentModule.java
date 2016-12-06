@@ -2,6 +2,8 @@ package io.infectnet.server.engine.content.configuration;
 
 import io.infectnet.server.engine.content.status.SynchronousStatusPublisher;
 import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
+import io.infectnet.server.engine.content.type.NestTypeComponent;
+import io.infectnet.server.engine.content.world.customizer.NestCustomizer;
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
@@ -11,13 +13,9 @@ import io.infectnet.server.engine.core.player.PlayerService;
 import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
 import io.infectnet.server.engine.core.status.StatusPublisher;
 import io.infectnet.server.engine.core.world.World;
-import io.infectnet.server.engine.core.world.customizer.NestCustomizer;
-import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
@@ -31,7 +29,7 @@ public class ContentModule {
   public static Function<Player, Player> providesIdentityPlayerInitializer(
       PlayerStorageService playerStorageService, EntityManager entityManager,
       World world, TypeRepository typeRepository,
-      Set<WorldCustomizer> worldCustomizers) {
+      NestCustomizer nestCustomizer) {
     return (player) -> {
       playerStorageService.addStorageForPlayer(player);
 
@@ -40,24 +38,16 @@ public class ContentModule {
       });
 
       Optional<TypeComponent> typeComponent =
-          typeRepository.getTypeByName(BitResourceTypeComponent.TYPE_NAME);
+          typeRepository.getTypeByName(NestTypeComponent.TYPE_NAME);
 
-      if(typeComponent.isPresent()){
+      if (typeComponent.isPresent()) {
         Entity nest = typeComponent.get().createEntityOfType();
 
         nest.getOwnerComponent().setOwner(player);
 
-        NestCustomizer nestCustomizer = null;
-
-        for (WorldCustomizer customizer : worldCustomizers) {
-          if (customizer instanceof NestCustomizer) {
-            nestCustomizer = (NestCustomizer) customizer;
-
-            break;
-          }
-        }
-
         nestCustomizer.getRandomNestPosition().ifPresent(pos -> {
+          nest.getPositionComponent().setPosition(pos);
+
           world.getTileByPosition(pos).setEntity(nest);
 
           entityManager.addEntity(nest);
