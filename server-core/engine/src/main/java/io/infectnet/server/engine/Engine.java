@@ -66,7 +66,7 @@ public class Engine {
 
     bootstrapper.getGameLoop().setStatusConsumer(statusConsumer);
 
-    EngineConfigurator configurator = DaggerEngine_Bootstrapper.create().getEngineConfigurator();
+    EngineConfigurator configurator = bootstrapper.getEngineConfigurator();
 
     configurator.configure();
   }

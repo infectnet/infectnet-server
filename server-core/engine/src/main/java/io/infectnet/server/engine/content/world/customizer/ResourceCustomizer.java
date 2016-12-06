@@ -1,4 +1,4 @@
-package io.infectnet.server.engine.core.world.customizer;
+package io.infectnet.server.engine.content.world.customizer;
 
 import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
 import io.infectnet.server.engine.core.entity.Entity;
@@ -8,6 +8,7 @@ import io.infectnet.server.engine.core.world.Position;
 import io.infectnet.server.engine.core.world.Tile;
 import io.infectnet.server.engine.core.world.TileType;
 import io.infectnet.server.engine.core.world.World;
+import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
 import java.util.ArrayList;
 import java.util.List;
