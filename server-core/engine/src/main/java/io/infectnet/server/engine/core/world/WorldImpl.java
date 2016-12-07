@@ -4,6 +4,9 @@ import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.world.strategy.generation.WorldGeneratorStrategy;
 import io.infectnet.server.engine.core.world.strategy.pathfinding.PathFinderStrategy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 public class WorldImpl extends World {
+  private static final Logger logger = LoggerFactory.getLogger(WorldImpl.class);
+
   /**
    * The two-dimensional array to hold all tiles in the {@link World}
    */
@@ -103,24 +108,30 @@ public class WorldImpl extends World {
 
   @Override
   public void generate(int height, int width) {
-    tiles = new Tile[height][width];
-
-    boolean[][] cells = worldGeneratorStrategy.generateWorld(height, width);
+    if ((height <= 0) || (width <= 0)) {
+      throw new IllegalArgumentException("Height and width must be greater than zero!");
+    }
 
     this.height = height;
     this.width = width;
+
+    tiles = new Tile[height][width];
+
+    boolean[][] cells = worldGeneratorStrategy.generateWorld(height, width);
 
     for (int i = 0; i < height; ++i) {
       for (int j = 0; j < width; ++j) {
         if (isBorder(i, j)) {
           tiles[i][j] = new Tile(TileType.ROCK, new Position(i, j));
-        } else if (cells[i][j] == worldGeneratorStrategy.CAVE) {
+        } else if (cells[i][j] == WorldGeneratorStrategy.CAVE) {
           tiles[i][j] = new Tile(TileType.CAVE, new Position(i, j));
         } else {
           tiles[i][j] = new Tile(TileType.ROCK, new Position(i, j));
         }
       }
     }
+
+    logger.info("Generated World with height {} and width {}", height, width);
   }
 
   /**

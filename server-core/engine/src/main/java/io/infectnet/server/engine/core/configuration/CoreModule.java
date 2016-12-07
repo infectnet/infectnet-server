@@ -8,8 +8,9 @@ import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.execution.ScriptExecutor;
 import io.infectnet.server.engine.core.status.StatusPublisher;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
+import io.infectnet.server.engine.core.util.hook.Hook;
 import io.infectnet.server.engine.core.util.ListenableQueue;
-import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
+import io.infectnet.server.engine.core.util.hook.PostSetupHook;
 
 import java.util.Collections;
 import java.util.Set;
@@ -66,14 +67,9 @@ public class CoreModule {
   }
 
   @Provides
+  @PostSetupHook
   @ElementsIntoSet
-  public static Set<Runnable> providesDefaultPostSetUpRunnableSet() {
-    return Collections.emptySet();
-  }
-
-  @Provides
-  @ElementsIntoSet
-  public static Set<WorldCustomizer> providesDefaultEmptyWorldCustomizerSet() {
+  public static Set<Hook> providesDefaultEmptyPostSetupHookSet() {
     return Collections.emptySet();
   }
 }
