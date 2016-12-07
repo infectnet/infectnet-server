@@ -64,7 +64,7 @@ public class OrderedList<E extends Ordered> {
   }
 
   private int getPlaceByOrder(int order) {
-    for (int i = 0, n = backingList.size(); i < n; ++i) {
+    for (int i = 0; i < backingList.size(); ++i) {
       if (backingList.get(i).getOrder() >= order) {
         return i;
       }
