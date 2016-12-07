@@ -21,7 +21,7 @@ public class OrderedList<E extends Ordered> {
    * collection.
    * @param elements the elements to be stored in the new {@code OrderedList}
    * @param <E> the type of elements to be stored in the list
-   * @return a new {@&ode OrderedList}
+   * @return a new {@code OrderedList}
    * @throws NullPointerException if the passed collection is {@code null}
    */
   public static <E extends Ordered> OrderedList<E> of(Collection<E> elements) {

@@ -12,6 +12,9 @@ import io.infectnet.server.engine.core.world.TileType;
 import io.infectnet.server.engine.core.world.World;
 import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,8 @@ import java.util.Optional;
  * putting Resources onto some chosen Tiles.
  */
 public class ResourceCustomizer implements WorldCustomizer {
+  private static final Logger logger = LoggerFactory.getLogger(ResourceCustomizer.class);
+
   /**
    * The number of neighbouring CAVE Tiles and other Resources.
    */
@@ -118,6 +123,8 @@ public class ResourceCustomizer implements WorldCustomizer {
 
       world.getTileByPosition(pos).setEntity(resource);
     }
+
+    logger.info("Added {} resource entities to world", resources.size());
   }
 
   /**

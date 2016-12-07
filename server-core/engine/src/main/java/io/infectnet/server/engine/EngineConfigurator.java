@@ -8,17 +8,23 @@ import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperFactory;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperRepository;
 import io.infectnet.server.engine.core.script.Request;
 import io.infectnet.server.engine.core.system.ProcessorSystem;
+import io.infectnet.server.engine.core.util.hook.Hook;
 import io.infectnet.server.engine.core.util.ListenableQueue;
+import io.infectnet.server.engine.core.util.OrderedList;
+import io.infectnet.server.engine.core.util.hook.PostSetupHook;
 import io.infectnet.server.engine.core.world.World;
-import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 class EngineConfigurator {
+  private static final Logger logger = LoggerFactory.getLogger(EngineConfigurator.class);
+
   @Inject
   @Named("Action Queue")
   /* package */ ListenableQueue<Action> actionQueue;
@@ -46,10 +52,8 @@ class EngineConfigurator {
   /* package */ World world;
 
   @Inject
-  /* package */ Set<Runnable> postSetUpSet;
-
-  @Inject
-  /* package */ List<WorldCustomizer> orderedWorldCustomizerList;
+  @PostSetupHook
+  /* package */ Set<Hook> postSetupHooks;
 
   @Inject
   public EngineConfigurator() {
@@ -59,13 +63,21 @@ class EngineConfigurator {
   }
 
   public void configure() {
+    logger.info("Starting engine configuration...");
+
+    logger.info("Registering {} Systems...", processorSystems.size());
+
     processorSystems.forEach(s -> {
       s.registerActionListeners(actionQueue);
 
       s.registerRequestListeners(requestQueue);
     });
 
+    logger.info("Registering {} TypeComponents...", typeComponents.size());
+
     typeComponents.forEach(typeRepository::registerType);
+
+    logger.info("Registering {} type-to-wrapper mappings...", wrapperFactoryMap.size());
 
     wrapperFactoryMap.forEach((typeName, factory) -> {
       typeRepository.getTypeByName(typeName)
@@ -74,8 +86,8 @@ class EngineConfigurator {
 
     world.generate(1000, 1000);
 
-    orderedWorldCustomizerList.forEach(worldCustomizer -> worldCustomizer.customize(world));
+    logger.info("Running {} post setup hooks...", postSetupHooks.size());
 
-    postSetUpSet.forEach(Runnable::run);
+    OrderedList.of(postSetupHooks).getBackingList().forEach(Hook::execute);
   }
 }

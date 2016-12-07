@@ -21,7 +21,7 @@ public class PlayerServiceImpl implements PlayerService {
 
   private final Set<Player> observedPlayers;
 
-  private final Function<Player, Player> playerInitializer;
+  private final Function<Player, Player> defaultPlayerInitializer;
 
   private final PlayerStorageService playerStorageService;
 
@@ -29,17 +29,17 @@ public class PlayerServiceImpl implements PlayerService {
    * Constructs a new instance with the specified initializer function. This function will be used
    * to set the various fields of a newly created {@link Player} instance to appropriate starter
    * values.
-   * @param playerInitializer the function that will be used to initialize new {@code Player}
+   * @param defaultPlayerInitializer the function that will be used to initialize new {@code Player}
    * instances
    * @param playerStorageService the service managing player-level storage
    */
-  public PlayerServiceImpl(Function<Player, Player> playerInitializer,
+  public PlayerServiceImpl(Function<Player, Player> defaultPlayerInitializer,
                            PlayerStorageService playerStorageService) {
     this.playerMap = new ConcurrentHashMap<>();
 
     this.observedPlayers = new CopyOnWriteArraySet<>();
 
-    this.playerInitializer = playerInitializer;
+    this.defaultPlayerInitializer = defaultPlayerInitializer;
 
     this.playerStorageService = playerStorageService;
   }
@@ -51,8 +51,14 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public Optional<Player> createPlayer(String username) {
-    // avoid throwing NPE in favor of Optional
-    if (playerMap.containsKey(username) || username == null) {
+    return this.createPlayer(username, defaultPlayerInitializer);
+  }
+
+  @Override
+  public Optional<Player> createPlayer(String username,
+                                       Function<Player, Player> playerInitializer) {
+    // avoid throwing NPE/IAE in favor of Optional
+    if (playerMap.containsKey(username) || username == null || playerInitializer == null) {
       return Optional.empty();
     }
 

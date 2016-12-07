@@ -12,6 +12,8 @@ import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.player.PlayerService;
 import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
 import io.infectnet.server.engine.core.status.StatusPublisher;
+import io.infectnet.server.engine.core.util.hook.Hook;
+import io.infectnet.server.engine.core.util.hook.PostSetupHook;
 import io.infectnet.server.engine.core.world.World;
 
 import java.util.Optional;
@@ -26,7 +28,7 @@ import dagger.multibindings.IntoSet;
 public class ContentModule {
   @Provides
   @Singleton
-  public static Function<Player, Player> providesIdentityPlayerInitializer(
+  public static Function<Player, Player> providesDefaultPlayerInitializer(
       PlayerStorageService playerStorageService, EntityManager entityManager,
       World world, TypeRepository typeRepository,
       NestCustomizer nestCustomizer) {
@@ -59,11 +61,14 @@ public class ContentModule {
   }
 
   @Provides
+  @PostSetupHook
   @IntoSet
-  public static Runnable providesEnvironmentPlayerRunnable(PlayerService playerService) {
-    return () -> {
-      playerService.createPlayer("Environment");
-    };
+  public static Hook providesEnvironmentPlayerInitializationHook(PlayerService playerService) {
+    /*
+     * Passing the identity function as the initializer so the default initialization function
+     * will not be executed for the Environment player.
+     */
+    return Hook.from(0, () -> playerService.createPlayer("Environment", Function.identity()));
   }
 
   @Provides

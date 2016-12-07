@@ -5,6 +5,9 @@ import io.infectnet.server.engine.core.world.Position;
 import io.infectnet.server.engine.core.world.World;
 import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,6 +21,7 @@ import java.util.Set;
  * finding all Tiles that are fitted to hold a Nest.
  */
 public class NestCustomizer implements WorldCustomizer {
+  private static final Logger logger = LoggerFactory.getLogger(NestCustomizer.class);
 
   /**
    * The minimum distance of two Nests.
@@ -43,6 +47,8 @@ public class NestCustomizer implements WorldCustomizer {
         }
       }
     }
+
+    logger.info("Counted {} possible base positions", basePositions.size());
   }
 
   /**
@@ -60,6 +66,8 @@ public class NestCustomizer implements WorldCustomizer {
         it.remove();
       }
     }
+
+    logger.info("There are {} remaining base positions", basePositions.size());
 
     return Optional.ofNullable(base);
   }
