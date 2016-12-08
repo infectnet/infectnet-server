@@ -8,6 +8,7 @@ import io.infectnet.server.engine.content.system.inventory.InventoryManagementSy
 import io.infectnet.server.engine.content.system.kill.KillSystem;
 import io.infectnet.server.engine.content.system.movement.MovementSystem;
 import io.infectnet.server.engine.content.system.spawn.SpawnSystem;
+import io.infectnet.server.engine.core.entity.EntityCreator;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
 import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
@@ -77,7 +78,8 @@ public class SystemModule {
   @IntoSet
   public static ProcessorSystem providesEntityCreatorSystem(EntityManager entityManager,
                                                             World world,
-                                                            PlayerStorageService playerStorageService) {
-    return new EntityCreatorSystem(entityManager, world, playerStorageService);
+                                                            PlayerStorageService playerStorageService,
+                                                            EntityCreator entityCreator) {
+    return new EntityCreatorSystem(entityManager, world, playerStorageService, entityCreator);
   }
 }
