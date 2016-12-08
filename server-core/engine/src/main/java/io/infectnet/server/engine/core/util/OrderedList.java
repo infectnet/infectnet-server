@@ -70,6 +70,6 @@ public class OrderedList<E extends Ordered> {
       }
     }
 
-    return FIRST;
+    return backingList.size();
   }
 }
