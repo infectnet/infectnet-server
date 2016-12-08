@@ -2,6 +2,7 @@ package io.infectnet.server.engine.content.world.customizer;
 
 import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
 import io.infectnet.server.engine.core.entity.Entity;
+import io.infectnet.server.engine.core.entity.EntityCreator;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
 import io.infectnet.server.engine.core.player.Player;
@@ -44,13 +45,18 @@ public class ResourceCustomizer implements WorldCustomizer {
 
   private final PlayerService playerService;
 
+  private final EntityCreator entityCreator;
+
   private TypeComponent component;
 
   private Player environmentPlayer;
 
-  public ResourceCustomizer(TypeRepository typeRepository, PlayerService playerService) {
+  public ResourceCustomizer(TypeRepository typeRepository, PlayerService playerService, EntityCreator entityCreator) {
     this.typeRepository = typeRepository;
+
     this.playerService = playerService;
+
+    this.entityCreator = entityCreator;
   }
 
   @Override
@@ -116,12 +122,7 @@ public class ResourceCustomizer implements WorldCustomizer {
    */
   private void addingResourcesToWorld(World world, List<Position> resources) {
     for (Position pos : resources) {
-      Entity resource = component.createEntityOfType();
-
-      resource.getPositionComponent().setPosition(pos);
-      resource.getOwnerComponent().setOwner(environmentPlayer);
-
-      world.getTileByPosition(pos).setEntity(resource);
+      entityCreator.create(component, pos, environmentPlayer);
     }
 
     logger.info("Added {} resource entities to world", resources.size());

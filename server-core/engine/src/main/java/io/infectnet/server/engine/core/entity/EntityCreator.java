@@ -24,7 +24,7 @@ public class EntityCreator {
    */
   public EntityCreator(EntityManager entityManager, World world) {
     this.entityManager = entityManager;
-    
+
     this.world = world;
   }
 

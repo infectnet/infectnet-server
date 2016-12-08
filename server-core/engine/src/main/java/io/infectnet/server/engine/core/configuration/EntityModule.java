@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.core.configuration;
 
+import io.infectnet.server.engine.core.entity.EntityCreator;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.EntityManagerImpl;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
@@ -9,6 +10,7 @@ import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperFactory;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperRepository;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperRepositoryImpl;
+import io.infectnet.server.engine.core.world.World;
 
 import java.util.Collections;
 import java.util.Map;
@@ -46,5 +48,11 @@ public abstract class EntityModule {
   @ElementsIntoSet
   public static Set<TypeComponent> providesDefaultEmptyTypeComponentSet() {
     return Collections.emptySet();
+  }
+
+  @Provides
+  @Singleton
+  public static EntityCreator providesEntityCreator(EntityManager entityManager, World world) {
+    return new EntityCreator(entityManager, world);
   }
 }
