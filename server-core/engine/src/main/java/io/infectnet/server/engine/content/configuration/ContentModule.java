@@ -5,6 +5,7 @@ import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
 import io.infectnet.server.engine.content.type.NestTypeComponent;
 import io.infectnet.server.engine.content.world.customizer.NestCustomizer;
 import io.infectnet.server.engine.core.entity.Entity;
+import io.infectnet.server.engine.core.entity.EntityCreator;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
@@ -29,9 +30,8 @@ public class ContentModule {
   @Provides
   @Singleton
   public static Function<Player, Player> providesDefaultPlayerInitializer(
-      PlayerStorageService playerStorageService, EntityManager entityManager,
-      World world, TypeRepository typeRepository,
-      NestCustomizer nestCustomizer) {
+      PlayerStorageService playerStorageService, TypeRepository typeRepository,
+      NestCustomizer nestCustomizer, EntityCreator entityCreator) {
     return (player) -> {
       playerStorageService.addStorageForPlayer(player);
 
@@ -39,20 +39,11 @@ public class ContentModule {
         storage.setAttribute(BitResourceTypeComponent.TYPE_NAME, 50);
       });
 
-      Optional<TypeComponent> typeComponent =
-          typeRepository.getTypeByName(NestTypeComponent.TYPE_NAME);
+      Optional<TypeComponent> nestType = typeRepository.getTypeByName(NestTypeComponent.TYPE_NAME);
 
-      if (typeComponent.isPresent()) {
-        Entity nest = typeComponent.get().createEntityOfType();
-
-        nest.getOwnerComponent().setOwner(player);
-
+      if (nestType.isPresent()) {
         nestCustomizer.getRandomNestPosition().ifPresent(pos -> {
-          nest.getPositionComponent().setPosition(pos);
-
-          world.getTileByPosition(pos).setEntity(nest);
-
-          entityManager.addEntity(nest);
+          entityCreator.create(nestType.get(), pos, player);
         });
       }
 

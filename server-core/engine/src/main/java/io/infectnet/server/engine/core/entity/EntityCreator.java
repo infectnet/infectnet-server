@@ -54,7 +54,7 @@ public class EntityCreator {
 
     entityManager.addEntity(entity);
 
-    world.getTileByPosition(nonNullPosition).setEntity(entity);
+    world.setEntityOnPosition(entity, nonNullPosition);
 
     return entity;
   }
