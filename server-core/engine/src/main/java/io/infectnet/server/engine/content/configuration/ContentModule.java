@@ -1,10 +1,10 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.player.Environment;
 import io.infectnet.server.engine.content.status.SynchronousStatusPublisher;
 import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
 import io.infectnet.server.engine.content.type.NestTypeComponent;
 import io.infectnet.server.engine.content.world.customizer.NestCustomizer;
-import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.EntityCreator;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
@@ -27,6 +27,8 @@ import dagger.multibindings.IntoSet;
 @Module(includes = {SelectorModule.class, DslModule.class, SystemModule.class, TypeModule.class,
     WorldModule.class, WrapperModule.class})
 public class ContentModule {
+  private static final String ENVIRONMENT_PLAYER = "Environment";
+
   @Provides
   @Singleton
   public static Function<Player, Player> providesDefaultPlayerInitializer(
@@ -59,8 +61,19 @@ public class ContentModule {
      * Passing the identity function as the initializer so the default initialization function
      * will not be executed for the Environment player.
      */
-    return Hook.from(0, () -> playerService.createPlayer("Environment", Function.identity()));
+    return Hook.from(0, () -> playerService.createPlayer(ENVIRONMENT_PLAYER, Function.identity()));
   }
+
+  @Provides
+  @Singleton
+  @Environment
+  public static Player providesEnvironmentPlayer(PlayerService playerService) {
+    /*
+     * If it throws, the whole application should just die.
+     */
+    return playerService.getPlayerByUsername(ENVIRONMENT_PLAYER).get();
+  }
+
 
   @Provides
   @Singleton

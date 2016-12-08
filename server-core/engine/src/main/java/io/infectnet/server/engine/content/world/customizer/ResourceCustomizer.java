@@ -1,12 +1,10 @@
 package io.infectnet.server.engine.content.world.customizer;
 
 import io.infectnet.server.engine.content.type.BitResourceTypeComponent;
-import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.EntityCreator;
 import io.infectnet.server.engine.core.entity.component.TypeComponent;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
 import io.infectnet.server.engine.core.player.Player;
-import io.infectnet.server.engine.core.player.PlayerService;
 import io.infectnet.server.engine.core.world.Position;
 import io.infectnet.server.engine.core.world.Tile;
 import io.infectnet.server.engine.core.world.TileType;
@@ -19,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.inject.Provider;
 
 /**
  * Customizing the World after the Tiles were generated,
@@ -39,43 +38,34 @@ public class ResourceCustomizer implements WorldCustomizer {
    */
   private static final int GENERATION_LIMIT = 2;
 
-  private static final String ENV_PLAYER_NAME = "Environment";
-
   private final TypeRepository typeRepository;
 
-  private final PlayerService playerService;
+  private final Provider<Player> environmentPlayer;
 
   private final EntityCreator entityCreator;
 
   private TypeComponent component;
 
-  private Player environmentPlayer;
-
-  public ResourceCustomizer(TypeRepository typeRepository, PlayerService playerService, EntityCreator entityCreator) {
+  public ResourceCustomizer(TypeRepository typeRepository,
+                            Provider<Player> environmentPlayer,
+                            EntityCreator entityCreator) {
     this.typeRepository = typeRepository;
 
-    this.playerService = playerService;
+    this.environmentPlayer = environmentPlayer;
 
     this.entityCreator = entityCreator;
   }
 
   @Override
   public void customize(World world) {
-    Optional<TypeComponent>
-        componentOptional =
+    Optional<TypeComponent> componentOptional =
         typeRepository.getTypeByName(BitResourceTypeComponent.TYPE_NAME);
-
-    Optional<Player> environmentPlayerOptional = playerService.getPlayerByUsername(ENV_PLAYER_NAME);
 
     if (componentOptional.isPresent()) {
       component = componentOptional.get();
 
-      if (environmentPlayerOptional.isPresent()) {
-        environmentPlayer = environmentPlayerOptional.get();
-
-        for (int i = 0; i < GENERATION_LIMIT; ++i) {
-          generate(world);
-        }
+      for (int i = 0; i < GENERATION_LIMIT; ++i) {
+        generate(world);
       }
     }
   }
@@ -122,7 +112,7 @@ public class ResourceCustomizer implements WorldCustomizer {
    */
   private void addingResourcesToWorld(World world, List<Position> resources) {
     for (Position pos : resources) {
-      entityCreator.create(component, pos, environmentPlayer);
+      entityCreator.create(component, pos, environmentPlayer.get());
     }
 
     logger.info("Added {} resource entities to world", resources.size());
