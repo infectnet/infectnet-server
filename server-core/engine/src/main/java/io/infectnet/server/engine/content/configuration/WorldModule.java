@@ -1,9 +1,11 @@
 package io.infectnet.server.engine.content.configuration;
 
+import io.infectnet.server.engine.content.player.Environment;
 import io.infectnet.server.engine.content.world.customizer.NestCustomizer;
 import io.infectnet.server.engine.content.world.customizer.ResourceCustomizer;
+import io.infectnet.server.engine.core.entity.EntityCreator;
 import io.infectnet.server.engine.core.entity.type.TypeRepository;
-import io.infectnet.server.engine.core.player.PlayerService;
+import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.util.hook.Hook;
 import io.infectnet.server.engine.core.util.hook.PostSetupHook;
 import io.infectnet.server.engine.core.world.World;
@@ -11,6 +13,7 @@ import io.infectnet.server.engine.core.world.customizer.WorldCustomizer;
 
 import java.util.Arrays;
 import java.util.List;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
@@ -21,8 +24,9 @@ public class WorldModule {
   @Provides
   @Singleton
   public static ResourceCustomizer providesResourceCustomizer(TypeRepository typeRepository,
-                                                              PlayerService playerService) {
-    return new ResourceCustomizer(typeRepository, playerService);
+                                                              @Environment Provider<Player> environmentPlayer,
+                                                              EntityCreator entityCreator) {
+    return new ResourceCustomizer(typeRepository, environmentPlayer, entityCreator);
   }
 
   @Provides

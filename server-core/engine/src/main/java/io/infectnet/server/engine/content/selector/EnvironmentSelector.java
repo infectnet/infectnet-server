@@ -9,36 +9,33 @@ import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapper;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperRepository;
 import io.infectnet.server.engine.core.player.Player;
-import io.infectnet.server.engine.core.player.PlayerService;
 import io.infectnet.server.engine.core.script.selector.Selector;
 import io.infectnet.server.engine.core.world.World;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class EnvironmentSelector extends Selector {
-  private static final String ENVIRONMENT_USERNAME = "Environment";
-
   private final EntityManager entityManager;
 
   private final EntityWrapperRepository wrapperRepository;
 
-  private final PlayerService playerService;
+  private final Player environmentPlayer;
 
   private final World world;
 
   public EnvironmentSelector(Player player, EntityManager entityManager,
-                             EntityWrapperRepository wrapperRepository, PlayerService playerService,
+                             EntityWrapperRepository wrapperRepository,
+                             Player environmentPlayer,
                              World world) {
     super(player);
+
     this.entityManager = entityManager;
     this.wrapperRepository = wrapperRepository;
-    this.playerService = playerService;
+    this.environmentPlayer = environmentPlayer;
     this.world = world;
   }
 
@@ -81,15 +78,9 @@ public class EnvironmentSelector extends Selector {
   }
 
   private Collection<Entity> getAllEnvironmentEntities(Category category) {
-    Optional<Player> environmentPlayer = playerService.getPlayerByUsername(ENVIRONMENT_USERNAME);
-
-    if (environmentPlayer.isPresent()) {
-      return entityManager.query()
-          .ofPlayer(environmentPlayer.get())
+    return entityManager.query()
+          .ofPlayer(environmentPlayer)
           .inCategory(category)
           .execute();
-    }
-
-    return Collections.emptyList();
   }
 }

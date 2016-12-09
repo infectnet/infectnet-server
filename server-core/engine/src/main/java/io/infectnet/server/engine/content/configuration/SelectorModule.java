@@ -1,14 +1,17 @@
 package io.infectnet.server.engine.content.configuration;
 
 import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
+import io.infectnet.server.engine.content.player.Environment;
 import io.infectnet.server.engine.content.selector.EnemySelectorFactory;
 import io.infectnet.server.engine.content.selector.EnvironmentSelectorFactory;
 import io.infectnet.server.engine.content.selector.OwnSelectorFactory;
 import io.infectnet.server.engine.core.entity.EntityManager;
 import io.infectnet.server.engine.core.entity.wrapper.EntityWrapperRepository;
+import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.player.PlayerService;
 import io.infectnet.server.engine.core.world.World;
 
+import javax.inject.Provider;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
@@ -35,7 +38,7 @@ public class SelectorModule {
   @IntoSet
   public static DslBindingCustomizer providesEnvironmentSelectorFactory(
       EntityManager entityManager, EntityWrapperRepository wrapperRepository,
-      PlayerService playerService, World world) {
-    return new EnvironmentSelectorFactory(entityManager, wrapperRepository, playerService, world);
+      @Environment Provider<Player> environmentPlayer, World world) {
+    return new EnvironmentSelectorFactory(entityManager, wrapperRepository, environmentPlayer, world);
   }
 }
