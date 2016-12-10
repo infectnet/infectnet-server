@@ -38,7 +38,7 @@ public class MovementSystem implements ProcessorSystem {
     MovementAction movementAction = (MovementAction) action;
 
     Position startPosition = movementAction.getSource().getPositionComponent().getPosition();
-    Position targetPosition = movementAction.getTargetEntity().getPositionComponent().getPosition();
+    Position targetPosition = movementAction.getTargetPosition();
 
     // If the target position occupied and we are next to it, don't move.
     if (world.getTileByPosition(targetPosition).isBlockedOrOccupied()

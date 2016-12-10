@@ -2,18 +2,19 @@ package io.infectnet.server.engine.content.system.movement;
 
 import io.infectnet.server.engine.core.entity.Entity;
 import io.infectnet.server.engine.core.entity.wrapper.Action;
+import io.infectnet.server.engine.core.world.Position;
 
 public class MovementAction extends Action {
 
-  private final Entity targetEntity;
+  private final Position targetPosition;
 
-  public MovementAction(Entity movingEntity, Entity targetEntity) {
+  public MovementAction(Entity movingEntity, Position targetPosition) {
     super(movingEntity);
 
-    this.targetEntity = targetEntity;
+    this.targetPosition = targetPosition;
   }
 
-  public Entity getTargetEntity() {
-    return targetEntity;
+  public Position getTargetPosition() {
+    return targetPosition;
   }
 }
