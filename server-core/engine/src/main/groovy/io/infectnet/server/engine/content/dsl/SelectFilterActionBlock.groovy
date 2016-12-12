@@ -55,11 +55,24 @@ class SelectFilterActionBlock implements DslBindingCustomizer {
   private static <T> void doForOne(Closure<Boolean> filter, Closure<Void> action,
                                    Collection<? extends T> elements) {
     for (T element : elements) {
-      def closureDelegate = [current: element];
+      Map<String, Object> closureDelegate = [current: element];
+
+      /*
+       * Alert - Workaround ahead - replace in production
+       *
+       * Visibility in nested closures did not work as intended so we had to introduce this fix.
+       * It simply copies the variables from the closure's enclosing script to its delegate and then
+       * the resolution strategy is set as DELEGATE_FIRST.
+       * Sadly Groovy did not found variables on the thisObject of the closure when using
+       * DELEGATE_FIRST so we had to put this here.
+       */
+      closureDelegate.putAll((Map) action.thisObject.properties["binding"].properties["variables"]);
 
       filter.delegate = closureDelegate;
 
       if (filter()) {
+        action.resolveStrategy = Closure.DELEGATE_FIRST;
+
         action.delegate = closureDelegate;
 
         action();
@@ -72,7 +85,9 @@ class SelectFilterActionBlock implements DslBindingCustomizer {
   private static <T> void doForAll(Closure<Boolean> filter, Closure<Void> action,
                                    Collection<? extends T> elements) {
     for (T element : elements) {
-      def closureDelegate = [current: element];
+      Map<String, Object> closureDelegate = [current: element];
+
+      closureDelegate.putAll((Map) action.thisObject.properties["binding"].properties["variables"]);
 
       filter.delegate = closureDelegate;
 

@@ -15,6 +15,9 @@ class GatherBlock implements DslBindingCustomizer {
           for (T element : elements) {
             def closureDelegate = [current: element];
 
+            closureDelegate.putAll(
+                (Map) filter.thisObject.properties["binding"].properties["variables"]);
+
             filter.delegate = closureDelegate;
 
             if (filter()) {
