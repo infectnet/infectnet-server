@@ -1,4 +1,4 @@
-package io.infectnet.server.engine.content.dsl
+package io.infectnet.server.engine.core.dsl
 
 import io.infectnet.server.engine.core.script.execution.BindingContext
 

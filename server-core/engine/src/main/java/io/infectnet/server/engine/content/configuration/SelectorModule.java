@@ -1,6 +1,6 @@
 package io.infectnet.server.engine.content.configuration;
 
-import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
+import io.infectnet.server.engine.core.dsl.DslBindingCustomizer;
 import io.infectnet.server.engine.content.player.Environment;
 import io.infectnet.server.engine.content.selector.EnemySelectorFactory;
 import io.infectnet.server.engine.content.selector.EnvironmentSelectorFactory;

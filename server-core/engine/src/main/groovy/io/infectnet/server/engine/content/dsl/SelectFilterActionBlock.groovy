@@ -1,6 +1,7 @@
 package io.infectnet.server.engine.content.dsl
 
 import groovy.transform.CompileStatic
+import io.infectnet.server.engine.core.dsl.DslBindingCustomizer
 import io.infectnet.server.engine.core.script.execution.BindingContext
 
 @CompileStatic

@@ -3,7 +3,7 @@ package io.infectnet.server.engine.core.configuration;
 import groovy.lang.Binding;
 import io.infectnet.server.engine.content.configuration.DslModule;
 import io.infectnet.server.engine.content.configuration.SelectorModule;
-import io.infectnet.server.engine.content.dsl.DslBindingCustomizer;
+import io.infectnet.server.engine.core.dsl.DslBindingCustomizer;
 import io.infectnet.server.engine.core.player.Player;
 import io.infectnet.server.engine.core.script.code.CodeRepository;
 import io.infectnet.server.engine.core.script.code.CodeRepositoryImpl;

@@ -1,5 +1,6 @@
 package io.infectnet.server.engine.content.dsl;
 
+import io.infectnet.server.engine.core.dsl.DslBindingCustomizer;
 import io.infectnet.server.engine.core.player.storage.PlayerStorage;
 import io.infectnet.server.engine.core.player.storage.PlayerStorageService;
 import io.infectnet.server.engine.core.script.execution.BindingContext;
